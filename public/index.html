@@ -32,7 +32,15 @@
           </button>
           <div class="popover-menu" id="language-menu" hidden>
             <button type="button" data-locale="zh-CN">简体中文</button>
+            <button type="button" data-locale="zh-TW">繁體中文</button>
             <button type="button" data-locale="en">English</button>
+            <button type="button" data-locale="es">Español</button>
+            <button type="button" data-locale="pt">Português</button>
+            <button type="button" data-locale="fr">Français</button>
+            <button type="button" data-locale="de">Deutsch</button>
+            <button type="button" data-locale="ja">日本語</button>
+            <button type="button" data-locale="ko">한국어</button>
+            <button type="button" data-locale="tl">Tagalog</button>
           </div>
         </div>
         <button class="icon-button" id="notification-button" type="button" aria-label="消息通知" aria-expanded="false" hidden>
@@ -94,6 +102,7 @@
           <div><span class="eyebrow">共创致谢墙</span><h2 id="recognition-title">您的建言，将与教会一同被记录</h2></div>
           <p>当需求获得同工助力并进入产品规划，建言者、协同补充者及其所在教会将共同进入 ChurchOS 共创致谢墙。</p>
           <div class="recognition-example"><span class="avatar">T</span><span><strong>Tim Zhang</strong><small>洛杉矶恩典社区教会</small></span><i data-lucide="award" aria-hidden="true"></i></div>
+          <figure class="share-poster-preview"><img src="/images/co_creation_share_poster_1784077717552.jpg" alt="ChurchOS 全球需求共创计划分享海报"><figcaption>共创分享海报</figcaption></figure>
         </section>
       </section>
 
@@ -134,6 +143,7 @@
           <button class="active" type="button" data-admin-tab="overview"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i>需求分析</button>
           <button type="button" data-admin-tab="disputes"><i data-lucide="scale" aria-hidden="true"></i>申诉审批</button>
           <button type="button" data-admin-tab="campaign"><i data-lucide="timer-reset" aria-hidden="true"></i>活动设置</button>
+          <button type="button" data-admin-tab="prototypes"><i data-lucide="panels-top-left" aria-hidden="true"></i>原型验证</button>
           <button type="button" data-admin-tab="distribution"><i data-lucide="send" aria-hidden="true"></i>分发与反馈</button>
         </nav>
         <button class="ghost-button" id="admin-exit-button" type="button"><i data-lucide="log-out" aria-hidden="true"></i>退出后台</button>
@@ -145,6 +155,7 @@
         <section id="admin-campaign-panel" data-admin-panel="campaign" hidden>
           <form id="campaign-form" class="settings-form"><label class="switch-field"><input id="campaign-enabled" type="checkbox"><span>显示活动倒计时</span></label><label>截止时间<input id="campaign-deadline" type="datetime-local"></label><button class="primary-button" type="submit">保存设置</button></form>
         </section>
+        <section id="admin-prototypes-panel" data-admin-panel="prototypes" hidden><div id="admin-prototypes-content"></div></section>
         <section id="admin-distribution-panel" data-admin-panel="distribution" hidden><div id="admin-distribution-content"></div></section>
       </main>
     </section>

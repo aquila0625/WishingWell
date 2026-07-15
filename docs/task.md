@@ -1,27 +1,25 @@
-# ChurchOS 教会通 - 开发实施进度任务卡 (task.md)
+# ChurchOS Delivery Checklist
 
-以下为项目的详细实施清单，我们将逐步标记进度并在开发完成后在此校验。
+> **中文版本：** [task.zh-CN.md](./task.zh-CN.md)
 
-- `[ ]` 1. **数据库引擎与初始化 (`db.js` & Seed 数据)**
-  - `[ ]` 编写简易高健壮性文件型 JSON 数据库读写助手。
-  - `[ ]` 预装初始数据：生成 20~30 个全球知名教会数据库（支持地理联想）、默认 ChurchOS 说明数据、以及初始测试痛点与评论。
-- `[ ]` 2. **后端 API 服务构建 (`server.js`)**
-  - `[ ]` 账户与画像接口：注册（包含 13 个细分职务、定位解析、可选头像上传）、登录、身份核验。
-  - `[ ]` 期望共创接口：防抖查重检索、需求提交（支持图片/录音文件上传、AI置信度拦截模拟）、同感点赞（支持同工头像去重联动）、盖楼评论。
-  - `[ ]` 管理员控制台接口：需求强制合并（写入原因）、拆分申诉审批（解绑恢复）。
-  - `[ ]` AI 数据归纳与导出：AI 智能预分析接口（计算人口比例、痛点聚类、ROI）、Markdown/Excel 一键导出。
-  - `[ ]` 结案反馈与分发物料：一键群发 HTML 报告邮件接口、小铃铛通知拉取与置顶接口。
-- `[ ]` 3. **前端 UI 视图骨架 (`public/index.html` & `public/style.css`)**
-  - `[ ]` 经典 Figma 浅灰网格与微光光晕混搭的高品质商业级 UI 布局。
-  - `[ ]` PC 端（左侧愿景/团队板，右侧广场网格）与 移动 H5 端（单栏流式、底部悬浮栏）自适应。
-  - `[ ]` 动效库：投币许愿金币抛物线、水池波纹、点赞粒子与流光高亮标签。
-- `[ ]` 4. **前端控制交互逻辑 (`public/app.js`)**
-  - `[ ]` 静默定位获取：集成 IP 与 HTML5 地理定位，完成“国家、省份、城市”预填。
-  - `[ ]` 地理优先联想输入：根据同工定位城市，输入教会名称时优先推荐本地教会并带出地址。
-  - `[ ]` 输入框实时查重：防抖校验同名/同义标题，滑出建议助力列表。
-  - `[ ]` 动态海报渲染与下载：基于 Canvas/HTML 动态拼装生成 2:3 二维码分享海报。
-  - `[ ]` AI 交互原型容器渲染：直接在前台展示和操作 AI 画出的“排班日历组件”与“财务分析报表”。
-- `[ ]` 5. **系统验证与走查测试**
-  - `[ ]` 测试 13 个角色职务注册与渐变头像兜底。
-  - `[ ]` 验证重复提交拦截与申诉合并循环。
-  - `[ ]` 验证一键海报下载和 AI 数据预分析 Markdown 导出效果。
+## Completed
+
+- [x] JSON database adapter with isolated test databases and deterministic seed data
+- [x] Authentication, church autocomplete, wishes, votes, comments, translations, disputes, notifications, campaign settings, exports, QR generation, and admin APIs
+- [x] Responsive H5 landing page matching the approved navy/cyan reference UI
+- [x] Login and registration flow with session restoration and church autocomplete
+- [x] Requirement wall with category filters, sorting, optimistic voting, and voter avatars
+- [x] Requirement submission with similarity suggestions, image upload, and demo audio transcription
+- [x] Requirement details with official replies, nested comments, translations, and split disputes
+- [x] Share link, QR code, and downloadable 848x1264 poster canvas
+- [x] Notification center and administrator analysis, merge, dispute, campaign, prototype, export, and demo email tools
+- [x] Automated tests and responsive browser verification
+- [x] Bilingual README, design, and implementation documentation
+
+## Demo Boundaries
+
+- [ ] Connect a production AI provider
+- [ ] Connect production email and SMS providers
+- [ ] Replace demo identity tokens and plaintext demo passwords with production authentication
+- [ ] Replace JSON files with a production database
+- [ ] Connect an authoritative global church directory and precise geolocation service

@@ -25,8 +25,8 @@
   - `notifications.json`：通知中心数据（支持六大场景）。
 - **`public/`** - 前端静态资源目录：
   - [public/index.html](file:///Users/yishu/AIGit/许愿池项目/public/index.html) - 主页面 HTML（包含首页广场、同工致谢榜、小铃铛通知面板与管理后台）。
-  - [public/style.css](file:///Users/yishu/AIGit/许愿池项目/public/style.css) - CSS 样式系统与所有动效（涟漪、投币、点赞粒子）。
-  - [public/app.js](file:///Users/yishu/AIGit/许愿池项目/public/app.js) - 前端逻辑（地理优先联想、防抖查重、联动职务、IP/GPS定位、AI 原型组件渲染、API 交互）。
+  - `public/styles/` - 模块化 CSS 视觉系统，包括设计变量、基础样式、组件、页面与响应式规则。
+  - `public/js/` - 模块化前端逻辑，包括登录注册、需求协作、分享通知、后台原型和 API 交互。
 - **`public/uploads/`** - 用户上传截图与音频存放处。
 
 ---

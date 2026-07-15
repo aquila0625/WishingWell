@@ -27,6 +27,10 @@
     grid-template-columns: 1fr;
   }
 
+  .share-poster-preview {
+    width: min(220px, 100%);
+  }
+
   .wish-grid {
     grid-template-columns: 1fr;
   }
@@ -175,6 +179,23 @@
   .copy-field {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .merge-form {
+    grid-template-columns: 1fr;
+  }
+
+  .merge-form > * {
+    grid-column: 1 !important;
+  }
+
+  .schedule-grid {
+    grid-template-columns: 88px 1fr 1fr;
+    font-size: 0.78rem;
+  }
+
+  .schedule-grid > * {
+    padding: 8px;
   }
 
   .admin-sidebar {

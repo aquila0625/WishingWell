@@ -16,11 +16,12 @@ export function initAdmin({ api, store, sharing }) {
   function switchTab(tab) {
     document.querySelectorAll('[data-admin-tab]').forEach((button) => button.classList.toggle('active', button.dataset.adminTab === tab));
     document.querySelectorAll('[data-admin-panel]').forEach((panel) => { panel.hidden = panel.dataset.adminPanel !== tab; });
-    const titles = { overview: '需求智能分析', disputes: '申诉审批', campaign: '活动设置', distribution: '分发与反馈' };
+    const titles = { overview: '需求智能分析', disputes: '申诉审批', campaign: '活动设置', prototypes: '原型验证', distribution: '分发与反馈' };
     title.textContent = titles[tab];
     if (tab === 'overview') loadOverview();
     if (tab === 'disputes') loadDisputes();
     if (tab === 'campaign') loadCampaign();
+    if (tab === 'prototypes') renderPrototypes();
     if (tab === 'distribution') renderDistribution();
   }
 
@@ -78,8 +79,52 @@ export function initAdmin({ api, store, sharing }) {
     const container = document.getElementById('admin-disputes-list');
     container.textContent = '正在加载申诉…';
     try {
-      const disputes = await api.request('/api/admin/disputes');
+      const [disputes, wishes] = await Promise.all([
+        api.request('/api/admin/disputes'),
+        api.request('/api/wishes')
+      ]);
       container.replaceChildren();
+      const mergeForm = node('form', 'merge-form');
+      const sourceLabel = node('label', '', '待合并需求');
+      const sourceSelect = node('select');
+      sourceSelect.name = 'source_wish_id';
+      const targetLabel = node('label', '', '合并至');
+      const targetSelect = node('select');
+      targetSelect.name = 'target_wish_id';
+      wishes.filter((wish) => wish.status !== 'merged').forEach((wish) => {
+        const sourceOption = node('option', '', wish.title);
+        sourceOption.value = wish.id;
+        const targetOption = sourceOption.cloneNode(true);
+        sourceSelect.append(sourceOption);
+        targetSelect.append(targetOption);
+      });
+      sourceLabel.append(sourceSelect);
+      targetLabel.append(targetSelect);
+      const reasonLabel = node('label', '', '合并原因');
+      const reason = node('textarea');
+      reason.name = 'reason';
+      reason.rows = 3;
+      reason.required = true;
+      reasonLabel.append(reason);
+      const mergeButton = node('button', 'secondary-button', '执行合并');
+      mergeButton.type = 'submit';
+      mergeForm.append(node('h2', '', '需求合并管理'), sourceLabel, targetLabel, reasonLabel, mergeButton);
+      mergeForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const values = Object.fromEntries(new FormData(mergeForm));
+        if (values.source_wish_id === values.target_wish_id) {
+          showToast('合并源和目标不能相同', { tone: 'error' });
+          return;
+        }
+        const response = await api.request('/api/admin/wishes/merge', {
+          method: 'POST',
+          body: JSON.stringify(values)
+        });
+        showToast(response.message, { tone: 'success' });
+        window.dispatchEvent(new CustomEvent('churchos:wishes-changed'));
+        loadDisputes();
+      });
+      container.append(mergeForm);
       if (!disputes.length) {
         container.append(node('p', 'admin-empty', '当前没有待处理的拆分申诉。'));
         return;
@@ -124,6 +169,38 @@ export function initAdmin({ api, store, sharing }) {
     store.set({ campaign: response });
     showToast('活动设置已保存', { tone: 'success' });
   });
+
+  function renderPrototypes() {
+    const container = document.getElementById('admin-prototypes-content');
+    container.replaceChildren();
+    const tabs = node('div', 'prototype-tabs');
+    const stage = node('div', 'prototype-stage');
+    const prototypes = {
+      schedule: {
+        label: '智能排班日历',
+        render() {
+          stage.innerHTML = '<div class="schedule-prototype"><div class="prototype-heading"><strong>7月主日服侍排班</strong><span class="status-badge">AI 冲突检测已开启</span></div><div class="schedule-grid"><span>服侍</span><span>第一堂</span><span>第二堂</span><strong>诗班</strong><span>Tim Zhang</span><span>Grace Li</span><strong>音控</strong><span class="conflict-cell">Tim Zhang · 冲突</span><span>David Chen</span><strong>接待</strong><span>Anna Wu</span><span>Michael Ho</span></div></div>';
+        }
+      },
+      finance: {
+        label: '奉献凭证批处理',
+        render() {
+          stage.innerHTML = '<div class="finance-prototype"><div class="prototype-heading"><strong>2026 年度奉献凭证</strong><span class="status-badge">CRA 合规检查通过</span></div><div class="finance-progress"><span>已核对 286 / 300</span><progress value="286" max="300"></progress></div><div class="finance-actions"><button class="secondary-button" type="button">预览 PDF</button><button class="primary-button" type="button">批量生成并寄送</button></div></div>';
+        }
+      }
+    };
+    Object.entries(prototypes).forEach(([key, prototype], index) => {
+      const button = node('button', index === 0 ? 'active' : '', prototype.label);
+      button.type = 'button';
+      button.addEventListener('click', () => {
+        tabs.querySelectorAll('button').forEach((item) => item.classList.toggle('active', item === button));
+        prototype.render();
+      });
+      tabs.append(button);
+    });
+    container.append(tabs, stage);
+    prototypes.schedule.render();
+  }
 
   function renderDistribution() {
     const container = document.getElementById('admin-distribution-content');

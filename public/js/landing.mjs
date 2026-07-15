@@ -20,6 +20,7 @@ export function initLanding({ api, store }) {
   let expanded = true;
   let userToggled = false;
   let timer;
+  let renderedCampaign = null;
 
   function renderDrawer() {
     drawer.classList.toggle('collapsed', !expanded);
@@ -61,5 +62,11 @@ export function initLanding({ api, store }) {
   }
 
   renderDrawer();
+  store.subscribe((state) => {
+    if (state.campaign !== renderedCampaign) {
+      renderedCampaign = state.campaign;
+      startCountdown(state.campaign);
+    }
+  });
   return { loadCampaign, setExpanded };
 }

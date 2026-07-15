@@ -239,8 +239,9 @@ export function initWishWall({ api, store, auth }) {
     }
   }));
 
-  wishForm.addEventListener('submit', (event) => auth.requireAuth(async () => {
+  wishForm.addEventListener('submit', (event) => {
     event.preventDefault();
+    auth.requireAuth(async () => {
     const data = new FormData(wishForm);
     const files = [...wishForm.elements.images.files];
     const values = Object.fromEntries(data);
@@ -265,7 +266,8 @@ export function initWishWall({ api, store, auth }) {
     } finally {
       setBusy(submit, false);
     }
-  }));
+    });
+  });
 
   function renderComment(comment, wish, depth = 0) {
     const item = element('article', `comment-item depth-${depth}`);
@@ -415,8 +417,9 @@ export function initWishWall({ api, store, auth }) {
     if (!commentTree.length) commentList.append(element('p', 'muted-copy', '还没有评论，成为第一位回应的同工。'));
     const commentForm = element('form', 'comment-form');
     commentForm.innerHTML = '<span class="reply-context"></span><input name="parent_comment_id" type="hidden"><input name="reply_to_nickname" type="hidden"><label>发表评论<textarea name="content" rows="3" required></textarea></label><button class="primary-button" type="submit">发表评论</button>';
-    commentForm.addEventListener('submit', (event) => auth.requireAuth(async () => {
+    commentForm.addEventListener('submit', (event) => {
       event.preventDefault();
+      auth.requireAuth(async () => {
       const values = Object.fromEntries(new FormData(commentForm));
       try {
         const response = await comments.add(wish.id, values);
@@ -427,7 +430,8 @@ export function initWishWall({ api, store, auth }) {
       } catch (error) {
         showToast(error.message, { tone: 'error' });
       }
-    }));
+      });
+    });
     commentSection.append(commentList, commentForm);
     detailContent.append(commentSection);
     refreshIcons();
