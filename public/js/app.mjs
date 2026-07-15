@@ -2,6 +2,7 @@ import { createApiClient } from './api-client.mjs';
 import { createStore } from './store.mjs';
 import { closeDialog, openDialog, refreshIcons } from './ui.mjs';
 import { setLocale } from './i18n.mjs';
+import { initLanding } from './landing.mjs';
 
 const store = createStore({
   view: 'home',
@@ -63,8 +64,8 @@ async function bootstrapApp() {
   showView('home');
 
   try {
-    const campaign = await api.request('/api/campaign');
-    store.set({ campaign });
+    const landing = initLanding({ api, store });
+    await landing.loadCampaign();
   } catch (error) {
     console.warn('Campaign settings unavailable', error);
   }

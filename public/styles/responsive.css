@@ -1,0 +1,188 @@
+@media (max-width: 900px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    align-content: center;
+  }
+
+  .hero-signal {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-signal div {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    border-right: 1px solid var(--color-border);
+    border-bottom: 0;
+  }
+
+  .hero-signal div:last-child {
+    border-right: 0;
+  }
+
+  .ministry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recognition-section {
+    grid-template-columns: 1fr;
+  }
+
+  .wish-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-view {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .admin-sidebar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .admin-sidebar nav {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .admin-sidebar nav button {
+    white-space: nowrap;
+  }
+
+  .admin-sidebar > .ghost-button {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+
+  .app-shell {
+    border-inline: 0;
+  }
+
+  .app-header {
+    gap: 8px;
+  }
+
+  .brand-copy small,
+  #header-user-name,
+  #header-login-button span,
+  #language-button span {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 5px;
+  }
+
+  .campaign-banner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    justify-content: stretch;
+  }
+
+  .campaign-banner strong {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  .hero-section {
+    min-height: calc(100svh - var(--header-height) - 28px);
+    padding-block: 42px 190px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2rem, 9vw, 2.55rem);
+  }
+
+  .hero-actions,
+  .wall-heading,
+  .wall-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-actions > button,
+  .wall-heading > button {
+    width: 100%;
+  }
+
+  .hero-signal div {
+    padding-inline: 8px;
+    text-align: center;
+  }
+
+  .hero-signal strong {
+    font-size: 1.4rem;
+  }
+
+  .ministry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ministry-grid article {
+    min-height: 0;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quick-drawer {
+    max-height: 230px;
+  }
+
+  .quick-drawer.collapsed {
+    max-height: 42px;
+  }
+
+  .category-tabs {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .category-tabs button {
+    flex: 0 0 auto;
+  }
+
+  .select-field {
+    justify-content: space-between;
+  }
+
+  .wish-card {
+    grid-template-columns: minmax(0, 1fr) 64px;
+    padding: 16px;
+  }
+
+  .form-grid,
+  .form-grid-three {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-field {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .admin-sidebar nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .admin-brand small {
+    display: none;
+  }
+}
