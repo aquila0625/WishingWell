@@ -439,3 +439,147 @@
   border-left: 2px solid var(--color-primary);
   background: rgba(34, 211, 238, 0.05);
 }
+
+.similar-row,
+.comment-heading,
+.comment-actions,
+.voter-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.similar-row {
+  justify-content: space-between;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.similar-row > span {
+  display: grid;
+}
+
+.similar-row small,
+.muted-copy,
+.detail-author,
+.reply-context {
+  color: var(--color-muted);
+}
+
+.audio-result {
+  display: grid;
+  gap: 10px;
+}
+
+.audio-result p {
+  margin: 0;
+}
+
+.low-confidence {
+  color: var(--color-accent);
+}
+
+.detail-heading {
+  padding: 4px 42px 22px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detail-heading h2 {
+  margin: 14px 0 8px;
+}
+
+.detail-section,
+.official-reply,
+.merged-section {
+  padding-block: 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detail-section h3,
+.merged-section h3 {
+  margin-bottom: 12px;
+}
+
+.detail-description {
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.official-reply {
+  padding-inline: 16px;
+  border-left: 2px solid var(--color-primary);
+  background: rgba(34, 211, 238, 0.045);
+}
+
+.merged-section {
+  padding-inline: 16px;
+  border-left: 2px solid var(--color-accent);
+  background: rgba(240, 181, 106, 0.04);
+}
+
+.detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.detail-gallery img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.voter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.voter-chip {
+  padding: 5px 10px 5px 5px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.comment-list {
+  display: grid;
+  gap: 10px;
+}
+
+.comment-item {
+  padding: 12px;
+  border-left: 2px solid var(--color-border-strong);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.comment-item.depth-1 {
+  margin: 10px 0 0 18px;
+  border-left-color: var(--color-border);
+}
+
+.comment-heading {
+  justify-content: space-between;
+}
+
+.comment-body {
+  margin: 8px 0;
+  color: var(--color-text);
+}
+
+.comment-actions {
+  justify-content: flex-end;
+}
+
+.comment-form,
+.dispute-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.pending-label {
+  color: var(--color-accent);
+}
