@@ -406,6 +406,84 @@
   font-size: 2rem;
 }
 
+.analytics-summary,
+.analytics-panel,
+.dispute-row {
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: rgba(17, 24, 39, 0.7);
+}
+
+.analytics-summary p {
+  margin: 10px 0 0;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 12px;
+  margin-block: 12px;
+}
+
+.analytics-panel h2,
+.dispute-row h2 {
+  font-size: 1.2rem;
+}
+
+.analysis-row {
+  position: relative;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.analysis-row:last-child {
+  border-bottom: 0;
+}
+
+.analysis-row p {
+  margin: 6px 0 0;
+}
+
+.analysis-value {
+  position: absolute;
+  top: 14px;
+  right: 0;
+  color: var(--color-primary);
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dispute-row {
+  margin-bottom: 12px;
+}
+
+.dispute-row small {
+  color: var(--color-muted);
+}
+
+.admin-empty {
+  padding: 80px 20px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.email-log {
+  min-height: 260px;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-success);
+  background: #05080f;
+  white-space: pre-wrap;
+}
+
 .settings-form {
   max-width: 620px;
   padding: 24px;

@@ -142,6 +142,30 @@
   box-shadow: var(--shadow-panel);
 }
 
+.notification-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notification-row.unread {
+  color: var(--color-primary);
+  background: rgba(34, 211, 238, 0.045);
+}
+
+.notification-row p,
+.notification-empty {
+  margin: 0;
+}
+
+.notification-empty {
+  padding: 28px 12px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
 .popover-menu {
   top: calc(100% + 8px);
   right: 0;

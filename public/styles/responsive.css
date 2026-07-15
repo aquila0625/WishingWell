@@ -31,6 +31,10 @@
     grid-template-columns: 1fr;
   }
 
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
   .admin-view {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;

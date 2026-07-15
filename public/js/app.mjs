@@ -5,6 +5,9 @@ import { setLocale } from './i18n.mjs';
 import { initLanding } from './landing.mjs';
 import { initAuth } from './auth.mjs';
 import { initWishWall } from './wishes.mjs';
+import { initSharing } from './sharing.mjs';
+import { initNotifications } from './notifications.mjs';
+import { initAdmin } from './admin.mjs';
 
 const store = createStore({
   view: 'home',
@@ -69,6 +72,9 @@ async function bootstrapApp() {
   const auth = initAuth({ api, store });
   await auth.restoreSession();
   wishWall = initWishWall({ api, store, auth });
+  const sharing = initSharing({ api });
+  initNotifications({ api, store });
+  initAdmin({ api, store, sharing });
 
   try {
     const landing = initLanding({ api, store });
