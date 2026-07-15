@@ -4,6 +4,10 @@ const multer = require('multer');
 const fs = require('node:fs');
 const path = require('node:path');
 const { createDatabase } = require('./db');
+const { createAuthRouter } = require('./routes/auth');
+const { createWishesRouter } = require('./routes/wishes');
+const { createAdminRouter } = require('./routes/admin');
+const { createShareRouter } = require('./routes/share');
 
 function createUpload(uploadDir) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -37,6 +41,10 @@ function createApp({
   app.use(express.urlencoded({ extended: true }));
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+  app.use('/api', createShareRouter({ database }));
+  app.use('/api', createAuthRouter({ database, upload }));
+  app.use('/api', createWishesRouter({ database, upload }));
+  app.use('/api/admin', createAdminRouter({ database }));
   app.use('/vendor/lucide', express.static(path.join(__dirname, 'node_modules', 'lucide', 'dist', 'umd')));
   app.use(express.static(path.join(__dirname, 'public')));
 
