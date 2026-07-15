@@ -3,6 +3,7 @@ import { createStore } from './store.mjs';
 import { closeDialog, openDialog, refreshIcons } from './ui.mjs';
 import { setLocale } from './i18n.mjs';
 import { initLanding } from './landing.mjs';
+import { initAuth } from './auth.mjs';
 
 const store = createStore({
   view: 'home',
@@ -62,6 +63,8 @@ async function bootstrapApp() {
   bindShell();
   refreshIcons();
   showView('home');
+  const auth = initAuth({ api, store });
+  await auth.restoreSession();
 
   try {
     const landing = initLanding({ api, store });
