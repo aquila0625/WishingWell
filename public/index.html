@@ -2,741 +2,200 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChurchOS 教会通 - 早期需求共创收集</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Google Fonts Outfit & Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1120">
+  <meta name="description" content="ChurchOS 教会通全球需求共创平台">
+  <title>ChurchOS 教会通 · 需求共创平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
-  <!-- App Container (Figma Wireframe Canvas Style) -->
-  <div class="app-container">
-
-    <!-- Top Header -->
-    <header class="main-header">
-      <div class="header-logo" id="header-logo-home">
-        <div class="cross-icon">✝</div>
-        <div class="logo-text">
-          <h1>ChurchOS</h1>
-          <span>教会通 · 需求共创平台</span>
-        </div>
-      </div>
-
-      <!-- Quick back button, visible in sub-pages -->
-      <button class="btn btn-text" id="back-to-home-btn" style="display: none;">◀ 返回首页</button>
-
+  <div class="app-shell">
+    <header class="app-header" id="app-header">
+      <button class="brand-button" id="brand-home-button" type="button" aria-label="返回 ChurchOS 首页">
+        <span class="brand-mark" aria-hidden="true">✝</span>
+        <span class="brand-copy"><strong>ChurchOS</strong><small>教会通 · 需求共创平台</small></span>
+      </button>
+      <button class="icon-button back-button" id="back-home-button" type="button" aria-label="返回首页" hidden>
+        <i data-lucide="arrow-left" aria-hidden="true"></i>
+      </button>
       <div class="header-actions">
-        <!-- Global Language Switcher with Globe Icon & Dropdown -->
-        <div class="lang-dropdown-container">
-          <button class="lang-dropdown-btn" id="lang-dropdown-btn">
-            <span class="globe-emoji">🌐</span>
-            <span id="current-lang-text">简体中文</span>
-            <span class="arrow-emoji">▼</span>
+        <div class="language-control">
+          <button class="compact-button" id="language-button" type="button" aria-expanded="false" aria-controls="language-menu">
+            <i data-lucide="languages" aria-hidden="true"></i><span>简体中文</span><i data-lucide="chevron-down" aria-hidden="true"></i>
           </button>
-          <div class="lang-dropdown-menu" id="lang-dropdown-menu" style="display: none;">
-            <button class="lang-option-btn active" data-lang="zh-CN">简体中文 (Chinese)</button>
-            <button class="lang-option-btn" data-lang="zh-TW">繁體中文 (Traditional Chinese)</button>
-            <button class="lang-option-btn" data-lang="en">English (US)</button>
-            <button class="lang-option-btn" data-lang="es">Español (Spanish)</button>
-            <button class="lang-option-btn" data-lang="pt">Português (Portuguese)</button>
-            <button class="lang-option-btn" data-lang="fr">Français (French)</button>
-            <button class="lang-option-btn" data-lang="de">Deutsch (German)</button>
-            <button class="lang-option-btn" data-lang="ja">日本語 (Japanese)</button>
-            <button class="lang-option-btn" data-lang="ko">한국어 (Korean)</button>
-            <button class="lang-option-btn" data-lang="tl">Tagalog (Filipino)</button>
+          <div class="popover-menu" id="language-menu" hidden>
+            <button type="button" data-locale="zh-CN">简体中文</button>
+            <button type="button" data-locale="en">English</button>
           </div>
         </div>
-
-        <!-- Notification Bell -->
-        <div class="bell-container" id="bell-btn" style="display: none;">
-          <span class="bell-icon">🔔</span>
-          <span class="badge" id="noti-badge" style="display: none;">0</span>
-
-          <!-- Notifications Dropdown -->
-          <div class="noti-dropdown" id="noti-dropdown">
-            <div class="noti-header">
-              <h3 data-localize="noti_title">新消息通知</h3>
-              <button id="clear-noti-btn" data-localize="noti_clear">清除全部</button>
-            </div>
-            <div class="noti-list" id="noti-list">
-              <div class="noti-empty" data-localize="noti_empty">暂无新消息通知</div>
-            </div>
-          </div>
+        <button class="icon-button" id="notification-button" type="button" aria-label="消息通知" aria-expanded="false" hidden>
+          <i data-lucide="bell" aria-hidden="true"></i><span class="notification-badge" id="notification-badge" hidden>0</span>
+        </button>
+        <button class="compact-button" id="header-login-button" type="button"><i data-lucide="log-in" aria-hidden="true"></i><span data-i18n="login">登录</span></button>
+        <div class="user-menu" id="user-menu" hidden>
+          <span class="avatar" id="header-avatar">T</span><span id="header-user-name">同工</span>
+          <button class="icon-button" id="logout-button" type="button" aria-label="退出登录"><i data-lucide="log-out" aria-hidden="true"></i></button>
         </div>
-
-        <!-- User Profile Dropdown (Logged In) -->
-        <div class="user-profile" id="user-profile" style="display: none;">
-          <div class="user-avatar" id="user-avatar-btn">T</div>
-          <span class="user-name" id="user-name-span">同工</span>
-          <button class="btn btn-text btn-sm" id="logout-btn" data-localize="logout">退出</button>
-        </div>
-
-        <!-- Admin Dashboard Trigger -->
-        <button class="btn btn-admin" id="admin-panel-btn" style="display: none;">⚙️ 后台管理</button>
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
+    <aside class="notification-panel" id="notification-panel" aria-label="消息通知" hidden>
+      <div class="panel-heading"><h2>消息通知</h2><button class="text-button" id="read-all-button" type="button">全部已读</button></div>
+      <div id="notification-list"></div>
+    </aside>
 
-      <!-- LEVEL 1: Homepage View (Landing Vision & CTAs) -->
-      <section class="page-view" id="homepage-view">
-        <div class="landing-card" style="padding-bottom: 20px;">
-
-          <div class="landing-header">
-            <!-- Countdown Banner (Enabled dynamically by Admin) -->
-            <div class="countdown-banner" id="countdown-banner" style="display: none;">
-              <span class="timer-icon">⏳</span>
-              <span id="countdown-text" data-localize="timer_prefix">距离本阶段 ChurchOS 需求收集截止还有：</span>
-              <span class="timer-ticker" id="timer-ticker">00天 00时 00分 00秒</span>
-            </div>
-          </div>
-
-          <!-- Promotional Copy Layout - EXACT USER COPY INTEGRATED -->
-          <div class="promo-content" style="padding-bottom: 250px;"> <!-- Margin space to avoid drawer overlapping text -->
-
-            <div class="promo-section">
-              <h2 class="landing-title" style="margin-top: 10px; margin-bottom: 5px;">🛠️ ChurchOS：全矩阵事工板块，全方位服务堂会</h2>
-              <p class="promo-p lead-text" style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px;">
-                ChurchOS 并非冷冰冰的管理软件，而是一个开放、可无限扩展的云端事工协作生态。我们致力于深度覆盖教会日常服侍的每一个场景，目前已规划的核心事工板块包括：
-              </p>
-            </div>
-
-            <!-- Bullet Matrix list -->
-            <div class="promo-section">
-              <ul class="promo-bullets" style="list-style: none; padding-left: 0; line-height: 1.8;">
-                <li style="margin-bottom: 12px;">📖 <b>教牧管理</b>：主日讲台排期、讲章存档、牧养日志与代祷追踪。</li>
-                <li style="margin-bottom: 12px;">🛡️ <b>执事治理</b>：会议决议协作、项目跟进、长执会事务排程。</li>
-                <li style="margin-bottom: 12px;">👥 <b>会友服务</b>：电子名册、家庭网络映射、会友自助资料更新。</li>
-                <li style="margin-bottom: 12px;">🕊️ <b>宣教关怀</b>：宣教工场动态追踪、探访登记、弱势关怀档案。</li>
-                <li style="margin-bottom: 12px;">🎒 <b>儿青事工</b>：主日学安全签到（Check-in）、家校联络、青少年团契成长日志。</li>
-                <li style="margin-bottom: 12px;">💳 <b>财务管理</b>：多币种奉献记录、预算编制、一键开具美/加税务合规收据。</li>
-                <li style="margin-bottom: 12px;">🏫 <b>空间设备</b>：堂会场地预约预定、音控直播与乐器资产保养/借还。</li>
-                <li style="margin-bottom: 12px;">🌱 <b>初信造就</b>：慕道班排课、洗礼管理、门徒训练成长轨迹跟进。</li>
-                <li style="margin-bottom: 15px;">➕ <b>以及更多……</b>：系统采用模块化架构，未来将根据全球众教会的实际服侍需求，源源不断地定制和扩展新的事工模块（如教会图书馆、主日交通接送等）。</li>
-              </ul>
-            </div>
-
-            <!-- Incentive Box with Exact Copy -->
-            <div class="promo-section highlight-box" style="margin-top: 25px; margin-bottom: 25px; padding: 20px; border-left: 4px solid #00f0ff; background: rgba(255,255,255,0.05); border-radius: 4px;">
-              <h3 style="margin-top: 0; margin-bottom: 12px;">🌟 您的建言，将与您的教会一同被载入史册</h3>
-              <p style="margin-bottom: 15px; font-size: 0.95rem; line-height: 1.6;">
-                每一家堂会的运转都有其独特的痛点与本土化的法例规则。为了让 ChurchOS 成为最适合同工的工具，我们邀请您一起加入这场<b>“全球教会共创计划”</b>：
-              </p>
-
-              <ul style="list-style: none; padding-left: 0; line-height: 1.7; font-size: 0.95rem;">
-                <li style="margin-bottom: 10px;">🏷️ <b>提报您的服侍痛点</b>：无论是在日常排班、主日学签到、还是财务发票开具中遇到的麻烦，都请告诉我们。</li>
-                <li style="margin-bottom: 10px;">🏆 <b>为母会赢得荣誉</b>：当您提出的需求获得大多数同工点赞助力，且最终被平台采纳开发后，您个人以及您所在的教会全称将被永久载入 ChurchOS 的<b>『共创致谢墙（Acknowledge Board）』</b>上！</li>
-                <li style="margin-bottom: 10px; color: #00f0ff; font-style: italic; padding-left: 15px;">（例：Tim Zhang | 洛杉矶恩典社区教会）</li>
-              </ul>
-
-              <p style="margin-top: 15px; margin-bottom: 0; font-weight: 500;">
-                这不仅是您的智慧结晶，更是您的教会贡献给全球众堂会的一份服侍贺礼！
-              </p>
-            </div>
-
-            <!-- Bottom Slogans -->
-            <div class="promo-section text-center" style="text-align: center; margin-bottom: 25px;">
-              <p style="font-weight: 600; color: #00f0ff; font-size: 1.05rem; margin-bottom: 8px;">💡 您的一个建言，将帮助全球千万个堂会走向井然有序。</p>
-              <p style="font-size: 0.95rem; opacity: 0.8;">【👉 扫码 / 点击下方按钮，立刻加入共创，为您的教会建言献策！】</p>
-            </div>
-
-          </div>
-
-          <!-- Collapsible Sticky Bottom Drawer holding the buttons -->
-          <div class="floating-drawer" id="floating-drawer">
-            <div class="drawer-handle" id="drawer-handle">
-              <span class="drawer-handle-indicator"></span>
-              <span class="drawer-handle-text" id="drawer-handle-text">收起菜单 ▼</span>
-            </div>
-            <div class="drawer-content">
-              <div class="cta-stack">
-                <button class="btn btn-primary btn-lg" id="join-co-btn" data-localize="btn_join">🔑 注册 / 登录</button>
-                <button class="btn btn-secondary btn-lg" id="go-square-btn" data-localize="btn_square">📋 查看他人的需求</button>
-                <button class="btn btn-secondary btn-lg" id="fast-submit-btn" data-localize="btn_submit">✍️ 我要提需求</button>
-                <button class="btn btn-text btn-lg" id="share-platform-btn" data-localize="btn_share">🔗 我要分享</button>
-              </div>
-            </div>
-          </div>
-
+    <main class="app-main" id="app-main">
+      <section class="page-view home-view" id="home-view" data-view="home">
+        <div class="campaign-banner" id="campaign-banner" hidden>
+          <i data-lucide="hourglass" aria-hidden="true"></i>
+          <span>距离本阶段需求收集截止还有</span>
+          <strong id="campaign-countdown">00天 00时 00分 00秒</strong>
         </div>
-      </section>
-
-      <!-- LEVEL 2: Co-creation Wish Wall View -->
-      <section class="page-view" id="wishwall-view" style="display: none;">
-        <div class="wall-container">
-          <div class="wall-header-title">
-            <h2 data-localize="square_title">⛪ 共创广场 / 需求许愿墙</h2>
-            <p data-localize="square_subtitle">同工们正在积极建言的痛点板块。点击卡片助力同感，合建 ChurchOS！</p>
-          </div>
-
-          <!-- Extensible Horizontal category slider -->
-          <div class="category-slider-wrapper">
-            <div class="category-slider" id="category-tabs">
-              <button class="slider-btn active" data-category="all">全部板块</button>
-              <button class="slider-btn" data-category="排班事工">🗓️ 教牧与排班</button>
-              <button class="slider-btn" data-category="奉献财务">💳 财务管理</button>
-              <button class="slider-btn" data-category="主日策划">🎯 主日策划</button>
-              <button class="slider-btn" data-category="团契考勤">👥 关怀与儿青</button>
+        <div class="hero-section">
+          <div class="hero-copy">
+            <span class="eyebrow">全球教会共创计划</span>
+            <h1>ChurchOS 教会通<br>早期需求共创计划</h1>
+            <p>ChurchOS 不是冷冰冰的管理软件，而是一个开放、可扩展的云端事工协作生态。您的真实服侍经验，将帮助全球堂会建立更贴合实际工作的数字工具。</p>
+            <div class="hero-actions">
+              <button class="primary-button" id="hero-join-button" type="button"><i data-lucide="sparkles" aria-hidden="true"></i>加入共创</button>
+              <button class="secondary-button" id="hero-wall-button" type="button"><i data-lucide="messages-square" aria-hidden="true"></i>浏览需求广场</button>
             </div>
           </div>
-
-          <div class="wall-toolbar">
-            <div class="filter-group">
-              <label for="sort-filter" data-localize="sort_by">排序方式：</label>
-              <select id="sort-filter">
-                <option value="votes" data-localize="sort_hot">按同感热度排序</option>
-                <option value="date" data-localize="sort_date">按最新发布排序</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="open-wish-form-btn-square">✍️ 我要提需求</button>
-          </div>
-
-          <!-- Wish cards grid -->
-          <div class="wish-grid" id="wish-grid">
-            <!-- Dynamically populated -->
+          <div class="hero-signal" aria-label="共创参与数据">
+            <div><strong>128+</strong><span>同工参与</span></div>
+            <div><strong>36</strong><span>堂会建言</span></div>
+            <div><strong>18</strong><span>进入规划</span></div>
           </div>
         </div>
+
+        <section class="ministry-section" aria-labelledby="ministry-title">
+          <div class="section-heading"><span class="eyebrow">全矩阵事工板块</span><h2 id="ministry-title">全方位服务堂会</h2></div>
+          <div class="ministry-grid">
+            <article><i data-lucide="book-open" aria-hidden="true"></i><h3>教牧管理</h3><p>讲台排期、讲章存档、牧养日志与代祷追踪。</p></article>
+            <article><i data-lucide="shield-check" aria-hidden="true"></i><h3>执事治理</h3><p>会议决议协作、项目跟进与事务排程。</p></article>
+            <article><i data-lucide="users" aria-hidden="true"></i><h3>会友服务</h3><p>电子名册、家庭网络与资料自助更新。</p></article>
+            <article><i data-lucide="heart-handshake" aria-hidden="true"></i><h3>宣教关怀</h3><p>宣教动态、探访登记与弱势关怀档案。</p></article>
+            <article><i data-lucide="graduation-cap" aria-hidden="true"></i><h3>儿青事工</h3><p>安全签到、家校联络与成长日志。</p></article>
+            <article><i data-lucide="hand-coins" aria-hidden="true"></i><h3>财务管理</h3><p>奉献记录、预算与税务合规收据。</p></article>
+            <article><i data-lucide="building-2" aria-hidden="true"></i><h3>空间设备</h3><p>场地预约、直播设备与资产借还。</p></article>
+            <article><i data-lucide="sprout" aria-hidden="true"></i><h3>初信造就</h3><p>慕道班、洗礼管理与门徒训练轨迹。</p></article>
+          </div>
+        </section>
+
+        <section class="recognition-section" aria-labelledby="recognition-title">
+          <div><span class="eyebrow">共创致谢墙</span><h2 id="recognition-title">您的建言，将与教会一同被记录</h2></div>
+          <p>当需求获得同工助力并进入产品规划，建言者、协同补充者及其所在教会将共同进入 ChurchOS 共创致谢墙。</p>
+          <div class="recognition-example"><span class="avatar">T</span><span><strong>Tim Zhang</strong><small>洛杉矶恩典社区教会</small></span><i data-lucide="award" aria-hidden="true"></i></div>
+        </section>
       </section>
 
+      <section class="page-view wall-view" id="wall-view" data-view="wall" hidden>
+        <div class="wall-heading">
+          <div><span class="eyebrow">全球同工共同建言</span><h1>需求许愿墙</h1><p>为真实服侍痛点表达同感，共同决定 ChurchOS 的产品优先级。</p></div>
+          <button class="primary-button" id="wall-submit-button" type="button"><i data-lucide="plus" aria-hidden="true"></i>我要提需求</button>
+        </div>
+        <div class="wall-controls">
+          <div class="category-tabs" id="category-tabs" role="tablist" aria-label="需求分类">
+            <button type="button" class="active" data-category="all" aria-selected="true">全部</button>
+            <button type="button" data-category="排班事工" aria-selected="false">教牧与排班</button>
+            <button type="button" data-category="奉献财务" aria-selected="false">财务管理</button>
+            <button type="button" data-category="主日策划" aria-selected="false">主日策划</button>
+            <button type="button" data-category="团契考勤" aria-selected="false">关怀与儿青</button>
+          </div>
+          <label class="select-field">排序<select id="wish-sort"><option value="votes">同感热度</option><option value="date">最新发布</option></select></label>
+        </div>
+        <div class="wish-grid" id="wish-grid" aria-live="polite"></div>
+        <div class="empty-state" id="wish-empty-state" hidden><i data-lucide="inbox" aria-hidden="true"></i><h2>这个分类还没有需求</h2><p>成为第一位提出服侍痛点的同工。</p><button class="primary-button" type="button" data-open-wish>提交需求</button></div>
+      </section>
     </main>
 
-    <!-- Sticky Bottom Visitor Bar (Visible on mobile H5 for non-logged users) -->
-    <div class="sticky-bottom-bar" id="visitor-sticky-bar" style="display: none;">
-      <div class="sticky-bar-text">
-        <span class="sticky-emoji">💡</span>
-        <p data-localize="sticky_text">已有 120+ 教会同工参与共创！采纳即登联合致谢墙！</p>
+    <aside class="quick-drawer" id="quick-drawer" aria-label="快捷入口">
+      <button class="drawer-handle" id="drawer-handle" type="button" aria-expanded="true"><span></span><small>收起快捷入口</small></button>
+      <div class="quick-actions">
+        <button class="primary-button" id="drawer-auth-button" type="button"><i data-lucide="user-plus" aria-hidden="true"></i>注册 / 登录</button>
+        <button class="secondary-button" id="drawer-wall-button" type="button"><i data-lucide="layout-list" aria-hidden="true"></i>查看需求</button>
+        <button class="secondary-button" id="drawer-submit-button" type="button"><i data-lucide="pen-line" aria-hidden="true"></i>我要提需求</button>
+        <button class="ghost-button" id="drawer-share-button" type="button"><i data-lucide="share-2" aria-hidden="true"></i>分享本页</button>
       </div>
-      <div class="sticky-bar-actions">
-        <button class="btn btn-primary btn-sm" id="sticky-join-btn" data-localize="sticky_btn_join">快速加入</button>
-        <button class="btn btn-secondary btn-sm" id="sticky-login-btn" data-localize="sticky_btn_login">登录</button>
-      </div>
-    </div>
+    </aside>
 
-    <!-- Admin Panel Tab Overlay (SaaS Dashboard Style) -->
-    <div class="admin-panel-overlay" id="admin-panel" style="display: none;">
-      <div class="admin-container">
-        <aside class="admin-sidebar">
-          <div class="admin-logo">
-            <span class="admin-cross">🛡️</span>
-            <div>
-              <h3>ChurchOS 后台</h3>
-              <p>发起人控制台</p>
-            </div>
-          </div>
-          <nav class="admin-nav">
-            <button class="admin-nav-btn active" data-target="admin-overview">📊 需求统计与 AI 预分析</button>
-            <button class="admin-nav-btn" data-target="admin-disputes">⚖️ 合并申诉审批</button>
-            <button class="admin-nav-btn" data-target="admin-mockups">📱 AI 交互原型组件</button>
-            <button class="admin-nav-btn" data-target="admin-distribute">🔗 一键 H5 推广分发</button>
-          </nav>
-          <div class="admin-sidebar-footer">
-            <button class="btn btn-text btn-block" id="close-admin-btn">退出后台</button>
-          </div>
-        </aside>
-
-        <section class="admin-main">
-
-          <!-- Tab 1: AI Analytics & Export -->
-          <div class="admin-tab-content" id="admin-overview">
-            <div class="admin-header-row">
-              <h2>AI 需求智能归纳与预分析</h2>
-              <div class="admin-actions">
-                <button class="btn btn-secondary" id="ai-trigger-btn">🤖 触发 AI 预分析</button>
-                <button class="btn btn-secondary" id="export-excel-btn">📊 导出 Excel 清单 (Backlog)</button>
-                <button class="btn btn-primary" id="export-md-btn">📝 导出 Markdown 报告</button>
-              </div>
-            </div>
-
-            <!-- Demographics summary -->
-            <div class="analytics-card" id="ai-demo-card">
-              <h3>👥 共创同工画像统计 (AI 提炼)</h3>
-              <p id="ai-demo-text">尚未分析，请点击“触发 AI 预分析”按钮开始数据处理...</p>
-            </div>
-
-            <div class="analytics-row">
-              <!-- Clustered lists -->
-              <div class="analytics-card flex-2">
-                <h3>🔍 核心痛点聚类归纳 (Semantic Clustering)</h3>
-                <div class="cluster-list" id="ai-clusters-list">
-                  <div class="empty-state">等待数据预分析...</div>
-                </div>
-              </div>
-
-              <!-- Recommendations -->
-              <div class="analytics-card flex-1">
-                <h3>🚀 开发优先级与 ROI 推荐 (Roadmap)</h3>
-                <div class="recom-list" id="ai-recom-list">
-                  <div class="empty-state">等待数据预分析...</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Campaign Settings (Deadline & Countdown config) -->
-            <div class="analytics-card" style="margin-top: 20px;">
-              <h3>⏳ 共创收集截止设置 (Campaign Settings)</h3>
-              <p class="desc">配置 H5 首页是否显示倒计时横幅，并设定最终的截止时间。</p>
-              <div class="settings-form-row" style="margin-top: 15px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; margin-bottom: 0;">
-                  <input type="checkbox" id="settings-countdown-enabled" checked> 开启首页倒计时横幅
-                </label>
-                <label style="font-weight: normal; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
-                  截止时间：<input type="datetime-local" id="settings-countdown-deadline" value="2026-08-31T23:59">
-                </label>
-                <button class="btn btn-secondary btn-sm" id="save-settings-btn">保存设置</button>
-              </div>
-            </div>
-
-            <!-- Email Feedback Panel -->
-            <div class="analytics-card" style="margin-top: 20px;">
-              <h3>✉️ 一键群发成果反馈邮件 (闭环通知)</h3>
-              <p class="desc">点击后，系统将自动汇总当前的共创报告，并向所有参与建言、点赞支持及评论的同工群发 HTML 结案信。</p>
-              <div style="margin-top: 15px;">
-                <button class="btn btn-primary" id="send-emails-btn">✉️ 开始群发通知</button>
-              </div>
-              <div class="sse-log-box" id="sse-log-box" style="display: none;">
-                <h4>📡 SSE 投递日志流：</h4>
-                <pre id="sse-logs">等待发起投递...</pre>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab 2: Disputes merge approvals -->
-          <div class="admin-tab-content" id="admin-disputes" style="display: none;">
-            <h2>合并申诉审批箱</h2>
-            <p class="subtitle">原作者不赞同管理员的强制合并决策时，可在此发起拆分申诉。您可以审核并一键同意拆分或维持决策。</p>
-            <div class="dispute-list" id="admin-disputes-list">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
-
-          <!-- Tab 3: Interactive UI Mockups -->
-          <div class="admin-tab-content" id="admin-mockups" style="display: none;">
-            <h2>AI 交互式原型组件验证</h2>
-            <p class="subtitle">AI 针对 Top 痛点自动编译生成的交互式 HTML/CSS 原型卡片，供管理员 and 开发人员现场交互走查。</p>
-
-            <div class="mockups-grid">
-              <!-- Mockup 1: Volunteer Schedule Calendar -->
-              <div class="mockup-card">
-                <h3>🗓️ 痛点一：智能服侍排班日历组件 (Live Prototype)</h3>
-                <p class="desc">支持冲突红线预警与主日排程过滤</p>
-                <div class="interactive-container">
-                  <!-- Live Calendar Prototype -->
-                  <div class="calendar-widget">
-                    <div class="cal-header">
-                      <button id="cal-prev">◀</button>
-                      <h4 id="cal-month-title">2026年 7月</h4>
-                      <button id="cal-next">▶</button>
-                    </div>
-                    <div class="cal-weekdays">
-                      <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-                    </div>
-                    <div class="cal-days" id="cal-days-grid">
-                      <!-- Grid populated via JS -->
-                    </div>
-                    <div class="cal-roster" id="cal-roster-pane">
-                      <h5>今日排班明细：</h5>
-                      <ul id="roster-list">
-                        <li>请点击带有服侍点的日历方格查看明细</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Mockup 2: Canadian Tax Receipt PDF Template -->
-              <div class="mockup-card">
-                <h3>💳 痛点二：财务一键批量退税发票组件 (CRA Compliant)</h3>
-                <p class="desc">支持捐赠数额自动计算与 CRA 合规表单预览</p>
-                <div class="interactive-container">
-                  <div class="receipt-widget">
-                    <div class="receipt-form-inputs">
-                      <label>收据编号: <input type="text" id="rc-no" value="CRA-2026-089" readonly></label>
-                      <label>捐赠人姓名: <input type="text" id="rc-name" value="陈晨 同工"></label>
-                      <label>年度捐赠总额: <input type="number" id="rc-amount" value="5600"></label>
-                      <button class="btn btn-secondary btn-sm" id="generate-receipt-btn">重新生成收据</button>
-                    </div>
-                    <div class="receipt-preview-box">
-                      <div class="receipt-preview-inner" id="receipt-preview">
-                        <!-- Simulated CRA Tax Receipt -->
-                        <div class="receipt-header">
-                          <h4>OFFICIAL DONATION RECEIPT FOR INCOME TAX PURPOSES</h4>
-                          <p>Issued by ChurchOS Grace Alliance Church</p>
-                        </div>
-                        <div class="receipt-body">
-                          <p><b>Receipt No:</b> CRA-2026-089</p>
-                          <p><b>Donor Name:</b> 陈晨 同工</p>
-                          <p><b>Total Amount Received:</b> $5,600.00 CAD</p>
-                          <p><b>Date Received:</b> December 31, 2026</p>
-                          <p><b>Place Issued:</b> Vancouver, BC, Canada</p>
-                        </div>
-                        <div class="receipt-footer">
-                          <p class="cra-rule">Eligible amount of gift for tax purposes: $5,600.00 CAD. Meets CRA regulations.</p>
-                          <div class="signature-line">Authorized Signature</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab 4: Poster distribution -->
-          <div class="admin-tab-content" id="admin-distribute" style="display: none;">
-            <h2>一键 H5 分发与分享海报</h2>
-            <p class="subtitle">系统自动拼装了针对 ChurchOS 教会通设计的推广海报、动态二维码与专属 H5 短链，支持一键下载和复制。</p>
-
-            <div class="distribution-flex">
-              <!-- Left settings -->
-              <div class="dist-left">
-                <div class="form-group">
-                  <label>专属分发 H5 链接</label>
-                  <div class="input-with-button">
-                    <input type="text" id="share-link-input" readonly value="http://localhost:3000/index.html">
-                    <button class="btn btn-secondary" id="copy-share-link-btn">复制链接</button>
-                  </div>
-                </div>
-
-                <div class="form-group" style="margin-top: 20px;">
-                  <label>动态二维码预览</label>
-                  <div class="qr-container">
-                    <div class="mock-qrcode" id="qr-box">
-                      <!-- Simulated SVG QR code -->
-                      <div class="qr-pixel-matrix"></div>
-                      <span class="qr-logo-center">⛪</span>
-                    </div>
-                  </div>
-                  <p class="desc" style="text-align: center; margin-top: 10px;">使用手机扫码，直接进入 H5 首页</p>
-                </div>
-              </div>
-
-              <!-- Right Poster Card -->
-              <div class="dist-right">
-                <h3>下载高保真分享海报</h3>
-                <p class="desc">您可以直接下载下面这张拼装好的 2:3 宣传海报图片，直接转发至群中：</p>
-
-                <div class="poster-preview-card" id="poster-element">
-                  <div class="poster-church-logo">✝</div>
-                  <h2 class="poster-title">全球教会管理 App<br>需求共创计划</h2>
-                  <p class="poster-subtitle">轻松管理，共建美好教会</p>
-
-                  <div class="poster-core-bullets">
-                    <ul>
-                      <li>🗓️ 1. 同工主日排班冲突检测</li>
-                      <li>💳 2. 年底奉献退税凭证一键开具</li>
-                      <li>🎯 3. 主日礼拜崇拜策划单编排</li>
-                      <li>👥 4. 团契小组签到考勤与随访</li>
-                    </ul>
-                  </div>
-
-                  <div class="poster-qr-area">
-                    <div class="poster-qr-box">
-                      <div class="qr-pixel-matrix-small"></div>
-                    </div>
-                    <p>扫码参与共创，建言被采纳将载入致谢墙</p>
-                  </div>
-                </div>
-
-                <div style="margin-top: 15px; text-align: center;">
-                  <button class="btn btn-primary" id="download-poster-btn">📥 下载海报图片</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+    <section class="admin-view" id="admin-view" hidden>
+      <aside class="admin-sidebar">
+        <div class="admin-brand"><span class="brand-mark">✝</span><span><strong>ChurchOS 后台</strong><small>共创发起人控制台</small></span></div>
+        <nav aria-label="后台功能">
+          <button class="active" type="button" data-admin-tab="overview"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i>需求分析</button>
+          <button type="button" data-admin-tab="disputes"><i data-lucide="scale" aria-hidden="true"></i>申诉审批</button>
+          <button type="button" data-admin-tab="campaign"><i data-lucide="timer-reset" aria-hidden="true"></i>活动设置</button>
+          <button type="button" data-admin-tab="distribution"><i data-lucide="send" aria-hidden="true"></i>分发与反馈</button>
+        </nav>
+        <button class="ghost-button" id="admin-exit-button" type="button"><i data-lucide="log-out" aria-hidden="true"></i>退出后台</button>
+      </aside>
+      <main class="admin-main">
+        <header><div><span class="eyebrow">ChurchOS Co-creation</span><h1 id="admin-page-title">需求智能分析</h1></div><button class="icon-button" id="admin-close-button" type="button" aria-label="关闭后台"><i data-lucide="x" aria-hidden="true"></i></button></header>
+        <section id="admin-overview-panel" data-admin-panel="overview"><div id="admin-overview-content"></div></section>
+        <section id="admin-disputes-panel" data-admin-panel="disputes" hidden><div id="admin-disputes-list"></div></section>
+        <section id="admin-campaign-panel" data-admin-panel="campaign" hidden>
+          <form id="campaign-form" class="settings-form"><label class="switch-field"><input id="campaign-enabled" type="checkbox"><span>显示活动倒计时</span></label><label>截止时间<input id="campaign-deadline" type="datetime-local"></label><button class="primary-button" type="submit">保存设置</button></form>
         </section>
-      </div>
-    </div>
-
-    <!-- Form Modal: Submit new expectation -->
-    <div class="modal-overlay" id="wish-form-modal" style="display: none;">
-      <div class="modal-card">
-        <div class="modal-header">
-          <h2>✍️ 提报服侍痛点与期望</h2>
-          <button class="close-btn" id="close-wish-form-btn">×</button>
-        </div>
-        <form id="wish-submit-form">
-          <div class="form-group">
-            <label>痛点归纳板块 <span class="required">*</span></label>
-            <select id="wish-category" required>
-              <option value="排班事工">🗓️ 服侍排班</option>
-              <option value="奉献财务">💳 奉献财务</option>
-              <option value="主日策划">🎯 主日策划</option>
-              <option value="团契考勤">👥 团契考勤</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>痛点简短标题 (30字以内) <span class="required">*</span></label>
-            <input type="text" id="wish-title" placeholder="如：主日义工排班严重打架/多事工冲突" required max-length="30">
-
-            <!-- Real-time Similarity Check suggestions drawer -->
-            <div class="similar-suggestions" id="similar-wishes-drawer" style="display: none;">
-              <h5>💡 类似痛点推荐支持：以下同工发表过相似内容，您可直接去为其助力：</h5>
-              <ul id="similar-wishes-list">
-                <!-- Dynamically populated -->
-              </ul>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>详细服侍场景描述 (最少10字) <span class="required">*</span></label>
-            <textarea id="wish-content" rows="5" placeholder="请详细阐述您在服侍中遇到了什么麻烦？您期望教会通如何帮助您？" required></textarea>
-          </div>
-
-          <!-- Multi-modal input: Audio capture -->
-          <div class="form-group audio-capture-group">
-            <label>🎤 语音输入 / 录制服侍建言</label>
-            <p class="desc">您可以直接对着麦克风说话，AI 将自动转录为文字；或者直接上传您的本地音频文件 (MP3/WAV/M4A)。</p>
-            <div class="audio-control-row">
-              <button type="button" class="btn btn-secondary btn-sm" id="voice-record-btn">🎤 开始录制</button>
-              <span id="voice-status">麦克风已就绪</span>
-              <input type="file" id="voice-file-input" accept="audio/*" style="display: none;">
-              <button type="button" class="btn btn-text btn-sm" id="upload-voice-btn">📂 上传录音文件</button>
-            </div>
-            <!-- AI Confidence warnings -->
-            <div class="audio-warning-box" id="audio-confidence-warning" style="display: none;">
-              <p>⚠️ <b>AI 语音转录置信度较低 (<span id="conf-score">0</span>%)</b>: 您的录音可能杂音较多或不够标准，请检查下方转写出来的文字并进行微调！</p>
-              <div style="margin-top: 8px;">
-                <button type="button" class="btn btn-secondary btn-sm" id="retry-record-btn">重新录制</button>
-                <button type="button" class="btn btn-primary btn-sm" id="focus-edit-btn">手动修改文字</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Screenshot upload -->
-          <div class="form-group">
-            <label>🖼️ 截图或表格附件 (1-3张, 限 5MB 内, 选填)</label>
-            <input type="file" id="wish-images" multiple accept="image/*">
-            <p class="desc">支持上传您目前繁琐的手工 Excel 排班表、税款证明模板等截图，以便参考。</p>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="cancel-wish-btn">取消</button>
-            <button type="submit" class="btn btn-primary" id="submit-wish-btn">🌟 投币许愿，提交建言</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal: Auth Login / Register (Combined Glassmorphic Popup) -->
-    <div class="modal-overlay" id="auth-modal" style="display: none;">
-      <div class="modal-card auth-card">
-
-        <!-- Toggle tabs -->
-        <div class="auth-tabs">
-          <button class="auth-tab-btn active" id="tab-login-btn">同工登录</button>
-          <button class="auth-tab-btn" id="tab-register-btn">加入共创 (注册)</button>
-        </div>
-
-        <button class="close-btn" id="close-auth-btn">×</button>
-
-        <!-- A. Login Form -->
-        <form id="login-form">
-          <div class="form-group">
-            <label>登录电子邮箱 <span class="required">*</span></label>
-            <input type="email" id="login-email" placeholder="输入您的注册邮箱" required>
-          </div>
-          <div class="form-group">
-            <label>登录密码 <span class="required">*</span></label>
-            <input type="password" id="login-password" placeholder="输入密码" required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">🔐 登录同工账号</button>
-        </form>
-
-        <!-- B. Register Form -->
-        <form id="register-form" style="display: none;" enctype="multipart/form-data">
-          <div class="form-group">
-            <label>同工电子邮箱 <span class="required">*</span></label>
-            <input type="email" id="register-email" placeholder="如 tim.zhang@grace.org" required>
-            <p class="desc">用来接收后续共创成果报告的结案反馈邮件。</p>
-          </div>
-
-          <div class="form-group">
-            <label>登录密码 <span class="required">*</span></label>
-            <input type="password" id="register-password" placeholder="设定至少6位字符密码" required minlength="6">
-          </div>
-
-          <!-- Display Name with Credit tooltip incentive -->
-          <div class="form-group">
-            <label>展示姓名 / 真实姓名 <span class="required">*</span></label>
-            <input type="text" id="register-nickname" placeholder="如 Tim Zhang 或 张伟" required>
-            <p class="desc tooltip-desc" id="nickname-hint">
-              💡 建议使用真实姓名，未来可能会进入致谢墙
-            </p>
-          </div>
-
-          <!-- Custom Avatar Upload -->
-          <div class="form-group">
-            <label>个人真实头像 (自选上传, 选填)</label>
-            <input type="file" id="register-avatar" accept="image/*">
-            <p class="desc">愿意上传则显示真实头像；若跳过，系统会自动根据姓名首字母生成发光背景头像。</p>
-          </div>
-
-          <!-- Church Auto-complete & manual overrides -->
-          <div class="form-group">
-            <label>所属教会全称 <span class="required">*</span></label>
-            <div class="autocomplete-wrapper">
-              <input type="text" id="register-church" placeholder="输入关键字搜索，如 恩典 / 圣公会" required autocomplete="off">
-              <div class="autocomplete-items" id="church-autocomplete-box" style="display: none;">
-                <!-- Populated via JS -->
-              </div>
-            </div>
-            <div class="manual-override-check" style="margin-top: 8px;">
-              <label style="font-weight: normal; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
-                <input type="checkbox" id="manual-church-check"> 我的教会不在列表上，我需要手动录入
-              </label>
-            </div>
-          </div>
-
-          <!-- Geolocation inputs (Country, State/Province, City) -->
-          <div class="location-group">
-            <div class="form-group">
-              <label>所在国家 <span class="required">*</span></label>
-              <input type="text" id="register-country" placeholder="定位检测中..." required>
-            </div>
-            <div class="form-group">
-              <label>所在省 / 州 <span class="required">*</span></label>
-              <input type="text" id="register-state" placeholder="省/州..." required>
-            </div>
-            <div class="form-group">
-              <label>所在城市 <span class="required">*</span></label>
-              <input type="text" id="register-city" placeholder="城市..." required>
-            </div>
-          </div>
-          <p class="desc" id="loc-status-text" style="margin-top: -5px; margin-bottom: 10px; color: #00f0ff;">📡 定位就绪：已基于您的网络IP进行静默地理匹配</p>
-
-          <!-- Church Roles Dropdown (Finalized 13 roles) -->
-          <div class="form-group">
-            <label>教会服侍职务 / 身份 <span class="required">*</span></label>
-            <select id="register-role" required>
-              <option value="主任牧师 / 神父 (Senior Pastor / Priest)">主任牧师 / 神父 (Senior Pastor / Priest)</option>
-              <option value="牧师 (Pastor)">牧师 (Pastor)</option>
-              <option value="传道人 (Evangelist / Preacher)">传道人 (Evangelist / Preacher)</option>
-              <option value="长老 (Elder)">长老 (Elder)</option>
-              <option value="执事 (Deacon)">执事 (Deacon)</option>
-              <option value="干事 / 行政人员 (Secretary / Administrator)">干事 / 行政人员 (Secretary / Administrator)</option>
-              <option value="财务 / 出纳 (Treasurer / Financial Secretary)">财务 / 出纳 (Treasurer / Financial Secretary)</option>
-              <option value="同工 (Church Staff / Core Worker)">同工 (Church Staff / Core Worker)</option>
-              <option value="组长 / 团契会长 (Small Group / Fellowship Leader)">组长 / 团契会长 (Small Group / Fellowship Leader)</option>
-              <option value="义工 / 服侍人员 (Volunteer)">义工 / 服侍人员 (Volunteer)</option>
-              <option value="普通信徒 (Believer / Congregant)">普通信徒 (Believer / Congregant)</option>
-              <option value="慕道友 (Seeker / Inquirer)">慕道友 (Seeker / Inquirer)</option>
-              <option value="其他 (Other)">其他 (Other)</option>
-            </select>
-
-            <!-- Manual role text field (slides out if Other is selected) -->
-            <input type="text" id="register-role-other" placeholder="请具体写明您的职责头衔" style="display: none; margin-top: 8px;">
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">🌟 注册并加入共创</button>
-        </form>
-
-      </div>
-    </div>
-
-    <!-- Modal: Wish Detail & Comments (Side Drawer or Modal popup) -->
-    <div class="modal-overlay" id="wish-detail-modal" style="display: none;">
-      <div class="modal-card detail-card">
-        <div class="modal-header">
-          <span class="badge-tag tag-primary" id="detail-category">分类</span>
-          <h2 id="detail-title">建言标题</h2>
-          <button class="close-btn" id="close-wish-detail-btn">×</button>
-        </div>
-
-        <div class="detail-body">
-          <!-- Submittor Info & Location demographic badge -->
-          <div class="submittor-row">
-            <div class="user-avatar" id="detail-author-avatar">T</div>
-            <div>
-              <h4 id="detail-author-name">姓名</h4>
-              <p id="detail-author-meta">教会 · 职务</p>
-            </div>
-            <div class="submittor-geo" id="detail-author-geo">📍 美国加利福尼亚州</div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Content description -->
-          <div class="detail-description">
-            <p id="detail-content">详细内容描述...</p>
-
-            <!-- Audio file player if exist -->
-            <div id="detail-audio-container" style="display: none; margin-top: 15px;">
-              <h5>🎤 <b>建言录音播发：</b></h5>
-              <audio id="detail-audio-player" controls src=""></audio>
-            </div>
-
-            <!-- Uploaded images container -->
-            <div class="detail-images" id="detail-images-container">
-              <!-- Dynamically populated -->
-            </div>
-
-            <!-- AI Translation toggle -->
-            <div class="translation-block">
-              <button class="btn btn-text btn-sm" id="translate-card-btn">🌐 AI 翻译卡片内容</button>
-              <div class="translation-result" id="translation-card-result" style="display: none;">
-                <!-- Result text -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Merged block details (if wish is merged or is a parent) -->
-          <div class="merged-info-card" id="detail-merged-box" style="display: none;">
-            <h4>⚠️ 合并关系与处理明细：</h4>
-            <p id="detail-merged-text">该期望已被系统强制合并至主期望。合并原因：...</p>
-            <button class="btn btn-secondary btn-sm" id="dispute-btn" style="margin-top: 10px;">⚖️ 申诉拆分此建言</button>
-            <div class="dispute-input-row" id="dispute-input-row" style="display: none; margin-top: 10px;">
-              <textarea id="dispute-reason-input" rows="3" placeholder="请填写您申请拆分的充足理由（至少10字）..."></textarea>
-              <button class="btn btn-primary btn-sm" id="submit-dispute-btn" style="margin-top: 8px;">提交拆分申请</button>
-            </div>
-          </div>
-
-          <!-- Official Reply (置顶, special styling) -->
-          <div class="admin-reply-card" id="detail-admin-reply-box" style="display: none;">
-            <div class="reply-badge">官方答复</div>
-            <p id="detail-admin-reply-text">官方答复内容将置顶在这里，包含流光边框高亮。</p>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Voter listing section (我有同感 lists) -->
-          <div class="voters-section">
-            <h4>👍 同感共创同工（已投票数: <span id="detail-vote-count">0</span>）</h4>
-            <div class="voters-avatars" id="detail-voters-list">
-              <!-- Initials avatars -->
-            </div>
-          </div>
-
-          <!-- Comments section -->
-          <div class="comments-section">
-            <h3>💬 同工评论交流</h3>
-
-            <!-- Comment form -->
-            <form id="comment-submit-form" style="margin-top: 15px; margin-bottom: 20px;">
-              <div class="comment-input-row">
-                <input type="text" id="comment-input" placeholder="输入您对该痛点的评论或服侍心得..." required>
-                <button type="submit" class="btn btn-secondary">发表评论</button>
-              </div>
-              <input type="hidden" id="comment-parent-id" value="">
-              <input type="hidden" id="comment-reply-to" value="">
-              <span id="reply-label" style="display: none; font-size: 0.85rem; color: #00f0ff;">回复 @xxx: <button type="button" id="cancel-reply-btn" class="btn btn-text btn-sm" style="color: red;">取消回复</button></span>
-            </form>
-
-            <!-- Flat 2-level Comments List -->
-            <div class="comments-list" id="detail-comments-list">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
+        <section id="admin-distribution-panel" data-admin-panel="distribution" hidden><div id="admin-distribution-content"></div></section>
+      </main>
+    </section>
   </div>
 
-  <script src="app.js"></script>
+  <dialog class="app-dialog auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div class="auth-tabs" role="tablist"><button class="active" id="login-tab" type="button" aria-selected="true">同工登录</button><button id="register-tab" type="button" aria-selected="false">加入共创</button></div>
+    <section id="login-panel">
+      <div class="dialog-heading"><span class="brand-mark">✝</span><h2 id="auth-dialog-title">同工登录</h2><p>欢迎回来，请输入您的账号信息</p></div>
+      <form id="login-form"><label>登录电子邮箱<input name="email" type="email" autocomplete="email" placeholder="example@church.org" required></label><label>登录密码<span class="password-input"><input name="password" type="password" autocomplete="current-password" required><button class="icon-button" type="button" data-toggle-password aria-label="显示密码"><i data-lucide="eye" aria-hidden="true"></i></button></span></label><button class="primary-button full-width" type="submit"><i data-lucide="lock-keyhole" aria-hidden="true"></i>登录同工账号</button></form>
+    </section>
+    <section id="register-panel" hidden>
+      <div class="dialog-heading"><h2>加入 ChurchOS 共创</h2><p>留下真实服侍背景，让每一条建言更有上下文。</p></div>
+      <form id="register-form" enctype="multipart/form-data">
+        <div class="form-grid"><label>电子邮箱<input name="email" type="email" required></label><label>登录密码<input name="password" type="password" minlength="6" required></label></div>
+        <div class="form-grid"><label>展示姓名<input name="nickname" type="text" required></label><label>个人头像<input name="avatar" type="file" accept="image/*"></label></div>
+        <label>所属教会全称<span class="autocomplete"><input name="church_name" id="church-input" type="text" autocomplete="off" required><div class="autocomplete-list" id="church-results" role="listbox" hidden></div></span></label>
+        <div class="form-grid form-grid-three"><label>国家<input name="country" value="加拿大 (Canada)" required></label><label>省 / 州<input name="state" value="Ontario" required></label><label>城市<input name="city" value="Toronto" required></label></div>
+        <label>服侍职务<select name="role_category" required><option value="主任牧师 / 神父">主任牧师 / 神父</option><option value="牧师">牧师</option><option value="传道人">传道人</option><option value="长老">长老</option><option value="执事">执事</option><option value="干事 / 行政人员">干事 / 行政人员</option><option value="财务 / 出纳">财务 / 出纳</option><option value="同工">同工</option><option value="组长 / 团契会长">组长 / 团契会长</option><option value="义工 / 服侍人员">义工 / 服侍人员</option><option value="普通信徒">普通信徒</option><option value="慕道友">慕道友</option><option value="其他">其他</option></select></label>
+        <button class="primary-button full-width" type="submit"><i data-lucide="user-plus" aria-hidden="true"></i>注册并加入共创</button>
+      </form>
+    </section>
+  </dialog>
+
+  <dialog class="app-dialog wish-form-dialog" id="wish-form-dialog" aria-labelledby="wish-form-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div class="dialog-heading align-left"><span class="eyebrow">分享真实服侍场景</span><h2 id="wish-form-title">提报需求与痛点</h2><p>描述问题发生的场景，以及您期望 ChurchOS 如何协助。</p></div>
+    <form id="wish-form" enctype="multipart/form-data">
+      <label>需求分类<select name="category" required><option value="">请选择</option><option value="排班事工">教牧与排班</option><option value="奉献财务">奉献财务</option><option value="主日策划">主日策划</option><option value="团契考勤">关怀与儿青</option></select></label>
+      <label>需求标题<span class="field-note">5-30 字</span><input id="wish-title-input" name="title" maxlength="30" required></label>
+      <div class="similar-panel" id="similar-panel" hidden><strong>发现相似需求</strong><div id="similar-list"></div></div>
+      <label>详细描述<span class="field-note">至少 10 字</span><textarea name="content" rows="5" required></textarea></label>
+      <label>参考图片<span class="field-note">最多 3 张，每张 5MB</span><input name="images" type="file" accept="image/*" multiple></label>
+      <label>语音录入<input id="audio-input" name="audio" type="file" accept="audio/*"></label>
+      <div class="audio-result" id="audio-result" hidden></div>
+      <button class="primary-button full-width" type="submit"><i data-lucide="send" aria-hidden="true"></i>提交需求</button>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog detail-dialog" id="wish-detail-dialog" aria-labelledby="detail-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div id="wish-detail-content"></div>
+  </dialog>
+
+  <dialog class="app-dialog share-dialog" id="share-dialog" aria-labelledby="share-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div class="dialog-heading"><span class="eyebrow">让更多同工参与</span><h2 id="share-title">分享 ChurchOS 共创计划</h2></div>
+    <label>分享链接<span class="copy-field"><input id="share-url" type="url" readonly><button class="secondary-button" id="copy-share-button" type="button"><i data-lucide="copy" aria-hidden="true"></i>复制</button></span></label>
+    <canvas id="share-poster" width="848" height="1264" aria-label="ChurchOS 共创分享海报"></canvas>
+    <button class="primary-button full-width" id="download-poster-button" type="button"><i data-lucide="download" aria-hidden="true"></i>下载分享海报</button>
+  </dialog>
+
+  <div class="toast-root" id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="/vendor/lucide/lucide.js"></script>
+  <script type="module" src="/js/app.mjs"></script>
 </body>
 </html>
