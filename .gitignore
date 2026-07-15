@@ -1,0 +1,11 @@
+node_modules/
+.worktrees/
+.superpowers/
+.DS_Store
+*.log
+coverage/
+test-results/
+playwright-report/
+tmp/
+public/uploads/*
+!public/uploads/.gitkeep

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "wish_id": 1,
+    "user_id": 3,
+    "nickname": "Sarah Miller",
+    "avatar_color": "linear-gradient(135deg, #00f0ff, #00ff7b)",
+    "content": "太同意了！我们教会的音控同工极其紧张，经常因为排班打架漏掉服侍，特别影响崇拜体验。",
+    "reply_to_nickname": null,
+    "parent_comment_id": null
+  },
+  {
+    "id": 2,
+    "wish_id": 1,
+    "user_id": 2,
+    "nickname": "Tim Zhang",
+    "avatar_color": "linear-gradient(135deg, #ff007b, #9900ff)",
+    "content": "是的，尤其是有些小组长服侍很频繁，如果能有个系统统一把控，就更贴心了。",
+    "reply_to_nickname": "Sarah Miller",
+    "parent_comment_id": 1
+  }
+]

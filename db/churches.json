@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "洛杉矶恩典社区教会 (Grace Community Church)",
+    "address": "13248 Roscoe Blvd, Sun Valley, CA 91352",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "洛杉矶 (Los Angeles)"
+  },
+  {
+    "id": 2,
+    "name": "温哥华圣公会三一堂 (St. John's Shaughnessy Anglican Church)",
+    "address": "1490 Nanton Ave, Vancouver, BC V6H 2E2",
+    "country": "加拿大 (Canada)",
+    "state": "不列颠哥伦比亚省 (British Columbia)",
+    "city": "温哥华 (Vancouver)"
+  },
+  {
+    "id": 3,
+    "name": "圣何塞信义会第一堂 (First Immanuel Lutheran Church)",
+    "address": "374 S 3rd St, San Jose, CA 95112",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "圣何塞 (San Jose)"
+  },
+  {
+    "id": 4,
+    "name": "多伦多华人福音教会 (Toronto Chinese Gospel Church)",
+    "address": "9 Metropolitan Rd, Scarborough, ON M1R 2T5",
+    "country": "加拿大 (Canada)",
+    "state": "安大略省 (Ontario)",
+    "city": "多伦多 (Toronto)"
+  },
+  {
+    "id": 5,
+    "name": "伦敦威斯敏斯特圣母主教座堂 (Westminster Cathedral)",
+    "address": "42 Francis St, London SW1P 1QW",
+    "country": "英国 (United Kingdom)",
+    "state": "英格兰 (England)",
+    "city": "伦敦 (London)"
+  },
+  {
+    "id": 6,
+    "name": "旧金山圣伯多禄圣保禄堂 (Saints Peter and Paul Church)",
+    "address": "666 Filbert St, San Francisco, CA 94133",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "旧金山 (San Francisco)"
+  },
+  {
+    "id": 7,
+    "name": "西雅图第一长老教会 (Seattle First Presbyterian Church)",
+    "address": "1013 8th Ave, Seattle, WA 98104",
+    "country": "美国 (United States)",
+    "state": "华盛顿州 (Washington)",
+    "city": "西雅图 (Seattle)"
+  },
+  {
+    "id": 8,
+    "name": "温哥华华人宣道会 (Vancouver Chinese Alliance Church)",
+    "address": "3330 Knight St, Vancouver, BC V5N 3K8",
+    "country": "加拿大 (Canada)",
+    "state": "不列颠哥伦比亚省 (British Columbia)",
+    "city": "温哥华 (Vancouver)"
+  },
+  {
+    "id": 9,
+    "name": "旧金山圣玛利亚主教座堂 (Cathedral of Saint Mary of the Assumption)",
+    "address": "1111 Gough St, San Francisco, CA 94109",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "旧金山 (San Francisco)"
+  },
+  {
+    "id": 10,
+    "name": "圣何塞华基教会 (San Jose Christian Alliance Church)",
+    "address": "2360 McLaughlin Ave, San Jose, CA 95122",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "圣何塞 (San Jose)"
+  }
+]

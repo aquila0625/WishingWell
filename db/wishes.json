@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "user_id": 2,
+    "title": "智能义工轮班冲突预警 calendar",
+    "content": "我们教会目前排班经常出现同一个同工在同一主日早上既排了诗班，又被排了音控服侍的情况。希望能有一个可视化的排班日历冲突检测系统，排班冲突时自动亮红报错，并支持微信/邮件一键发送通知。",
+    "category": "排班事工",
+    "images": [],
+    "audio_path": null,
+    "is_anonymous": 0,
+    "status": "accepted",
+    "votes": 18,
+    "voted_users": [
+      1,
+      2,
+      3
+    ],
+    "admin_reply": "非常有价值的服侍排班需求！我们已经在后台通过 AI 分析生成了专门的『智能排班日历组件原型』，您可以在下方直接预览和点击操作！",
+    "parent_wish_id": null,
+    "merge_reason": null,
+    "dispute_reason": null,
+    "dispute_status": "none"
+  },
+  {
+    "id": 2,
+    "user_id": 3,
+    "title": "年底奉献退税凭证一键批量开具",
+    "content": "在加拿大，年底会友需要凭教会开具的官方捐款凭证抵扣个人所得税。我们财务目前需要手动Excel核对、排版每一张PDF发给几百人，工作量极大，且极易出错。希望能支持批量核对数据、一键打包发送至会友邮箱，且PDF格式必须完美符合加拿大CRA税务局的要求！",
+    "category": "奉献财务",
+    "images": [],
+    "audio_path": null,
+    "is_anonymous": 0,
+    "status": "accepted",
+    "votes": 14,
+    "voted_users": [
+      1,
+      3
+    ],
+    "admin_reply": "这关系到教会的信誉与信徒的奉献权益。我们已设计了财务报表与PDF自动寄送的原型组件，正在走查开发。",
+    "parent_wish_id": null,
+    "merge_reason": null,
+    "dispute_reason": null,
+    "dispute_status": "none"
+  },
+  {
+    "id": 3,
+    "user_id": 2,
+    "title": "同工主日智能排班自动日历导出",
+    "content": "希望排班确定之后，不仅系统里能看到，还支持同工一键把自己的排班表导入到手机的手机日历（Apple Calendar/Google Calendar）中，这样不容易错过服侍时间。",
+    "category": "排班事工",
+    "images": [],
+    "audio_path": null,
+    "is_anonymous": 0,
+    "status": "merged",
+    "votes": 5,
+    "voted_users": [
+      2
+    ],
+    "admin_reply": null,
+    "parent_wish_id": 1,
+    "merge_reason": "该需求与『智能义工轮班冲突预警』高度重复，已统一合并入该项中进行开发规划。",
+    "dispute_reason": null,
+    "dispute_status": "none"
+  }
+]

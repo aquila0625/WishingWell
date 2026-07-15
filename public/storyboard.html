@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChurchOS 教会通 - 注册登录 UI 视觉跳转流程图</title>
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --panel-bg: rgba(255, 255, 255, 0.03);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --primary-cyan: #00f0ff;
+      --primary-purple: #bd00ff;
+      --text-color: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 20px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 30%, var(--primary-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title p {
+      margin: 5px 0 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .intro-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(4px);
+    }
+
+    .intro-card h2 {
+      margin-top: 0;
+      color: var(--primary-cyan);
+      font-size: 1.25rem;
+    }
+
+    .intro-card p {
+      line-height: 1.6;
+      color: #cbd5e1;
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    /* Horizontal Flow Canvas */
+    .flow-canvas {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      position: relative;
+    }
+
+    .flow-step {
+      display: flex;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .flow-step:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+      background: rgba(0, 240, 255, 0.01);
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+      color: #000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .step-detail {
+      flex: 1;
+    }
+
+    .step-detail h3 {
+      margin-top: 0;
+      font-size: 1.3rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-detail p {
+      line-height: 1.6;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .step-badge {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--primary-cyan);
+      color: var(--primary-cyan);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .interactive-list {
+      padding-left: 20px;
+      line-height: 1.8;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .interactive-list li strong {
+      color: var(--primary-cyan);
+    }
+
+    /* Phone Image Container */
+    .phone-preview {
+      width: 320px;
+      height: 568px;
+      border-radius: 24px;
+      border: 4px solid #1e293b;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      cursor: zoom-in;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .phone-preview:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 30px 60px rgba(0, 240, 255, 0.15);
+      border-color: #334155;
+    }
+
+    .phone-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Transition Arrow */
+    .transition-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-cyan);
+      font-size: 2rem;
+      animation: pulse 2s infinite;
+      height: 60px;
+    }
+
+    @keyframes pulse {
+      0% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(5px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.6; }
+    }
+
+    /* Lightbox modal for zooming images */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 7, 12, 0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    .lightbox img {
+      max-height: 90vh;
+      max-width: 90vw;
+      border-radius: 12px;
+      border: 2px solid var(--panel-border);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #00b8ff 100%);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-logo">
+      <div class="header-title">
+        <h1>✝ ChurchOS</h1>
+        <p>早期共创计划 · 注册登录 UI 视觉跳转流程图 (交互演示板)</p>
+      </div>
+    </div>
+    <button class="btn" onclick="window.location.href='index.html'">前往 ChurchOS 首页</button>
+  </header>
+
+  <div class="container">
+
+    <div class="intro-card">
+      <h2>💡 前端 UI 还原度与流程走查说明</h2>
+      <p>
+        本页面汇集了在 9:16 移动端 H5 视口下生成的<b>高保真 UI 还原图</b>。通过下方的时间轴序列，您可以完整走查<b>从游客进入、被拦截、跳转注册，到注册成功后重定向返回登录，再到登录成功和一键分享</b>的完整界面过渡细节。点击任意图片可进行全屏放大查看。
+      </p>
+    </div>
+
+    <div class="flow-canvas">
+
+      <!-- STEP 1: Homepage (Logged Out) -->
+      <div class="flow-step">
+        <div class="step-number">1</div>
+        <div class="step-detail">
+          <h3>
+            第一阶段：H5 专属首页面（游客只读版）
+            <span class="step-badge">VISITOR LANDING</span>
+          </h3>
+          <p>游客扫码或打开分享链接直接进入的首页面。界面采用深灰板岩底色，完全展示产品的愿景介绍及事工矩阵详情。</p>
+          <ul class="interactive-list">
+            <li><strong>防错设计</strong>：中间的“排班冲突、财务大考、关怀漏网”板块采用纯文字垂直平铺，<b>没有任何卡片外框或大图标，防止用户产生“这里可以点击”的误判</b>。</li>
+            <li><strong>快捷入口</strong>：底部堆叠四大行动点。首按钮“1. 注册/登录”以亮白色实心聚焦；其余为灰色线框按钮。</li>
+            <li><strong>地球仪 AI 选择器</strong>：顶部右上角设有 🌐 翻译下拉菜单。</li>
+          </ul>
+        </div>
+        <div class="phone-preview" onclick="zoomImage('images/1_homepage.jpg')">
+          <img src="images/1_homepage.jpg" alt="H5 Landing Homepage">
+        </div>
+      </div>
+
+      <div class="transition-arrow">▼ 点击 "1. 注册 / 登录" 或 触发拦截操作（点击提需求/点赞/评论）</div>
+
+      <!-- STEP 2: Login Modal (Tab A Active) -->
+      <div class="flow-step">
+        <div class="step-number">2</div>
+        <div class="step-detail">
+          <h3>
+            第二阶段：系统拉起登录弹窗 (同工登录)
+            <span class="step-badge">LOGIN TAB ACTIVE</span>
+          </h3>
+          <p>页面背景自动高斯模糊（Blur 10px），从屏幕正中淡入毛玻璃拟态登录窗口。默认激活 Tab A “同工登录”。</p>
+          <ul class="interactive-list">
+            <li><strong>极简输入</strong>：仅要求输入同工电子邮箱与登录密码，按钮亮白突出。</li>
+            <li><strong>引导注册链接</strong>：输入框最下方展示 `没有账号? 立即加入共创 (注册) ▶` 的文字链接。</li>
+          </ul>
+        </div>
+        <div class="phone-preview" onclick="zoomImage('images/2_login.jpg')">
+          <img src="images/2_login.jpg" alt="Login Form Modal">
+        </div>
+      </div>
+
+      <div class="transition-arrow">▼ 没有账号？点击底部链接跳转注册</div>
+
+      <!-- STEP 3: Register Modal (Tab B Active) -->
+      <div class="flow-step">
+        <div class="step-number">3</div>
+        <div class="step-detail">
+          <h3>
+            第三阶段：切换至注册窗口 (加入共创)
+            <span class="step-badge">REGISTER TAB ACTIVE</span>
+          </h3>
+          <p>同工点击注册链接，弹窗面板无缝切换为 Tab B “加入共创 (注册)”，高度适配同工画像搜集。</p>
+          <ul class="interactive-list">
+            <li><strong>真实姓名提示</strong>：展示姓名输入框下方提示 <i>“建议使用真实姓名，未来可能会进入致谢墙”</i>。</li>
+            <li><strong>IP 静默地理预填</strong>：所在地区自动识别网络 IP 填入，同工可以直接手动清空并重写，完成纠偏。</li>
+            <li><strong>教会联想与职务</strong>：所属教会输入可自动搜索，所在职务提供包括“财务/出纳”在内的 13 种职务点选。</li>
+          </ul>
+        </div>
+        <div class="phone-preview" onclick="zoomImage('images/3_register.jpg')">
+          <img src="images/3_register.jpg" alt="Register Form Modal">
+        </div>
+      </div>
+
+      <div class="transition-arrow">▼ 填写无误点击提交注册 ── 注册成功！</div>
+
+      <!-- STEP 4: Success & Return to Login -->
+      <div class="flow-step">
+        <div class="step-number">4</div>
+        <div class="step-detail">
+          <h3>
+            第四阶段：注册成功 ── 自动重定向回登录面板
+            <span class="step-badge">SUCCESS REDIRECT</span>
+          </h3>
+          <p>同工点击提交后注册成功，系统弹出绿色 Toast 成功通知，且<b>绝不执行静默自动登录</b>。</p>
+          <ul class="interactive-list">
+            <li><strong>自动视图切换</strong>：弹窗内的 Tab 面板在一秒内滑移切回 <b>Tab A “同工登录”</b> 页面。</li>
+            <li><strong>邮箱自动预填</strong>：系统自动提取刚刚注册成功的邮箱地址并填入“同工电子邮箱”框中。<b>同工只需聚焦密码框输入密码</b>，即可快速登录，安全无漏。</li>
+          </ul>
+        </div>
+        <!-- Reuse login image, but explain the auto-filled context -->
+        <div class="phone-preview" onclick="zoomImage('images/2_login.jpg')">
+          <img src="images/2_login.jpg" alt="Auto Prefilled Login Form">
+        </div>
+      </div>
+
+      <div class="transition-arrow">▼ 登录成功，重回首页（右上角头像亮起，底部浮条隐去） ── 点击 "4. 我要分享"</div>
+
+      <!-- STEP 5: Share Overlay (Option C) -->
+      <div class="flow-step">
+        <div class="step-number">5</div>
+        <div class="step-detail">
+          <h3>
+            第五阶段：我要分享（链接已复制 + 二维码海报长按保存）
+            <span class="step-badge">OPTION C SHARING OVERLAY</span>
+          </h3>
+          <p>登录成功的同工在首页或广场点击“我要分享”后弹出的双重分享渠道。</p>
+          <ul class="interactive-list">
+            <li><strong>链接静默复制</strong>：系统自动复制当前共创推广短链，顶部弹出青色提示条 `链接已成功复制，可直接粘贴分享！`。</li>
+            <li><strong>磨砂海报遮罩</strong>：正中浮现一张 2:3 纵向海报。同工可以在浏览器或微信中<b>直接长按这张海报保存到相册</b>，或直接转发到服侍同工群中，极度利于社交圈裂变。</li>
+          </ul>
+        </div>
+        <div class="phone-preview" onclick="zoomImage('images/4_share.jpg')">
+          <img src="images/4_share.jpg" alt="H5 Sharing Overlay">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Zoom Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeZoom()">
+    <img id="zoomed-img" src="" alt="Zoomed View">
+  </div>
+
+  <script>
+    function zoomImage(imgSrc) {
+      const lightbox = document.getElementById('lightbox');
+      const zoomedImg = document.getElementById('zoomed-img');
+      zoomedImg.src = imgSrc;
+      lightbox.style.display = 'flex';
+    }
+
+    function closeZoom() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

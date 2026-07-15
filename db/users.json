@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "email": "admin@churchos.net",
+    "password": "adminpassword",
+    "nickname": "筹备发起人 (陈晨)",
+    "church_name": "平台管理处",
+    "country": "中国 (China)",
+    "state": "广东 (Guangdong)",
+    "city": "深圳 (Shenzhen)",
+    "role_category": "干事 / 行政人员 (Secretary / Administrator)",
+    "is_admin": true,
+    "avatar_color": "linear-gradient(135deg, #a200ff, #00f0ff)"
+  },
+  {
+    "id": 2,
+    "email": "pastor.tim@grace.org",
+    "password": "password123",
+    "nickname": "Tim Zhang",
+    "church_name": "洛杉矶恩典社区教会 (Grace Community Church)",
+    "country": "美国 (United States)",
+    "state": "加利福尼亚州 (California)",
+    "city": "洛杉矶 (Los Angeles)",
+    "role_category": "主任牧师 / 神父 (Senior Pastor / Priest)",
+    "is_admin": false,
+    "avatar_color": "linear-gradient(135deg, #ff007b, #9900ff)"
+  },
+  {
+    "id": 3,
+    "email": "sarah.treasurer@stjohns.ca",
+    "password": "password123",
+    "nickname": "Sarah Miller",
+    "church_name": "温哥华圣公会三一堂 (St. John's Shaughnessy Anglican Church)",
+    "country": "加拿大 (Canada)",
+    "state": "不列颠哥伦比亚省 (British Columbia)",
+    "city": "温哥华 (Vancouver)",
+    "role_category": "财务 / 出纳 (Treasurer / Financial Secretary)",
+    "is_admin": false,
+    "avatar_color": "linear-gradient(135deg, #00f0ff, #00ff7b)"
+  }
+]
