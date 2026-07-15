@@ -4,6 +4,7 @@ import { closeDialog, openDialog, refreshIcons } from './ui.mjs';
 import { setLocale } from './i18n.mjs';
 import { initLanding } from './landing.mjs';
 import { initAuth } from './auth.mjs';
+import { initWishWall } from './wishes.mjs';
 
 const store = createStore({
   view: 'home',
@@ -14,6 +15,7 @@ const store = createStore({
 });
 
 const api = createApiClient({ getToken: () => store.get().token });
+let wishWall;
 
 function showView(view) {
   store.set({ view });
@@ -23,6 +25,7 @@ function showView(view) {
   document.getElementById('back-home-button').hidden = view === 'home';
   document.getElementById('quick-drawer').hidden = view !== 'home';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (view === 'wall') wishWall?.load();
 }
 
 function bindShell() {
@@ -65,6 +68,7 @@ async function bootstrapApp() {
   showView('home');
   const auth = initAuth({ api, store });
   await auth.restoreSession();
+  wishWall = initWishWall({ api, store, auth });
 
   try {
     const landing = initLanding({ api, store });

@@ -238,6 +238,29 @@
   font-size: 1.25rem;
 }
 
+.wish-card-content {
+  min-width: 0;
+}
+
+.wish-open-button {
+  display: grid;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.wish-open-button:hover h2 {
+  color: var(--color-primary);
+}
+
+.wish-author {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
 .wish-card p {
   display: -webkit-box;
   overflow: hidden;
@@ -255,6 +278,49 @@
   border-radius: 8px;
   color: var(--color-primary);
   background: rgba(34, 211, 238, 0.055);
+}
+
+.vote-button.active {
+  color: var(--color-primary-ink);
+  background: var(--color-primary);
+}
+
+.avatar-stack {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  padding-left: 8px;
+}
+
+.mini-avatar {
+  width: 26px;
+  height: 26px;
+  margin-left: -8px;
+  border: 2px solid var(--color-surface);
+  font-size: 0.7rem;
+}
+
+.wish-comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.loading-state,
+.error-state {
+  grid-column: 1 / -1;
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--color-muted);
+}
+
+.error-state {
+  flex-direction: column;
 }
 
 .status-badge,
