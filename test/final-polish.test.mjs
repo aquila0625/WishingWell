@@ -86,3 +86,10 @@ test('ministry and co-creation items align icons with their headings', () => {
   assert.match(css, /\.ministry-grid article \{[^}]*grid-template-columns: auto minmax\(0, 1fr\)/s);
   assert.match(css, /\.co-creation-steps article \{[^}]*grid-template-columns: auto minmax\(0, 1fr\)/s);
 });
+
+test('notification badge is anchored to the bell button', () => {
+  const css = fs.readFileSync(new URL('../public/styles/components.css', import.meta.url), 'utf8');
+
+  assert.match(css, /#notification-button\s*\{[^}]*position:\s*relative/s);
+  assert.match(css, /\.notification-badge\s*\{[^}]*position:\s*absolute/s);
+});

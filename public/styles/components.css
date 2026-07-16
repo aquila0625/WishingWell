@@ -193,6 +193,11 @@
   width: min(360px, calc(100vw - 24px));
 }
 
+#notification-button {
+  position: relative;
+  overflow: visible;
+}
+
 .notification-badge {
   position: absolute;
   top: -4px;
