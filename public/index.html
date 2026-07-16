@@ -20,7 +20,7 @@
     <header class="app-header" id="app-header">
       <button class="brand-button" id="brand-home-button" type="button" aria-label="返回 ChurchOS 首页">
         <span class="brand-mark" aria-hidden="true">✝</span>
-        <span class="brand-copy"><strong>ChurchOS</strong><small>教会通 APP · 需求共创</small></span>
+        <span class="brand-copy"><strong>ChurchOS</strong><small data-i18n="brand.subtitle">教会通 APP · 需求共创</small></span>
       </button>
       <button class="icon-button back-button" id="back-home-button" type="button" aria-label="返回首页" hidden>
         <i data-lucide="arrow-left" aria-hidden="true"></i>
@@ -35,12 +35,6 @@
             <button type="button" data-locale="zh-TW">繁體中文</button>
             <button type="button" data-locale="en">English</button>
             <button type="button" data-locale="es">Español</button>
-            <button type="button" data-locale="pt">Português</button>
-            <button type="button" data-locale="fr">Français</button>
-            <button type="button" data-locale="de">Deutsch</button>
-            <button type="button" data-locale="ja">日本語</button>
-            <button type="button" data-locale="ko">한국어</button>
-            <button type="button" data-locale="tl">Tagalog</button>
           </div>
         </div>
         <button class="icon-button" id="notification-button" type="button" aria-label="消息通知" aria-expanded="false" hidden>
@@ -64,69 +58,69 @@
       <section class="page-view home-view" id="home-view" data-view="home">
         <div class="campaign-banner" id="campaign-banner" hidden>
           <i data-lucide="hourglass" aria-hidden="true"></i>
-          <span>距离本阶段需求收集截止还有</span>
+          <span data-i18n="campaign.remaining">距离本阶段需求收集截止还有</span>
           <strong id="campaign-countdown">00天 00时 00分 00秒</strong>
         </div>
         <div class="hero-section">
           <div class="hero-copy">
-            <span class="eyebrow">ChurchOS 教会通 APP · 早期需求共创计划</span>
-            <h1>ChurchOS 教会通 APP</h1>
-            <p class="hero-tagline">与全球教会同工一起，定义未来的全场景数字化服侍平台</p>
-            <p class="hero-description">ChurchOS 教会通是一款正在筹备中的教会数字化管理与服侍协作 APP。它将连接教牧、长执、行政、会友、财务、儿青、宣教及场地设备等事工场景。在正式开发第一版产品之前，我们希望先听见真实的教会声音。</p>
+            <span class="eyebrow" data-i18n="hero.eyebrow">ChurchOS 教会通 APP · 早期需求共创计划</span>
+            <h1 data-i18n="hero.title">ChurchOS 教会通 APP</h1>
+            <p class="hero-tagline" data-i18n="hero.tagline">与全球教会同工一起，定义未来的全场景数字化服侍平台</p>
+            <p class="hero-description" data-i18n="hero.description">ChurchOS 教会通是一款正在筹备中的教会数字化管理与服侍协作 APP。它将连接教牧、长执、行政、会友、财务、儿青、宣教及场地设备等事工场景。在正式开发第一版产品之前，我们希望先听见真实的教会声音。</p>
           </div>
           <div class="hero-signal" aria-label="共创参与数据">
-            <div><strong>128+</strong><span>参与调研</span></div>
-            <div><strong>36</strong><span>真实需求</span></div>
-            <div><strong>18</strong><span>进入规划</span></div>
+            <div><strong>128+</strong><span data-i18n="stats.participants">参与调研</span></div>
+            <div><strong>36</strong><span data-i18n="stats.needs">真实需求</span></div>
+            <div><strong>18</strong><span data-i18n="stats.planned">进入规划</span></div>
           </div>
         </div>
 
         <section class="pain-section" id="pain-points" aria-labelledby="pain-title">
           <div class="pain-intro">
-            <span class="eyebrow">从真实问题开始</span>
-            <h2 id="pain-title">我们正在为真实的教会问题，打造一款真正好用的 APP</h2>
-            <p class="pastoral-greeting">亲爱的教牧同工、长执委员和主内弟兄姊妹，主内平安！</p>
-            <p>ChurchOS 不会从功能想象开始，而会从教牧和同工每天面对的实际问题开始。您遇到的每一个真实困难，都可能成为 ChurchOS 的下一项核心能力。</p>
+            <span class="eyebrow" data-i18n="pain.eyebrow">从真实问题开始</span>
+            <h2 id="pain-title" data-i18n="pain.title">我们正在为真实的教会问题，打造一款真正好用的 APP</h2>
+            <p class="pastoral-greeting" data-i18n="pain.greeting">亲爱的教牧同工、长执委员和主内弟兄姊妹，主内平安！</p>
+            <p data-i18n="pain.body">ChurchOS 不会从功能想象开始，而会从教牧和同工每天面对的实际问题开始。您遇到的每一个真实困难，都可能成为 ChurchOS 的下一项核心能力。</p>
           </div>
           <div class="pain-list">
-            <article><i data-lucide="book-marked" aria-hidden="true"></i><div><h3>牧养记录难以延续</h3><p>讲章、牧养日志和代祷事项依靠手动整理，团队难以持续掌握牧养状态。</p></div></article>
-            <article><i data-lucide="clipboard-list" aria-hidden="true"></i><div><h3>治理事项缺少协同</h3><p>会议决议、项目跟进和服侍排程分散在不同工具中，责任与进度不够清晰。</p></div></article>
-            <article><i data-lucide="network" aria-hidden="true"></i><div><h3>会友资料彼此割裂</h3><p>资料散落在表格和设备中，更新滞后，家庭与关系网络难以长期维护。</p></div></article>
-            <article><i data-lucide="blocks" aria-hidden="true"></i><div><h3>事工部门形成信息孤岛</h3><p>宣教、儿青、财务和场地设备各自记录，信息难以共享，沟通成本不断增加。</p></div></article>
+            <article><i data-lucide="book-marked" aria-hidden="true"></i><div><h3 data-i18n="pain.pastoral.title">牧养记录难以延续</h3><p data-i18n="pain.pastoral.body">讲章、牧养日志和代祷事项依靠手动整理，团队难以持续掌握牧养状态。</p></div></article>
+            <article><i data-lucide="clipboard-list" aria-hidden="true"></i><div><h3 data-i18n="pain.governance.title">治理事项缺少协同</h3><p data-i18n="pain.governance.body">会议决议、项目跟进和服侍排程分散在不同工具中，责任与进度不够清晰。</p></div></article>
+            <article><i data-lucide="network" aria-hidden="true"></i><div><h3 data-i18n="pain.members.title">会友资料彼此割裂</h3><p data-i18n="pain.members.body">资料散落在表格和设备中，更新滞后，家庭与关系网络难以长期维护。</p></div></article>
+            <article><i data-lucide="blocks" aria-hidden="true"></i><div><h3 data-i18n="pain.silos.title">事工部门形成信息孤岛</h3><p data-i18n="pain.silos.body">宣教、儿青、财务和场地设备各自记录，信息难以共享，沟通成本不断增加。</p></div></article>
           </div>
         </section>
 
         <section class="ministry-section" aria-labelledby="ministry-title">
-          <div class="section-heading"><span class="eyebrow">未来的 ChurchOS 教会通 APP</span><h2 id="ministry-title">它将为教会做什么？</h2><p>ChurchOS 计划以模块化方式连接堂会的主要事工场景。以下是当前的初步产品方向，最终功能范围和开发优先级，将根据本次全球需求共创计划持续调整。</p></div>
+          <div class="section-heading"><span class="eyebrow" data-i18n="ministry.eyebrow">未来的 ChurchOS 教会通 APP</span><h2 id="ministry-title" data-i18n="ministry.title">它将为教会做什么？</h2><p data-i18n="ministry.body">ChurchOS 计划以模块化方式连接堂会的主要事工场景。以下是当前的初步产品方向，最终功能范围和开发优先级，将根据本次全球需求共创计划持续调整。</p></div>
           <div class="ministry-grid">
-            <article><i data-lucide="book-open" aria-hidden="true"></i><h3>教牧管理</h3><p>主日讲台排期、讲章存档、牧养日志与代祷追踪。</p></article>
-            <article><i data-lucide="shield-check" aria-hidden="true"></i><h3>执事治理</h3><p>会议决议协作、项目跟进与长执会事务排程。</p></article>
-            <article><i data-lucide="users" aria-hidden="true"></i><h3>会友服务</h3><p>电子名册、家庭关系网络与会友资料自助更新。</p></article>
-            <article><i data-lucide="heart-handshake" aria-hidden="true"></i><h3>宣教关怀</h3><p>宣教动态、探访登记与弱势关怀档案。</p></article>
-            <article><i data-lucide="graduation-cap" aria-hidden="true"></i><h3>儿青事工</h3><p>主日学安全签到、家校联络与成长记录。</p></article>
-            <article><i data-lucide="hand-coins" aria-hidden="true"></i><h3>财务管理</h3><p>多币种奉献记录、预算编制与税务合规凭证。</p></article>
-            <article><i data-lucide="building-2" aria-hidden="true"></i><h3>空间设备</h3><p>场地预约、音控直播设备以及资产保养与借还。</p></article>
-            <article><i data-lucide="sprout" aria-hidden="true"></i><h3>初信造就</h3><p>慕道班、洗礼管理与门徒训练轨迹。</p></article>
-            <article><i data-lucide="plus" aria-hidden="true"></i><h3>更多事工</h3><p>根据全球堂会的真实需要，持续扩展教会图书馆、主日交通接送及更多事工模块。</p></article>
+            <article><i data-lucide="book-open" aria-hidden="true"></i><h3 data-i18n="module.pastoral.title">教牧管理</h3><p data-i18n="module.pastoral.body">主日讲台排期、讲章存档、牧养日志与代祷追踪。</p></article>
+            <article><i data-lucide="shield-check" aria-hidden="true"></i><h3 data-i18n="module.governance.title">执事治理</h3><p data-i18n="module.governance.body">会议决议协作、项目跟进与长执会事务排程。</p></article>
+            <article><i data-lucide="users" aria-hidden="true"></i><h3 data-i18n="module.members.title">会友服务</h3><p data-i18n="module.members.body">电子名册、家庭关系网络与会友资料自助更新。</p></article>
+            <article><i data-lucide="heart-handshake" aria-hidden="true"></i><h3 data-i18n="module.mission.title">宣教关怀</h3><p data-i18n="module.mission.body">宣教动态、探访登记与弱势关怀档案。</p></article>
+            <article><i data-lucide="graduation-cap" aria-hidden="true"></i><h3 data-i18n="module.youth.title">儿青事工</h3><p data-i18n="module.youth.body">主日学安全签到、家校联络与成长记录。</p></article>
+            <article><i data-lucide="hand-coins" aria-hidden="true"></i><h3 data-i18n="module.finance.title">财务管理</h3><p data-i18n="module.finance.body">多币种奉献记录、预算编制与税务合规凭证。</p></article>
+            <article><i data-lucide="building-2" aria-hidden="true"></i><h3 data-i18n="module.space.title">空间设备</h3><p data-i18n="module.space.body">场地预约、音控直播设备以及资产保养与借还。</p></article>
+            <article><i data-lucide="sprout" aria-hidden="true"></i><h3 data-i18n="module.discipleship.title">初信造就</h3><p data-i18n="module.discipleship.body">慕道班、洗礼管理与门徒训练轨迹。</p></article>
+            <article><i data-lucide="plus" aria-hidden="true"></i><h3 data-i18n="module.more.title">更多事工</h3><p data-i18n="module.more.body">根据全球堂会的真实需要，持续扩展教会图书馆、主日交通接送及更多事工模块。</p></article>
           </div>
         </section>
 
         <section class="co-creation-section" id="co-creation-path" aria-labelledby="co-creation-title">
-          <div class="section-heading"><span class="eyebrow">从调研走向产品</span><h2 id="co-creation-title">ChurchOS 第一版做什么，由您和一线同工共同决定</h2><p>每一家堂会都有独特的服侍场景。我们邀请您把一线经验带进 ChurchOS，与全球同工共同决定首个版本的功能范围和开发顺序。</p></div>
+          <div class="section-heading"><span class="eyebrow" data-i18n="cocreation.eyebrow">从调研走向产品</span><h2 id="co-creation-title" data-i18n="cocreation.title">ChurchOS 第一版做什么，由您和一线同工共同决定</h2><p data-i18n="cocreation.body">每一家堂会都有独特的服侍场景。我们邀请您把一线经验带进 ChurchOS，与全球同工共同决定首个版本的功能范围和开发顺序。</p></div>
           <div class="co-creation-steps">
-            <article><span>01</span><i data-lucide="message-square-plus" aria-hidden="true"></i><h3>提出真实需求</h3><p>分享您在教会服侍、管理和协作中遇到的问题，以及期望 APP 提供的帮助。</p></article>
-            <article><span>02</span><i data-lucide="users-round" aria-hidden="true"></i><h3>共同讨论助力</h3><p>为其他同工的建议点赞、评论并补充实际场景，让需求获得更完整的依据。</p></article>
-            <article><span>03</span><i data-lucide="route" aria-hidden="true"></i><h3>进入产品规划</h3><p>高共鸣、高价值的需求将优先进入 ChurchOS APP 的产品路线图。</p></article>
+            <article><span>01</span><i data-lucide="message-square-plus" aria-hidden="true"></i><h3 data-i18n="step.submit.title">提出真实需求</h3><p data-i18n="step.submit.body">分享您在教会服侍、管理和协作中遇到的问题，以及期望 APP 提供的帮助。</p></article>
+            <article><span>02</span><i data-lucide="users-round" aria-hidden="true"></i><h3 data-i18n="step.discuss.title">共同讨论助力</h3><p data-i18n="step.discuss.body">为其他同工的建议点赞、评论并补充实际场景，让需求获得更完整的依据。</p></article>
+            <article><span>03</span><i data-lucide="route" aria-hidden="true"></i><h3 data-i18n="step.plan.title">进入产品规划</h3><p data-i18n="step.plan.body">高共鸣、高价值的需求将优先进入 ChurchOS APP 的产品路线图。</p></article>
           </div>
         </section>
 
         <section class="recognition-section" aria-labelledby="recognition-title">
-          <div class="recognition-copy"><span class="eyebrow">共创致谢墙</span><h2 id="recognition-title">您的建议，将成为 ChurchOS 的一部分</h2><p>当一项需求被 ChurchOS APP 正式采纳，需求提出者、参与补充的同工及其所在教会，将共同进入 ChurchOS 共创致谢墙。</p><p>我们希望记录的不只是一个名字，更是全球教会同工共同参与产品建设的真实历程。</p></div>
+          <div class="recognition-copy"><span class="eyebrow" data-i18n="recognition.eyebrow">共创致谢墙</span><h2 id="recognition-title" data-i18n="recognition.title">您的建议，将成为 ChurchOS 的一部分</h2><p data-i18n="recognition.body1">当一项需求被 ChurchOS APP 正式采纳，需求提出者、参与补充的同工及其所在教会，将共同进入 ChurchOS 共创致谢墙。</p><p data-i18n="recognition.body2">我们希望记录的不只是一个名字，更是全球教会同工共同参与产品建设的真实历程。</p></div>
         </section>
 
         <section class="home-final-cta" id="home-final-cta" aria-labelledby="home-final-title">
-          <div><span class="eyebrow">从一个真实需求开始</span><h2 id="home-final-title">共同定义 ChurchOS 教会通 APP 的第一版</h2><p>告诉我们您最希望 ChurchOS 解决什么问题。您的一个真实需求，可能成为未来许多堂会共同使用的功能。</p></div>
-          <div class="home-final-actions"><button class="primary-button" type="button" data-open-wish><i data-lucide="pen-line" aria-hidden="true"></i>提交我的需求</button><button class="secondary-button" id="home-final-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i>邀请同工参与</button></div>
+          <div><span class="eyebrow" data-i18n="final.eyebrow">从一个真实需求开始</span><h2 id="home-final-title" data-i18n="final.title">共同定义 ChurchOS 教会通 APP 的第一版</h2><p data-i18n="final.body">告诉我们您最希望 ChurchOS 解决什么问题。您的一个真实需求，可能成为未来许多堂会共同使用的功能。</p></div>
+          <div class="home-final-actions"><button class="primary-button" type="button" data-open-wish><i data-lucide="pen-line" aria-hidden="true"></i><span data-i18n="action.submitNeed">提交我的需求</span></button><button class="secondary-button" id="home-final-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i><span data-i18n="action.invite">邀请同工参与</span></button></div>
         </section>
       </section>
 
@@ -156,12 +150,12 @@
     </main>
 
     <aside class="quick-drawer" id="quick-drawer" aria-label="快捷入口">
-      <button class="drawer-handle" id="drawer-handle" type="button" aria-expanded="true"><span></span><small>收起快捷入口</small></button>
+      <button class="drawer-handle" id="drawer-handle" type="button" aria-expanded="true"><span></span><small data-i18n="drawer.collapse">收起快捷入口</small></button>
       <div class="quick-actions">
-        <button class="primary-button" id="drawer-auth-button" type="button"><i data-lucide="user-plus" aria-hidden="true"></i>注册 / 登录</button>
-        <button class="secondary-button" id="drawer-wall-button" type="button"><i data-lucide="layout-list" aria-hidden="true"></i>查看需求</button>
-        <button class="secondary-button" id="drawer-submit-button" type="button"><i data-lucide="pen-line" aria-hidden="true"></i>我要提需求</button>
-        <button class="ghost-button" id="drawer-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i>分享本页</button>
+        <button class="primary-button" id="drawer-auth-button" type="button"><i data-lucide="user-plus" aria-hidden="true"></i><span data-i18n="drawer.auth">注册 / 登录</span></button>
+        <button class="secondary-button" id="drawer-wall-button" type="button"><i data-lucide="layout-list" aria-hidden="true"></i><span data-i18n="drawer.wall">查看需求</span></button>
+        <button class="secondary-button" id="drawer-submit-button" type="button"><i data-lucide="pen-line" aria-hidden="true"></i><span data-i18n="drawer.submit">我要提需求</span></button>
+        <button class="ghost-button" id="drawer-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i><span data-i18n="drawer.share">分享本页</span></button>
       </div>
     </aside>
 

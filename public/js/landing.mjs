@@ -1,3 +1,5 @@
+import { getLocale, setLocale, translate } from './i18n.mjs';
+
 export function formatRemainingTime(deadline, now = Date.now()) {
   const remaining = Math.max(0, Date.parse(deadline) - now);
   const days = Math.floor(remaining / 86400000);
@@ -20,7 +22,7 @@ export function initLanding({ api, store }) {
   function renderDrawer() {
     drawer.classList.toggle('collapsed', !expanded);
     handle.setAttribute('aria-expanded', String(expanded));
-    handleLabel.textContent = expanded ? '收起快捷入口' : '展开快捷入口';
+    handleLabel.textContent = expanded ? translate('drawer.collapse') : translate('drawer.expand');
   }
 
   function setExpanded(next) {
@@ -62,6 +64,7 @@ export function initLanding({ api, store }) {
     const campaign = await api.request('/api/campaign');
     store.set({ campaign });
     applyHomepage(campaign.homepage);
+    setLocale(getLocale());
     startCountdown(campaign);
   }
 

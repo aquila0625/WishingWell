@@ -3,10 +3,16 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { getSupportedLocales } from '../public/js/i18n.mjs';
 
-test('language switcher exposes the ten documented locales', () => {
-  assert.deepEqual(getSupportedLocales(), [
-    'zh-CN', 'zh-TW', 'en', 'es', 'pt', 'fr', 'de', 'ja', 'ko', 'tl'
-  ]);
+test('language switcher exposes the four launch locales', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+
+  assert.deepEqual(getSupportedLocales(), ['zh-CN', 'zh-TW', 'en', 'es']);
+  assert.match(html, /data-locale="zh-CN"/);
+  assert.match(html, /data-locale="zh-TW"/);
+  assert.match(html, /data-locale="en"/);
+  assert.match(html, /data-locale="es"/);
+  assert.doesNotMatch(html, /data-locale="pt"/);
+  assert.doesNotMatch(html, /data-locale="fr"/);
 });
 
 test('HTML includes concise administrator console tabs', () => {
@@ -37,14 +43,14 @@ test('home page presents the revised co-creation invitation', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
 
   assert.match(html, /ChurchOS 教会通 APP · 早期需求共创计划/);
-  assert.match(html, /<h1>ChurchOS 教会通 APP<\/h1>/);
+  assert.match(html, /<h1[^>]*data-i18n="hero\.title"[^>]*>ChurchOS 教会通 APP<\/h1>/);
   assert.match(html, /一款正在筹备中的教会数字化管理与服侍协作 APP/);
   assert.match(html, /ChurchOS 第一版做什么，由您和一线同工共同决定/);
   assert.match(html, /为其他同工的建议点赞、评论并补充实际场景，让需求获得更完整的依据。/);
   assert.doesNotMatch(html, /为其他堂会的建议点赞/);
-  assert.match(html, /<span>参与调研<\/span>/);
-  assert.match(html, /<span>真实需求<\/span>/);
-  assert.match(html, /<span>进入规划<\/span>/);
+  assert.match(html, /<span[^>]*data-i18n="stats\.participants"[^>]*>参与调研<\/span>/);
+  assert.match(html, /<span[^>]*data-i18n="stats\.needs"[^>]*>真实需求<\/span>/);
+  assert.match(html, /<span[^>]*data-i18n="stats\.planned"[^>]*>进入规划<\/span>/);
   assert.match(html, /id="pain-points"/);
   assert.match(html, /id="co-creation-path"/);
   assert.match(html, /id="home-final-cta"/);
