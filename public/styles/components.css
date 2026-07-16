@@ -231,12 +231,22 @@
   font-weight: 700;
 }
 
+.avatar-button {
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+}
+
+.avatar-button:hover {
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.14);
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--color-primary);
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -248,6 +258,38 @@ label {
   color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required-mark,
+.form-required-note span {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.optional-mark {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.field-hint {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.form-required-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  text-align: right;
 }
 
 input,
@@ -346,6 +388,30 @@ textarea:focus {
   grid-template-columns: 1fr 1fr;
   margin: calc(clamp(20px, 4vw, 34px) * -1) calc(clamp(20px, 4vw, 34px) * -1) 24px;
   border-bottom: 1px solid var(--color-border);
+}
+
+.auth-dialog-toolbar {
+  position: sticky;
+  top: calc(clamp(20px, 4vw, 34px) * -1);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  margin: calc(clamp(20px, 4vw, 34px) * -1) calc(clamp(20px, 4vw, 34px) * -1) 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(17, 24, 39, 0.98);
+  backdrop-filter: blur(24px);
+}
+
+.auth-dialog-toolbar .auth-tabs {
+  margin: 0;
+  border-bottom: 0;
+}
+
+.auth-dialog-toolbar .dialog-close {
+  position: static;
+  align-self: center;
+  margin-inline: 6px;
 }
 
 .auth-tabs button,

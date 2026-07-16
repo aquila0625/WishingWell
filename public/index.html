@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b1120">
-  <meta name="description" content="ChurchOS 教会通全球需求共创平台">
-  <title>ChurchOS 教会通 · 需求共创平台</title>
+  <meta name="description" content="参与 ChurchOS 教会通 APP 早期需求共创，共同定义未来的教会数字化服侍平台">
+  <title>ChurchOS 教会通 APP · 早期需求共创计划</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
     <header class="app-header" id="app-header">
       <button class="brand-button" id="brand-home-button" type="button" aria-label="返回 ChurchOS 首页">
         <span class="brand-mark" aria-hidden="true">✝</span>
-        <span class="brand-copy"><strong>ChurchOS</strong><small>教会通 · 需求共创平台</small></span>
+        <span class="brand-copy"><strong>ChurchOS</strong><small>教会通 APP · 需求共创</small></span>
       </button>
       <button class="icon-button back-button" id="back-home-button" type="button" aria-label="返回首页" hidden>
         <i data-lucide="arrow-left" aria-hidden="true"></i>
@@ -49,7 +49,7 @@
         <button class="icon-button" id="admin-open-button" type="button" aria-label="打开管理员后台" hidden><i data-lucide="shield" aria-hidden="true"></i></button>
         <button class="compact-button" id="header-login-button" type="button"><i data-lucide="log-in" aria-hidden="true"></i><span data-i18n="login">登录</span></button>
         <div class="user-menu" id="user-menu" hidden>
-          <span class="avatar" id="header-avatar">T</span><span id="header-user-name">同工</span>
+          <button class="avatar avatar-button" id="header-avatar" type="button" aria-label="查看我的需求">T</button><span id="header-user-name">同工</span>
           <button class="icon-button" id="logout-button" type="button" aria-label="退出登录"><i data-lucide="log-out" aria-hidden="true"></i></button>
         </div>
       </div>
@@ -69,40 +69,64 @@
         </div>
         <div class="hero-section">
           <div class="hero-copy">
-            <span class="eyebrow">全球教会共创计划</span>
-            <h1>ChurchOS 教会通<br>早期需求共创计划</h1>
-            <p>ChurchOS 不是冷冰冰的管理软件，而是一个开放、可扩展的云端事工协作生态。您的真实服侍经验，将帮助全球堂会建立更贴合实际工作的数字工具。</p>
-            <div class="hero-actions">
-              <button class="primary-button" id="hero-join-button" type="button"><i data-lucide="sparkles" aria-hidden="true"></i>加入共创</button>
-              <button class="secondary-button" id="hero-wall-button" type="button"><i data-lucide="messages-square" aria-hidden="true"></i>浏览需求广场</button>
-            </div>
+            <span class="eyebrow">ChurchOS 教会通 APP · 早期需求共创计划</span>
+            <h1>ChurchOS 教会通 APP</h1>
+            <p class="hero-tagline">与全球教会同工一起，定义未来的全场景数字化服侍平台</p>
+            <p class="hero-description">ChurchOS 教会通是一款正在筹备中的教会数字化管理与服侍协作 APP。它将连接教牧、长执、行政、会友、财务、儿青、宣教及场地设备等事工场景。在正式开发第一版产品之前，我们希望先听见真实的教会声音。</p>
           </div>
           <div class="hero-signal" aria-label="共创参与数据">
-            <div><strong>128+</strong><span>同工参与</span></div>
-            <div><strong>36</strong><span>堂会建言</span></div>
+            <div><strong>128+</strong><span>参与调研</span></div>
+            <div><strong>36</strong><span>真实需求</span></div>
             <div><strong>18</strong><span>进入规划</span></div>
           </div>
         </div>
 
+        <section class="pain-section" id="pain-points" aria-labelledby="pain-title">
+          <div class="pain-intro">
+            <span class="eyebrow">从真实问题开始</span>
+            <h2 id="pain-title">我们正在为真实的教会问题，打造一款真正好用的 APP</h2>
+            <p class="pastoral-greeting">亲爱的教牧同工、长执委员和主内弟兄姊妹，主内平安！</p>
+            <p>ChurchOS 不会从功能想象开始，而会从教牧和同工每天面对的实际问题开始。您遇到的每一个真实困难，都可能成为 ChurchOS 的下一项核心能力。</p>
+          </div>
+          <div class="pain-list">
+            <article><i data-lucide="book-marked" aria-hidden="true"></i><div><h3>牧养记录难以延续</h3><p>讲章、牧养日志和代祷事项依靠手动整理，团队难以持续掌握牧养状态。</p></div></article>
+            <article><i data-lucide="clipboard-list" aria-hidden="true"></i><div><h3>治理事项缺少协同</h3><p>会议决议、项目跟进和服侍排程分散在不同工具中，责任与进度不够清晰。</p></div></article>
+            <article><i data-lucide="network" aria-hidden="true"></i><div><h3>会友资料彼此割裂</h3><p>资料散落在表格和设备中，更新滞后，家庭与关系网络难以长期维护。</p></div></article>
+            <article><i data-lucide="blocks" aria-hidden="true"></i><div><h3>事工部门形成信息孤岛</h3><p>宣教、儿青、财务和场地设备各自记录，信息难以共享，沟通成本不断增加。</p></div></article>
+          </div>
+        </section>
+
         <section class="ministry-section" aria-labelledby="ministry-title">
-          <div class="section-heading"><span class="eyebrow">全矩阵事工板块</span><h2 id="ministry-title">全方位服务堂会</h2></div>
+          <div class="section-heading"><span class="eyebrow">未来的 ChurchOS 教会通 APP</span><h2 id="ministry-title">它将为教会做什么？</h2><p>ChurchOS 计划以模块化方式连接堂会的主要事工场景。以下是当前的初步产品方向，最终功能范围和开发优先级，将根据本次全球需求共创计划持续调整。</p></div>
           <div class="ministry-grid">
-            <article><i data-lucide="book-open" aria-hidden="true"></i><h3>教牧管理</h3><p>讲台排期、讲章存档、牧养日志与代祷追踪。</p></article>
-            <article><i data-lucide="shield-check" aria-hidden="true"></i><h3>执事治理</h3><p>会议决议协作、项目跟进与事务排程。</p></article>
-            <article><i data-lucide="users" aria-hidden="true"></i><h3>会友服务</h3><p>电子名册、家庭网络与资料自助更新。</p></article>
+            <article><i data-lucide="book-open" aria-hidden="true"></i><h3>教牧管理</h3><p>主日讲台排期、讲章存档、牧养日志与代祷追踪。</p></article>
+            <article><i data-lucide="shield-check" aria-hidden="true"></i><h3>执事治理</h3><p>会议决议协作、项目跟进与长执会事务排程。</p></article>
+            <article><i data-lucide="users" aria-hidden="true"></i><h3>会友服务</h3><p>电子名册、家庭关系网络与会友资料自助更新。</p></article>
             <article><i data-lucide="heart-handshake" aria-hidden="true"></i><h3>宣教关怀</h3><p>宣教动态、探访登记与弱势关怀档案。</p></article>
-            <article><i data-lucide="graduation-cap" aria-hidden="true"></i><h3>儿青事工</h3><p>安全签到、家校联络与成长日志。</p></article>
-            <article><i data-lucide="hand-coins" aria-hidden="true"></i><h3>财务管理</h3><p>奉献记录、预算与税务合规收据。</p></article>
-            <article><i data-lucide="building-2" aria-hidden="true"></i><h3>空间设备</h3><p>场地预约、直播设备与资产借还。</p></article>
+            <article><i data-lucide="graduation-cap" aria-hidden="true"></i><h3>儿青事工</h3><p>主日学安全签到、家校联络与成长记录。</p></article>
+            <article><i data-lucide="hand-coins" aria-hidden="true"></i><h3>财务管理</h3><p>多币种奉献记录、预算编制与税务合规凭证。</p></article>
+            <article><i data-lucide="building-2" aria-hidden="true"></i><h3>空间设备</h3><p>场地预约、音控直播设备以及资产保养与借还。</p></article>
             <article><i data-lucide="sprout" aria-hidden="true"></i><h3>初信造就</h3><p>慕道班、洗礼管理与门徒训练轨迹。</p></article>
+            <article><i data-lucide="plus" aria-hidden="true"></i><h3>更多事工</h3><p>根据全球堂会的真实需要，持续扩展教会图书馆、主日交通接送及更多事工模块。</p></article>
+          </div>
+        </section>
+
+        <section class="co-creation-section" id="co-creation-path" aria-labelledby="co-creation-title">
+          <div class="section-heading"><span class="eyebrow">从调研走向产品</span><h2 id="co-creation-title">ChurchOS 第一版做什么，由您和一线同工共同决定</h2><p>每一家堂会都有独特的服侍场景。我们邀请您把一线经验带进 ChurchOS，与全球同工共同决定首个版本的功能范围和开发顺序。</p></div>
+          <div class="co-creation-steps">
+            <article><span>01</span><i data-lucide="message-square-plus" aria-hidden="true"></i><h3>提出真实需求</h3><p>分享您在教会服侍、管理和协作中遇到的问题，以及期望 APP 提供的帮助。</p></article>
+            <article><span>02</span><i data-lucide="users-round" aria-hidden="true"></i><h3>共同讨论助力</h3><p>为其他同工的建议点赞、评论并补充实际场景，让需求获得更完整的依据。</p></article>
+            <article><span>03</span><i data-lucide="route" aria-hidden="true"></i><h3>进入产品规划</h3><p>高共鸣、高价值的需求将优先进入 ChurchOS APP 的产品路线图。</p></article>
           </div>
         </section>
 
         <section class="recognition-section" aria-labelledby="recognition-title">
-          <div><span class="eyebrow">共创致谢墙</span><h2 id="recognition-title">您的建言，将与教会一同被记录</h2></div>
-          <p>当需求获得同工助力并进入产品规划，建言者、协同补充者及其所在教会将共同进入 ChurchOS 共创致谢墙。</p>
-          <div class="recognition-example"><span class="avatar">T</span><span><strong>Tim Zhang</strong><small>洛杉矶恩典社区教会</small></span><i data-lucide="award" aria-hidden="true"></i></div>
-          <figure class="share-poster-preview"><img src="/images/co_creation_share_poster_1784077717552.jpg" alt="ChurchOS 全球需求共创计划分享海报"><figcaption>共创分享海报</figcaption></figure>
+          <div class="recognition-copy"><span class="eyebrow">共创致谢墙</span><h2 id="recognition-title">您的建议，将成为 ChurchOS 的一部分</h2><p>当一项需求被 ChurchOS APP 正式采纳，需求提出者、参与补充的同工及其所在教会，将共同进入 ChurchOS 共创致谢墙。</p><p>我们希望记录的不只是一个名字，更是全球教会同工共同参与产品建设的真实历程。</p></div>
+        </section>
+
+        <section class="home-final-cta" id="home-final-cta" aria-labelledby="home-final-title">
+          <div><span class="eyebrow">从一个真实需求开始</span><h2 id="home-final-title">共同定义 ChurchOS 教会通 APP 的第一版</h2><p>告诉我们您最希望 ChurchOS 解决什么问题。您的一个真实需求，可能成为未来许多堂会共同使用的功能。</p></div>
+          <div class="home-final-actions"><button class="primary-button" type="button" data-open-wish><i data-lucide="pen-line" aria-hidden="true"></i>提交我的需求</button><button class="secondary-button" id="home-final-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i>邀请同工参与</button></div>
         </section>
       </section>
 
@@ -114,10 +138,15 @@
         <div class="wall-controls">
           <div class="category-tabs" id="category-tabs" role="tablist" aria-label="需求分类">
             <button type="button" class="active" data-category="all" aria-selected="true">全部</button>
-            <button type="button" data-category="排班事工" aria-selected="false">教牧与排班</button>
-            <button type="button" data-category="奉献财务" aria-selected="false">财务管理</button>
-            <button type="button" data-category="主日策划" aria-selected="false">主日策划</button>
-            <button type="button" data-category="团契考勤" aria-selected="false">关怀与儿青</button>
+            <button type="button" data-category="教牧管理" aria-selected="false">教牧管理</button>
+            <button type="button" data-category="执事治理" aria-selected="false">执事治理</button>
+            <button type="button" data-category="会友服务" aria-selected="false">会友服务</button>
+            <button type="button" data-category="宣教关怀" aria-selected="false">宣教关怀</button>
+            <button type="button" data-category="儿青事工" aria-selected="false">儿青事工</button>
+            <button type="button" data-category="财务管理" aria-selected="false">财务管理</button>
+            <button type="button" data-category="空间设备" aria-selected="false">空间设备</button>
+            <button type="button" data-category="初信造就" aria-selected="false">初信造就</button>
+            <button type="button" data-category="更多事工" aria-selected="false">更多事工</button>
           </div>
           <label class="select-field">排序<select id="wish-sort"><option value="votes">同感热度</option><option value="date">最新发布</option></select></label>
         </div>
@@ -132,7 +161,7 @@
         <button class="primary-button" id="drawer-auth-button" type="button"><i data-lucide="user-plus" aria-hidden="true"></i>注册 / 登录</button>
         <button class="secondary-button" id="drawer-wall-button" type="button"><i data-lucide="layout-list" aria-hidden="true"></i>查看需求</button>
         <button class="secondary-button" id="drawer-submit-button" type="button"><i data-lucide="pen-line" aria-hidden="true"></i>我要提需求</button>
-        <button class="ghost-button" id="drawer-share-button" type="button"><i data-lucide="share-2" aria-hidden="true"></i>分享本页</button>
+        <button class="ghost-button" id="drawer-share-button" type="button" data-open-share><i data-lucide="share-2" aria-hidden="true"></i>分享本页</button>
       </div>
     </aside>
 
@@ -140,52 +169,81 @@
       <aside class="admin-sidebar">
         <div class="admin-brand"><span class="brand-mark">✝</span><span><strong>ChurchOS 后台</strong><small>共创发起人控制台</small></span></div>
         <nav aria-label="后台功能">
-          <button class="active" type="button" data-admin-tab="overview"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i>需求分析</button>
-          <button type="button" data-admin-tab="disputes"><i data-lucide="scale" aria-hidden="true"></i>申诉审批</button>
-          <button type="button" data-admin-tab="campaign"><i data-lucide="timer-reset" aria-hidden="true"></i>活动设置</button>
-          <button type="button" data-admin-tab="prototypes"><i data-lucide="panels-top-left" aria-hidden="true"></i>原型验证</button>
-          <button type="button" data-admin-tab="distribution"><i data-lucide="send" aria-hidden="true"></i>分发与反馈</button>
+          <button class="active" type="button" data-admin-tab="requirements"><i data-lucide="list-checks" aria-hidden="true"></i>需求数据</button>
+          <button type="button" data-admin-tab="users"><i data-lucide="users" aria-hidden="true"></i>用户管理</button>
+          <button type="button" data-admin-tab="homepage"><i data-lucide="panel-top" aria-hidden="true"></i>首页内容</button>
+          <button type="button" data-admin-tab="emails"><i data-lucide="send" aria-hidden="true"></i>进度邮件</button>
         </nav>
         <button class="ghost-button" id="admin-exit-button" type="button"><i data-lucide="log-out" aria-hidden="true"></i>退出后台</button>
       </aside>
       <main class="admin-main">
-        <header><div><span class="eyebrow">ChurchOS Co-creation</span><h1 id="admin-page-title">需求智能分析</h1></div><button class="icon-button" id="admin-close-button" type="button" aria-label="关闭后台"><i data-lucide="x" aria-hidden="true"></i></button></header>
-        <section id="admin-overview-panel" data-admin-panel="overview"><div id="admin-overview-content"></div></section>
-        <section id="admin-disputes-panel" data-admin-panel="disputes" hidden><div id="admin-disputes-list"></div></section>
-        <section id="admin-campaign-panel" data-admin-panel="campaign" hidden>
-          <form id="campaign-form" class="settings-form"><label class="switch-field"><input id="campaign-enabled" type="checkbox"><span>显示活动倒计时</span></label><label>截止时间<input id="campaign-deadline" type="datetime-local"></label><button class="primary-button" type="submit">保存设置</button></form>
-        </section>
-        <section id="admin-prototypes-panel" data-admin-panel="prototypes" hidden><div id="admin-prototypes-content"></div></section>
-        <section id="admin-distribution-panel" data-admin-panel="distribution" hidden><div id="admin-distribution-content"></div></section>
+        <header><div><span class="eyebrow">ChurchOS Co-creation</span><h1 id="admin-page-title">需求数据</h1></div><button class="icon-button" id="admin-close-button" type="button" aria-label="关闭后台"><i data-lucide="x" aria-hidden="true"></i></button></header>
+        <section id="admin-requirements-panel" data-admin-panel="requirements"><div id="admin-requirements-content"></div></section>
+        <section id="admin-users-panel" data-admin-panel="users" hidden><div id="admin-users-content"></div></section>
+        <section id="admin-homepage-panel" data-admin-panel="homepage" hidden><div id="admin-homepage-content"></div></section>
+        <section id="admin-emails-panel" data-admin-panel="emails" hidden><div id="admin-emails-content"></div></section>
       </main>
     </section>
   </div>
 
   <dialog class="app-dialog auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
-    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
-    <div class="auth-tabs" role="tablist"><button class="active" id="login-tab" type="button" aria-selected="true">同工登录</button><button id="register-tab" type="button" aria-selected="false">加入共创</button></div>
+    <div class="auth-dialog-toolbar">
+      <div class="auth-tabs" role="tablist"><button class="active" id="login-tab" type="button" aria-selected="true">登录</button><button id="register-tab" type="button" aria-selected="false">注册</button></div>
+      <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    </div>
     <section id="login-panel">
       <div class="dialog-heading"><span class="brand-mark">✝</span><h2 id="auth-dialog-title">同工登录</h2><p>欢迎回来，请输入您的账号信息</p></div>
       <form id="login-form"><label>登录电子邮箱<input name="email" type="email" autocomplete="email" placeholder="example@church.org" required></label><label>登录密码<span class="password-input"><input name="password" type="password" autocomplete="current-password" required><button class="icon-button" type="button" data-toggle-password aria-label="显示密码"><i data-lucide="eye" aria-hidden="true"></i></button></span></label><button class="primary-button full-width" type="submit"><i data-lucide="lock-keyhole" aria-hidden="true"></i>登录同工账号</button></form>
     </section>
     <section id="register-panel" hidden>
-      <div class="dialog-heading"><h2>加入 ChurchOS 共创</h2><p>留下真实服侍背景，让每一条建言更有上下文。</p></div>
+      <div class="dialog-heading"><h2 id="register-dialog-title">注册 ChurchOS 共创账号</h2><p>留下真实服侍背景，让每一条建言更有上下文。</p></div>
       <form id="register-form" enctype="multipart/form-data">
-        <div class="form-grid"><label>电子邮箱<input name="email" type="email" required></label><label>登录密码<input name="password" type="password" minlength="6" required></label></div>
-        <div class="form-grid"><label>展示姓名<input name="nickname" type="text" required></label><label>个人头像<input name="avatar" type="file" accept="image/*"></label></div>
-        <label>所属教会全称<span class="autocomplete"><input name="church_name" id="church-input" type="text" autocomplete="off" required><div class="autocomplete-list" id="church-results" role="listbox" hidden></div></span></label>
-        <div class="form-grid form-grid-three"><label>国家<input name="country" value="加拿大 (Canada)" required></label><label>省 / 州<input name="state" value="Ontario" required></label><label>城市<input name="city" value="Toronto" required></label></div>
-        <label>服侍职务<select name="role_category" required><option value="主任牧师 / 神父">主任牧师 / 神父</option><option value="牧师">牧师</option><option value="传道人">传道人</option><option value="长老">长老</option><option value="执事">执事</option><option value="干事 / 行政人员">干事 / 行政人员</option><option value="财务 / 出纳">财务 / 出纳</option><option value="同工">同工</option><option value="组长 / 团契会长">组长 / 团契会长</option><option value="义工 / 服侍人员">义工 / 服侍人员</option><option value="普通信徒">普通信徒</option><option value="慕道友">慕道友</option><option value="其他">其他</option></select></label>
+        <p class="form-required-note"><span aria-hidden="true">*</span> 为必填项目</p>
+        <div class="form-grid">
+          <label><span class="field-label">电子邮箱 <span class="required-mark" aria-hidden="true">*</span></span><input name="email" type="email" autocomplete="email" placeholder="name@church.org" aria-describedby="register-email-hint" required><small class="field-hint" id="register-email-hint">用于登录，并接收 ChurchOS 开发进度与需求采纳通知。</small></label>
+          <label><span class="field-label">登录密码 <span class="required-mark" aria-hidden="true">*</span></span><input name="password" type="password" minlength="6" autocomplete="new-password" aria-describedby="register-password-hint" required><small class="field-hint" id="register-password-hint">至少 6 位字符，请勿使用其他平台的重要密码。</small></label>
+        </div>
+        <div class="form-grid">
+          <label><span class="field-label">展示姓名 <span class="required-mark" aria-hidden="true">*</span></span><input name="nickname" type="text" autocomplete="name" placeholder="请输入您的真实姓名" aria-describedby="register-name-hint" required><small class="field-hint" id="register-name-hint">建议填写真实姓名，需求被采纳后会被显示在共创致谢墙展示。</small></label>
+          <label><span class="field-label">个人头像 <span class="optional-mark">选填</span></span><input name="avatar" type="file" accept="image/*"><small class="field-hint">用于展示您的账号头像。</small></label>
+        </div>
+        <label><span class="field-label">服侍职务 <span class="required-mark" aria-hidden="true">*</span></span><select name="role_category" required><option value="主任牧师 / 神父">主任牧师 / 神父</option><option value="牧师">牧师</option><option value="传道人">传道人</option><option value="长老">长老</option><option value="执事">执事</option><option value="干事 / 行政人员">干事 / 行政人员</option><option value="财务 / 出纳">财务 / 出纳</option><option value="同工">同工</option><option value="组长 / 团契会长">组长 / 团契会长</option><option value="义工 / 服侍人员">义工 / 服侍人员</option><option value="普通信徒">普通信徒</option><option value="慕道友">慕道友</option><option value="其他">其他</option></select></label>
+        <label><span class="field-label">所属教会全称 <span class="required-mark" aria-hidden="true">*</span></span><span class="autocomplete"><input name="church_name" id="church-input" type="text" autocomplete="off" placeholder="输入教会名称进行搜索" aria-describedby="register-church-hint" required><div class="autocomplete-list" id="church-results" role="listbox" hidden></div></span><small class="field-hint" id="register-church-hint">用于补充需求背景，并在需求被采纳后展示教会名称。</small></label>
+        <div class="form-grid form-grid-three">
+          <label><span class="field-label">国家 <span class="required-mark" aria-hidden="true">*</span></span><input name="country" value="加拿大 (Canada)" required></label>
+          <label><span class="field-label">省 / 州 <span class="required-mark" aria-hidden="true">*</span></span><input name="state" value="Ontario" required></label>
+          <label><span class="field-label">城市 <span class="required-mark" aria-hidden="true">*</span></span><input name="city" value="Toronto" required></label>
+        </div>
+        <label class="consent-field"><input name="consent" type="checkbox" required><span>我同意 ChurchOS 将我的账号资料和提交内容用于需求调研、产品规划、进度通知、共创致谢与数据分析。</span></label>
         <button class="primary-button full-width" type="submit"><i data-lucide="user-plus" aria-hidden="true"></i>注册并加入共创</button>
       </form>
     </section>
+  </dialog>
+
+  <dialog class="app-dialog my-wishes-dialog" id="my-wishes-dialog" aria-labelledby="my-wishes-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div class="dialog-heading align-left"><span class="eyebrow">我的共创记录</span><h2 id="my-wishes-title">我发布的需求</h2><p>查看需求进度，并在官方锁定前继续完善内容。</p></div>
+    <div class="my-wish-list" id="my-wish-list" aria-live="polite"></div>
+    <div class="empty-state my-wish-empty" id="my-wish-empty" hidden><i data-lucide="inbox" aria-hidden="true"></i><h3>还没有发布需求</h3><p>提交您的第一个真实服侍需求。</p><button class="primary-button" type="button" data-open-wish>提交需求</button></div>
+  </dialog>
+
+  <dialog class="app-dialog wish-edit-dialog" id="wish-edit-dialog" aria-labelledby="wish-edit-title">
+    <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+    <div class="dialog-heading align-left"><span class="eyebrow">完善需求内容</span><h2 id="wish-edit-title">编辑我的需求</h2><p>需求被官方锁定后将不能继续修改。</p></div>
+    <form id="wish-edit-form">
+      <input name="id" type="hidden">
+      <label>需求分类<select name="category" required><option value="教牧管理">教牧管理</option><option value="执事治理">执事治理</option><option value="会友服务">会友服务</option><option value="宣教关怀">宣教关怀</option><option value="儿青事工">儿青事工</option><option value="财务管理">财务管理</option><option value="空间设备">空间设备</option><option value="初信造就">初信造就</option><option value="更多事工">更多事工</option></select></label>
+      <label>需求标题<span class="field-note">5-30 字</span><input name="title" maxlength="30" required></label>
+      <label>详细描述<span class="field-note">至少 10 字</span><textarea name="content" rows="6" required></textarea></label>
+      <button class="primary-button full-width" type="submit"><i data-lucide="save" aria-hidden="true"></i>保存修改</button>
+    </form>
   </dialog>
 
   <dialog class="app-dialog wish-form-dialog" id="wish-form-dialog" aria-labelledby="wish-form-title">
     <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
     <div class="dialog-heading align-left"><span class="eyebrow">分享真实服侍场景</span><h2 id="wish-form-title">提报需求与痛点</h2><p>描述问题发生的场景，以及您期望 ChurchOS 如何协助。</p></div>
     <form id="wish-form" enctype="multipart/form-data">
-      <label>需求分类<select name="category" required><option value="">请选择</option><option value="排班事工">教牧与排班</option><option value="奉献财务">奉献财务</option><option value="主日策划">主日策划</option><option value="团契考勤">关怀与儿青</option></select></label>
+      <label>需求分类<select name="category" required><option value="">请选择</option><option value="教牧管理">教牧管理</option><option value="执事治理">执事治理</option><option value="会友服务">会友服务</option><option value="宣教关怀">宣教关怀</option><option value="儿青事工">儿青事工</option><option value="财务管理">财务管理</option><option value="空间设备">空间设备</option><option value="初信造就">初信造就</option><option value="更多事工">更多事工</option></select></label>
       <label>需求标题<span class="field-note">5-30 字</span><input id="wish-title-input" name="title" maxlength="30" required></label>
       <div class="similar-panel" id="similar-panel" hidden><strong>发现相似需求</strong><div id="similar-list"></div></div>
       <label>详细描述<span class="field-note">至少 10 字</span><textarea name="content" rows="5" required></textarea></label>

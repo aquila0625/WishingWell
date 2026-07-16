@@ -6,7 +6,7 @@ ChurchOS is a responsive H5 and desktop co-creation website for collecting, disc
 
 ## Requirements
 
-- Node.js 18 or newer
+- Node.js 24 or newer
 - npm 9 or newer
 
 ## Run Locally
@@ -37,21 +37,88 @@ npm run check
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Administrator | `admin@churchos.net` | `adminpassword` |
+| Local demo administrator | `admin@churchos.net` | `adminpassword` |
 | Pastor | `pastor.tim@grace.org` | `password123` |
 | Treasurer | `sarah.treasurer@stjohns.ca` | `password123` |
 
-These credentials and the file-based database are for local demonstration only.
+These credentials and local seed records are for demonstration only. In production Supabase data, the default administrator should be disabled; the current owner administrator is the configured `254351776@qq.com` account.
 
 ## Local Data
 
-Data is stored in `db/*.json`. To restore the original seed content after local testing, restore the tracked files with Git or replace them with the desired seed records before restarting the server.
+Runtime data is stored in the SQLite file `db/churchos.sqlite`. The tracked `db/*.json` files remain the first-start seed source.
 
 Uploaded images and audio are written to `public/uploads/` and are ignored by Git.
 
+## Deployment Configuration
+
+Copy `.env.example` to `.env` and adjust it for the server:
+
+```bash
+PORT=3000
+CHURCHOS_SESSION_SECRET=replace-with-a-long-random-secret
+CHURCHOS_DB_DIR=/srv/churchos/data
+CHURCHOS_DB_FILE=/srv/churchos/data/churchos.sqlite
+CHURCHOS_UPLOAD_DIR=/srv/churchos/uploads
+CHURCHOS_ADMIN_EMAIL=your-admin@example.org
+CHURCHOS_ADMIN_PASSWORD=change-this-password
+CHURCHOS_ADMIN_NAME=ChurchOS Admin
+```
+
+When `CHURCHOS_ADMIN_EMAIL`, `CHURCHOS_ADMIN_PASSWORD`, and `CHURCHOS_ADMIN_NAME` are all set, the service creates or updates that administrator account on startup.
+
+`CHURCHOS_SESSION_SECRET` signs login session tokens. Production deployments must use a long, random, private value. Changing it signs users out and requires them to log in again.
+
+Back up SQLite by copying the file pointed to by `CHURCHOS_DB_FILE`. To restore, stop the service, replace that file, and restart.
+
+Supabase credentials should live only in server-side environment variables such as `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; never commit them or put them in frontend code.
+
+## Switching to Supabase
+
+1. Run `docs/supabase-schema.sql` in the Supabase SQL Editor.
+2. Set these variables in the local or server `.env` file:
+
+```bash
+CHURCHOS_DB_PROVIDER=supabase
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+`SUPABASE_SERVICE_ROLE_KEY` must stay server-side. Do not put it in frontend code, chat messages, or Git commits.
+
+The Supabase adapter is now connected to the backend database interface. On first startup, it attempts to import JSON seed data into empty tables.
+
+If the production environment already contains real users or requirements, do not repeatedly clear Supabase tables. Seed import runs only when a table is empty.
+
+## Render Deployment
+
+The repository includes `render.yaml` for Blueprint deployment on Render. Do not write secrets into GitHub. Fill these values only in Render environment variables:
+
+```bash
+SUPABASE_URL=your Supabase project URL
+SUPABASE_SERVICE_ROLE_KEY=your Supabase service role key
+CHURCHOS_SESSION_SECRET=a long random string
+```
+
+After Render deploys successfully, verify the temporary Render URL can open `/api/health` and the homepage, then bind:
+
+```text
+churchosapp.org
+www.churchosapp.org
+```
+
+After adding the custom domains in Render, return to Namecheap Advanced DNS and add the DNS records provided by Render.
+
+## Pre-launch Security Checklist
+
+- Confirm `.env` is not committed to Git.
+- Confirm `CHURCHOS_SESSION_SECRET` is a long random string.
+- Confirm `SUPABASE_SERVICE_ROLE_KEY` exists only in server-side environment variables.
+- Confirm the default demo administrator `admin@churchos.net` is disabled.
+- Confirm the owner administrator account, for example `254351776@qq.com`, can log in and open the admin workspace.
+
 ## Demo-only Integrations
 
-AI translation, speech transcription, analysis, geolocation, and email delivery use deterministic local demo responses. OAuth, SMS, real email providers, production password hashing, and a production database are not connected.
+AI translation, speech transcription, analysis, geolocation, and email delivery use deterministic local demo responses. OAuth, SMS, and real email providers are not connected. Progress emails are currently simulated and logged in the admin workspace until a mail provider is connected.
 
 ## Project Structure
 

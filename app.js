@@ -4,6 +4,7 @@ const multer = require('multer');
 const fs = require('node:fs');
 const path = require('node:path');
 const { createDatabase } = require('./db');
+const { hashPassword } = require('./lib/passwords');
 const { createAuthRouter } = require('./routes/auth');
 const { createWishesRouter } = require('./routes/wishes');
 const { createAdminRouter } = require('./routes/admin');
@@ -25,26 +26,71 @@ function createUpload(uploadDir) {
 
 function createApp({
   dbDir,
+  dbFilePath,
+  databaseProvider,
+  supabaseUrl,
+  supabaseServiceRoleKey,
+  fetchImpl,
+  adminAccount,
+  sessionSecret,
   uploadDir = path.join(__dirname, 'public', 'uploads')
 } = {}) {
   const app = express();
-  const database = createDatabase({ dir: dbDir });
+  const database = createDatabase({
+    provider: databaseProvider,
+    dir: dbDir,
+    filePath: dbFilePath,
+    supabaseUrl,
+    supabaseServiceRoleKey,
+    fetchImpl
+  });
   const upload = createUpload(uploadDir);
 
-  database.seed();
+  const ready = (async () => {
+    await database.seed();
+    if (!adminAccount?.email || !adminAccount?.password || !adminAccount?.nickname) return;
+    const email = String(adminAccount.email).trim().toLowerCase();
+    const existing = (await database.read('users')).find((user) => user.email.toLowerCase() === email);
+    const payload = {
+      email,
+      password: hashPassword(String(adminAccount.password)),
+      nickname: String(adminAccount.nickname).trim(),
+      church_name: '系统初始化',
+      country: '系统初始化',
+      state: '系统初始化',
+      city: '系统初始化',
+      role_category: '系统管理员',
+      avatar_color: 'linear-gradient(135deg, #a200ff, #00f0ff)',
+      is_admin: true
+    };
+    if (existing) {
+      await database.update('users', existing.id, payload);
+    } else {
+      await database.insert('users', payload);
+    }
+  })();
   app.locals.db = database;
+  app.locals.ready = ready;
   app.locals.upload = upload;
   app.locals.uploadDir = uploadDir;
 
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(async (req, res, next) => {
+    try {
+      await ready;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
   app.use('/api', createShareRouter({ database }));
-  app.use('/api', createAuthRouter({ database, upload }));
-  app.use('/api', createWishesRouter({ database, upload }));
-  app.use('/api/admin', createAdminRouter({ database }));
+  app.use('/api', createAuthRouter({ database, upload, sessionSecret }));
+  app.use('/api', createWishesRouter({ database, upload, sessionSecret }));
+  app.use('/api/admin', createAdminRouter({ database, sessionSecret }));
   app.use('/vendor/lucide', express.static(path.join(__dirname, 'node_modules', 'lucide', 'dist', 'umd')));
   app.use(express.static(path.join(__dirname, 'public')));
 

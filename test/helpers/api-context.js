@@ -1,5 +1,10 @@
 const { createApp } = require('../../app');
 const { createTestDb } = require('./test-db');
+const { createSessionToken } = require('../../lib/session-tokens');
+
+function authHeader(userId) {
+  return `Bearer ${createSessionToken(userId)}`;
+}
 
 function createApiContext(t) {
   const temp = createTestDb();
@@ -12,3 +17,4 @@ function createApiContext(t) {
 }
 
 module.exports = { createApiContext };
+module.exports = { createApiContext, authHeader };

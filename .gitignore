@@ -2,6 +2,9 @@ node_modules/
 .worktrees/
 .superpowers/
 .DS_Store
+.env
+.env.*
+!.env.example
 *.log
 coverage/
 test-results/
@@ -9,3 +12,5 @@ playwright-report/
 tmp/
 public/uploads/*
 !public/uploads/.gitkeep
+db/*.sqlite
+db/*.sqlite-*

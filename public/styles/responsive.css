@@ -23,12 +23,13 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .recognition-section {
+  .pain-section {
     grid-template-columns: 1fr;
   }
 
-  .share-poster-preview {
-    width: min(220px, 100%);
+  .home-final-cta {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .wish-grid {
@@ -65,11 +66,20 @@
   .admin-sidebar > .ghost-button {
     margin-top: 0;
   }
+
+  .admin-toolbar,
+  .admin-record {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
   body {
     font-size: 15px;
+  }
+
+  .eyebrow {
+    font-size: 0.92rem;
   }
 
   .app-shell {
@@ -103,28 +113,30 @@
   }
 
   .hero-section {
-    min-height: calc(100svh - var(--header-height) - 28px);
-    padding-block: 42px 190px;
+    min-height: 0;
+    padding-block: 36px 108px;
   }
 
   .hero-copy h1 {
     font-size: clamp(2rem, 9vw, 2.55rem);
   }
 
-  .hero-actions,
+  .hero-copy .hero-tagline {
+    font-size: 1.2rem;
+  }
+
   .wall-heading,
   .wall-controls {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .hero-actions > button,
   .wall-heading > button {
     width: 100%;
   }
 
   .hero-signal div {
-    padding-inline: 8px;
+    padding: 12px 8px;
     text-align: center;
   }
 
@@ -132,8 +144,37 @@
     font-size: 1.4rem;
   }
 
+  .hero-signal span {
+    font-size: 0.78rem;
+  }
+
   .ministry-grid {
     grid-template-columns: 1fr;
+  }
+
+  .co-creation-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .co-creation-steps article,
+  .co-creation-steps article + article {
+    padding: 22px 44px 22px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .co-creation-steps article:last-child {
+    border-bottom: 0;
+  }
+
+  .co-creation-steps article > span {
+    top: 20px;
+    right: 4px;
+  }
+
+  .home-final-actions,
+  .home-final-actions > button {
+    width: 100%;
   }
 
   .ministry-grid article {
@@ -169,6 +210,15 @@
   .wish-card {
     grid-template-columns: minmax(0, 1fr) 64px;
     padding: 16px;
+  }
+
+  .my-wish-item {
+    grid-template-columns: 1fr;
+  }
+
+  .my-wish-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
   }
 
   .form-grid,
@@ -209,5 +259,13 @@
 
   .admin-brand small {
     display: none;
+  }
+
+  .admin-main {
+    padding: 16px;
+  }
+
+  .admin-record {
+    padding: 14px;
   }
 }

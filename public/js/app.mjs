@@ -12,7 +12,7 @@ import { initAdmin } from './admin.mjs';
 const store = createStore({
   view: 'home',
   user: null,
-  token: localStorage.getItem('churchos.userId'),
+  token: localStorage.getItem('churchos.sessionToken'),
   wishes: [],
   campaign: { enabled: false, deadline: null, closed: false }
 });
@@ -34,12 +34,12 @@ function showView(view) {
 function bindShell() {
   document.getElementById('brand-home-button').addEventListener('click', () => showView('home'));
   document.getElementById('back-home-button').addEventListener('click', () => showView('home'));
-  document.getElementById('hero-wall-button').addEventListener('click', () => showView('wall'));
+  document.getElementById('hero-wall-button')?.addEventListener('click', () => showView('wall'));
   document.getElementById('drawer-wall-button').addEventListener('click', () => showView('wall'));
 
   const authDialog = document.getElementById('auth-dialog');
   ['header-login-button', 'hero-join-button', 'drawer-auth-button'].forEach((id) => {
-    document.getElementById(id).addEventListener('click', () => openDialog(authDialog));
+    document.getElementById(id)?.addEventListener('click', () => openDialog(authDialog));
   });
 
   document.querySelectorAll('[data-close-dialog]').forEach((button) => {

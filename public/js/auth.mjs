@@ -1,10 +1,10 @@
 import { debounce, closeDialog, openDialog, refreshIcons, setBusy, showToast } from './ui.mjs';
 
 export function createSession(storage = window.localStorage) {
-  const key = 'churchos.userId';
+  const key = 'churchos.sessionToken';
   return {
     load: () => storage.getItem(key),
-    save: (user) => storage.setItem(key, String(user.id)),
+    save: (token) => storage.setItem(key, String(token)),
     clear: () => storage.removeItem(key)
   };
 }
@@ -14,6 +14,7 @@ export function validateRegistration(values) {
   if (!/^\S+@\S+\.\S+$/.test(values.email || '')) errors.email = '请输入有效邮箱';
   if ((values.password || '').length < 6) errors.password = '密码至少需要 6 位字符';
   if (!(values.nickname || '').trim()) errors.nickname = '请输入展示姓名';
+  if (values.consent !== 'on') errors.consent = '请确认同意数据用于需求调研与产品规划';
   return errors;
 }
 
@@ -38,6 +39,7 @@ export function initAuth({ api, store }) {
     registerTab.classList.toggle('active', !loginActive);
     loginTab.setAttribute('aria-selected', String(loginActive));
     registerTab.setAttribute('aria-selected', String(!loginActive));
+    dialog.setAttribute('aria-labelledby', loginActive ? 'auth-dialog-title' : 'register-dialog-title');
     loginPanel.hidden = !loginActive;
     registerPanel.hidden = loginActive;
     (loginActive ? loginForm.elements.email : registerForm.elements.email).focus();
@@ -57,10 +59,10 @@ export function initAuth({ api, store }) {
     if (user.avatar_color) avatar.style.background = user.avatar_color;
   }
 
-  function setUser(user) {
+  function setUser(user, token = store.get().token) {
     if (user) {
-      session.save(user);
-      store.set({ user, token: String(user.id) });
+      session.save(token);
+      store.set({ user, token });
     } else {
       session.clear();
       store.set({ user: null, token: null });
@@ -77,7 +79,7 @@ export function initAuth({ api, store }) {
     store.set({ token });
     try {
       const user = await api.request('/api/auth/me');
-      setUser(user);
+      setUser(user, token);
       return user;
     } catch (error) {
       setUser(null);
@@ -118,7 +120,7 @@ export function initAuth({ api, store }) {
         method: 'POST',
         body: JSON.stringify(values)
       });
-      setUser(response.user);
+      setUser(response.user, response.token);
       closeDialog(dialog);
       showToast(`欢迎回来，${response.user.nickname}`, { tone: 'success' });
       const action = pendingAction;
@@ -221,6 +223,10 @@ export function initAuth({ api, store }) {
   document.getElementById('logout-button').addEventListener('click', () => {
     setUser(null);
     showToast('已退出登录');
+  });
+
+  document.getElementById('header-avatar').addEventListener('click', () => {
+    requireAuth(() => window.dispatchEvent(new CustomEvent('churchos:open-my-wishes')));
   });
 
   switchTab('login');

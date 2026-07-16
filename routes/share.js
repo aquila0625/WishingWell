@@ -4,14 +4,14 @@ const QRCode = require('qrcode');
 function createShareRouter({ database }) {
   const router = express.Router();
 
-  router.get('/campaign', (req, res) => {
-    const settings = database.read('settings')[0] || { enabled: false, deadline: null };
+  router.get('/campaign', async (req, res) => {
+    const settings = (await database.read('settings'))[0] || { enabled: false, deadline: null };
     const closed = Boolean(
       settings.enabled
       && settings.deadline
       && Date.now() >= Date.parse(settings.deadline)
     );
-    res.json({ ...settings, closed });
+    res.json({ ...settings, homepage: settings.homepage || null, closed });
   });
 
   router.get('/share/qr', async (req, res, next) => {

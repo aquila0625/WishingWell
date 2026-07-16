@@ -1,13 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
-const { createApiContext } = require('./helpers/api-context');
+const { authHeader, createApiContext } = require('./helpers/api-context');
 
 test('authenticated users can create, vote, comment, and translate a wish', async (t) => {
   const context = createApiContext(t);
   const created = await request(context.app)
     .post('/api/wishes')
-    .set('Authorization', 'Bearer 2')
+    .set('Authorization', authHeader(2))
     .send({
       category: '排班事工',
       title: '主日接送排班冲突提醒',
@@ -18,13 +18,13 @@ test('authenticated users can create, vote, comment, and translate a wish', asyn
   const wishId = created.body.wish.id;
   const vote = await request(context.app)
     .post(`/api/wishes/${wishId}/vote`)
-    .set('Authorization', 'Bearer 3')
+    .set('Authorization', authHeader(3))
     .expect(200);
   assert.equal(vote.body.wish.votes, 2);
 
   await request(context.app)
     .post(`/api/wishes/${wishId}/comment`)
-    .set('Authorization', 'Bearer 3')
+    .set('Authorization', authHeader(3))
     .send({ content: '我们也遇到了相同问题。' })
     .expect(201);
 

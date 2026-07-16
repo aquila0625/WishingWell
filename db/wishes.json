@@ -52,7 +52,7 @@
     "audio_path": null,
     "is_anonymous": 0,
     "status": "merged",
-    "votes": 5,
+    "votes": 1,
     "voted_users": [
       2
     ],
@@ -61,5 +61,26 @@
     "merge_reason": "该需求与『智能义工轮班冲突预警』高度重复，已统一合并入该项中进行开发规划。",
     "dispute_reason": null,
     "dispute_status": "none"
+  },
+  {
+    "id": 4,
+    "user_id": 4,
+    "title": "关于主日程序单",
+    "content": "这个是我的洗的那种测试用的",
+    "category": "更多事工",
+    "images": [],
+    "audio_path": null,
+    "is_anonymous": 0,
+    "status": "voting",
+    "votes": 1,
+    "voted_users": [
+      4
+    ],
+    "admin_reply": null,
+    "parent_wish_id": null,
+    "merge_reason": null,
+    "dispute_reason": null,
+    "dispute_status": "none",
+    "created_at": 1784166874095
   }
 ]

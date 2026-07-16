@@ -1,7 +1,18 @@
+const path = require('node:path');
 const { createApp } = require('./app');
+const { loadEnvFile, resolveConfig } = require('./lib/config');
 
-const port = Number(process.env.PORT || 3000);
+const config = resolveConfig(loadEnvFile(path.join(__dirname, '.env')));
 
-createApp().listen(port, () => {
-  console.log(`ChurchOS running at http://localhost:${port}`);
+createApp({
+  databaseProvider: config.databaseProvider,
+  dbDir: config.dbDir,
+  dbFilePath: config.dbFilePath,
+  supabaseUrl: config.supabaseUrl,
+  supabaseServiceRoleKey: config.supabaseServiceRoleKey,
+  adminAccount: config.adminAccount,
+  sessionSecret: config.sessionSecret,
+  uploadDir: config.uploadDir
+}).listen(config.port, () => {
+  console.log(`ChurchOS running at http://localhost:${config.port}`);
 });

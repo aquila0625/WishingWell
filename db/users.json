@@ -37,5 +37,18 @@
     "role_category": "财务 / 出纳 (Treasurer / Financial Secretary)",
     "is_admin": false,
     "avatar_color": "linear-gradient(135deg, #00f0ff, #00ff7b)"
+  },
+  {
+    "id": 4,
+    "email": "254351776@qq.com",
+    "password": "wang1234",
+    "nickname": "Aquila Wang",
+    "church_name": "待补充",
+    "country": "待补充",
+    "state": "待补充",
+    "city": "待补充",
+    "role_category": "同工",
+    "is_admin": false,
+    "avatar_color": "linear-gradient(135deg, #38bdf8, #6366f1)"
   }
 ]

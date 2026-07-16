@@ -14,8 +14,13 @@ export function wishStatusLabel(status) {
   return ({
     voting: '共创中',
     accepted: '已采纳',
+    planned: '已规划',
+    developing: '开发中',
+    testing: '内测中',
     completed: '已完成',
-    merged: '已合并'
+    rejected: '暂不采纳',
+    merged: '已合并',
+    hidden: '已隐藏'
   })[status] || '处理中';
 }
 
@@ -59,6 +64,11 @@ export function initWishWall({ api, store, auth }) {
   const audioResult = document.getElementById('audio-result');
   const detailDialog = document.getElementById('wish-detail-dialog');
   const detailContent = document.getElementById('wish-detail-content');
+  const myWishesDialog = document.getElementById('my-wishes-dialog');
+  const myWishList = document.getElementById('my-wish-list');
+  const myWishEmpty = document.getElementById('my-wish-empty');
+  const wishEditDialog = document.getElementById('wish-edit-dialog');
+  const wishEditForm = document.getElementById('wish-edit-form');
   const comments = createCommentService({ api });
   let category = 'all';
   let sort = 'votes';
@@ -140,10 +150,86 @@ export function initWishWall({ api, store, auth }) {
   }
 
   function render() {
-    const wishes = filterAndSortWishes(store.get().wishes, { category, sort });
+    const wishes = filterAndSortWishes(
+      store.get().wishes.filter((wish) => wish.status !== 'hidden'),
+      { category, sort }
+    );
     grid.replaceChildren(...wishes.map(renderCard));
     empty.hidden = wishes.length > 0;
     refreshIcons();
+  }
+
+  function canEditWish(wish) {
+    return wish.user_id === store.get().user?.id && wish.status === 'voting';
+  }
+
+  function openWishEditor(wish) {
+    const latestWish = store.get().wishes.find((item) => item.id === wish.id) || wish;
+    if (!canEditWish(latestWish)) {
+      showToast('该需求已被官方锁定，不能继续修改', { tone: 'error' });
+      return;
+    }
+    wishEditForm.elements.id.value = latestWish.id;
+    wishEditForm.elements.category.value = latestWish.category;
+    wishEditForm.elements.title.value = latestWish.title;
+    wishEditForm.elements.content.value = latestWish.content;
+    closeDialog(myWishesDialog);
+    openDialog(wishEditDialog);
+  }
+
+  function renderMyWishItem(wish) {
+    const item = element('article', 'my-wish-item');
+    const meta = element('div', 'wish-meta');
+    meta.append(
+      element('span', 'category-badge', wish.category),
+      element('span', `status-badge status-${wish.status}`, wishStatusLabel(wish.status))
+    );
+
+    const copy = element('div', 'my-wish-copy');
+    copy.append(meta, element('h3', '', wish.title), element('p', '', wish.content));
+
+    const actions = element('div', 'my-wish-actions');
+    const view = element('button', 'secondary-button', '查看详情');
+    view.type = 'button';
+    view.innerHTML = '<i data-lucide="eye" aria-hidden="true"></i>查看详情';
+    view.addEventListener('click', () => {
+      closeDialog(myWishesDialog);
+      openWishDetail(wish);
+    });
+    actions.append(view);
+
+    if (canEditWish(wish)) {
+      const edit = element('button', 'primary-button', '编辑');
+      edit.type = 'button';
+      edit.innerHTML = '<i data-lucide="pencil" aria-hidden="true"></i>编辑';
+      edit.addEventListener('click', () => openWishEditor(wish));
+      actions.append(edit);
+    } else {
+      const locked = element('span', 'wish-locked-label');
+      locked.innerHTML = '<i data-lucide="lock-keyhole" aria-hidden="true"></i>官方已锁定';
+      actions.append(locked);
+    }
+
+    item.append(copy, actions);
+    return item;
+  }
+
+  function renderMyWishes() {
+    const userId = store.get().user?.id;
+    const wishes = store.get().wishes
+      .filter((wish) => wish.user_id === userId)
+      .sort((left, right) => Number(right.created_at || right.id) - Number(left.created_at || left.id));
+    myWishList.replaceChildren(...wishes.map(renderMyWishItem));
+    myWishEmpty.hidden = wishes.length > 0;
+    refreshIcons();
+  }
+
+  function openMyWishes() {
+    auth.requireAuth(async () => {
+      if (!loaded) await load();
+      renderMyWishes();
+      openDialog(myWishesDialog);
+    });
   }
 
   async function load({ force = false } = {}) {
@@ -176,6 +262,7 @@ export function initWishWall({ api, store, auth }) {
       similarPanel.hidden = true;
       audioResult.hidden = true;
       pendingAudioPath = null;
+      closeDialog(myWishesDialog);
       openDialog(wishDialog);
     });
   }
@@ -266,6 +353,42 @@ export function initWishWall({ api, store, auth }) {
     } finally {
       setBusy(submit, false);
     }
+    });
+  });
+
+  wishEditForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    auth.requireAuth(async () => {
+      const values = Object.fromEntries(new FormData(wishEditForm));
+      const errors = validateWish(values);
+      if (Object.keys(errors).length) {
+        showToast(Object.values(errors)[0], { tone: 'error' });
+        wishEditForm.elements[Object.keys(errors)[0]]?.focus();
+        return;
+      }
+
+      const submit = wishEditForm.querySelector('[type="submit"]');
+      setBusy(submit, true, '保存中');
+      try {
+        const response = await api.request(`/api/wishes/${values.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            category: values.category,
+            title: values.title,
+            content: values.content
+          })
+        });
+        replaceWish(response.wish);
+        render();
+        renderMyWishes();
+        closeDialog(wishEditDialog);
+        openDialog(myWishesDialog);
+        showToast(response.message, { tone: 'success' });
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      } finally {
+        setBusy(submit, false);
+      }
     });
   });
 
@@ -459,6 +582,7 @@ export function initWishWall({ api, store, auth }) {
   });
   document.querySelectorAll('[data-open-wish]').forEach((button) => button.addEventListener('click', openWishForm));
   window.addEventListener('churchos:open-wish', (event) => openWishDetail(event.detail.wish));
+  window.addEventListener('churchos:open-my-wishes', openMyWishes);
   window.addEventListener('churchos:wishes-changed', () => load({ force: true }));
-  return { load, openWishDetail, openWishForm, render, replaceWish };
+  return { load, openMyWishes, openWishDetail, openWishForm, render, replaceWish };
 }

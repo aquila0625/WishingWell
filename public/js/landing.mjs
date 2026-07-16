@@ -7,10 +7,6 @@ export function formatRemainingTime(deadline, now = Date.now()) {
   return `${String(days).padStart(2, '0')}天 ${String(hours).padStart(2, '0')}时 ${String(minutes).padStart(2, '0')}分 ${String(seconds).padStart(2, '0')}秒`;
 }
 
-export function shouldCollapseDrawer({ expanded, userToggled }) {
-  return expanded && !userToggled;
-}
-
 export function initLanding({ api, store }) {
   const drawer = document.getElementById('quick-drawer');
   const handle = document.getElementById('drawer-handle');
@@ -18,7 +14,6 @@ export function initLanding({ api, store }) {
   const banner = document.getElementById('campaign-banner');
   const countdown = document.getElementById('campaign-countdown');
   let expanded = true;
-  let userToggled = false;
   let timer;
   let renderedCampaign = null;
 
@@ -28,16 +23,12 @@ export function initLanding({ api, store }) {
     handleLabel.textContent = expanded ? '收起快捷入口' : '展开快捷入口';
   }
 
-  function setExpanded(next, manual = false) {
+  function setExpanded(next) {
     expanded = next;
-    if (manual) userToggled = true;
     renderDrawer();
   }
 
-  handle.addEventListener('click', () => setExpanded(!expanded, true));
-  window.addEventListener('scroll', () => {
-    if (shouldCollapseDrawer({ expanded, userToggled })) setExpanded(false);
-  }, { passive: true, once: true });
+  handle.addEventListener('click', () => setExpanded(!expanded));
 
   function startCountdown(campaign) {
     clearInterval(timer);
@@ -55,9 +46,22 @@ export function initLanding({ api, store }) {
     timer = setInterval(update, 1000);
   }
 
+  function applyHomepage(homepage) {
+    if (!homepage) return;
+    const heroTitle = document.querySelector('.hero-copy h1');
+    const heroTagline = document.querySelector('.hero-tagline');
+    const finalTitle = document.getElementById('home-final-title');
+    const shareButton = document.getElementById('home-final-share-button');
+    if (heroTitle && homepage.hero_title) heroTitle.textContent = homepage.hero_title;
+    if (heroTagline && homepage.hero_tagline) heroTagline.textContent = homepage.hero_tagline;
+    if (finalTitle && homepage.final_cta_title) finalTitle.textContent = homepage.final_cta_title;
+    if (shareButton) shareButton.hidden = homepage.show_share_button === false;
+  }
+
   async function loadCampaign() {
     const campaign = await api.request('/api/campaign');
     store.set({ campaign });
+    applyHomepage(campaign.homepage);
     startCountdown(campaign);
   }
 

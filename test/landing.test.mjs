@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { formatRemainingTime, shouldCollapseDrawer } from '../public/js/landing.mjs';
+import { formatRemainingTime } from '../public/js/landing.mjs';
 
 test('countdown formats complete day-hour-minute-second values', () => {
   assert.equal(
@@ -10,9 +10,12 @@ test('countdown formats complete day-hour-minute-second values', () => {
   );
 });
 
-test('first scroll collapses an expanded drawer', () => {
-  assert.equal(shouldCollapseDrawer({ expanded: true, userToggled: false }), true);
-  assert.equal(shouldCollapseDrawer({ expanded: true, userToggled: true }), false);
+test('quick drawer stays open until the user clicks its handle', () => {
+  const source = fs.readFileSync(new URL('../public/js/landing.mjs', import.meta.url), 'utf8');
+
+  assert.match(source, /let expanded = true/);
+  assert.match(source, /handle\.addEventListener\('click'/);
+  assert.doesNotMatch(source, /addEventListener\('scroll'/);
 });
 
 test('visual tokens preserve the approved navy and cyan reference palette', () => {
@@ -20,4 +23,10 @@ test('visual tokens preserve the approved navy and cyan reference palette', () =
   assert.match(css, /--color-bg:\s*#0b1120/i);
   assert.match(css, /--color-primary:\s*#22d3ee/i);
   assert.match(css, /--radius-card:\s*8px/i);
+});
+
+test('section eyebrow labels use a stronger readable size', () => {
+  const css = fs.readFileSync(new URL('../public/styles/components.css', import.meta.url), 'utf8');
+
+  assert.match(css, /\.eyebrow \{[^}]*font-size:\s*1rem/s);
 });

@@ -22,7 +22,11 @@ test('filterAndSortWishes filters category and sorts votes descending', () => {
 test('wishStatusLabel maps product states to readable Chinese labels', () => {
   assert.equal(wishStatusLabel('voting'), '共创中');
   assert.equal(wishStatusLabel('accepted'), '已采纳');
+  assert.equal(wishStatusLabel('planned'), '已规划');
+  assert.equal(wishStatusLabel('developing'), '开发中');
+  assert.equal(wishStatusLabel('testing'), '内测中');
   assert.equal(wishStatusLabel('merged'), '已合并');
+  assert.equal(wishStatusLabel('hidden'), '已隐藏');
   assert.equal(wishStatusLabel('unknown'), '处理中');
 });
 

@@ -132,7 +132,7 @@ export function initSharing({ api }) {
     }, 'image/png');
   });
 
-  document.getElementById('drawer-share-button').addEventListener('click', open);
+  document.querySelectorAll('[data-open-share]').forEach((button) => button.addEventListener('click', open));
   dialog.addEventListener('close', () => closeDialog(dialog));
   return { open };
 }

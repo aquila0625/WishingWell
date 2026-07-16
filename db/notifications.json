@@ -5,5 +5,13 @@
     "type": "comment",
     "message": "<b>Sarah Miller</b> 评论了您的痛点建言《智能义工轮班冲突预警 calendar》",
     "read": false
+  },
+  {
+    "id": 2,
+    "user_id": 2,
+    "type": "vote",
+    "message": "Aquila Wang 对《同工主日智能排班自动日历导出》表示同感",
+    "read": false,
+    "created_at": 1784166885183
   }
 ]

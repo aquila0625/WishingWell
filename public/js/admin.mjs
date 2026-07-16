@@ -1,4 +1,17 @@
 import { downloadBlob, refreshIcons, showToast } from './ui.mjs';
+import { wishStatusLabel } from './wishes.mjs';
+
+const STATUSES = [
+  ['voting', '共创中'],
+  ['accepted', '已采纳'],
+  ['planned', '已规划'],
+  ['developing', '开发中'],
+  ['testing', '内测中'],
+  ['completed', '已完成'],
+  ['rejected', '暂不采纳'],
+  ['merged', '已合并'],
+  ['hidden', '已隐藏']
+];
 
 function node(tag, className, text) {
   const element = document.createElement(tag);
@@ -7,244 +20,297 @@ function node(tag, className, text) {
   return element;
 }
 
-export function initAdmin({ api, store, sharing }) {
+function field(label, input) {
+  const wrapper = node('label', 'admin-field', label);
+  wrapper.append(input);
+  return wrapper;
+}
+
+function option(value, label, selectedValue) {
+  const item = node('option', '', label);
+  item.value = value;
+  item.selected = value === selectedValue;
+  return item;
+}
+
+function downloadText(filename, text) {
+  downloadBlob(new Blob([text], { type: 'application/json;charset=utf-8' }), filename);
+}
+
+export function initAdmin({ api, store }) {
   const view = document.getElementById('admin-view');
   const title = document.getElementById('admin-page-title');
-  const campaignForm = document.getElementById('campaign-form');
-  let reportData = null;
+  let currentWishes = [];
+  let selectedWishIds = new Set();
+  let currentFilters = { search: '', status: 'all', category: 'all' };
 
   function switchTab(tab) {
     document.querySelectorAll('[data-admin-tab]').forEach((button) => button.classList.toggle('active', button.dataset.adminTab === tab));
     document.querySelectorAll('[data-admin-panel]').forEach((panel) => { panel.hidden = panel.dataset.adminPanel !== tab; });
-    const titles = { overview: '需求智能分析', disputes: '申诉审批', campaign: '活动设置', prototypes: '原型验证', distribution: '分发与反馈' };
+    const titles = { requirements: '需求数据', users: '用户管理', homepage: '首页内容', emails: '进度邮件' };
     title.textContent = titles[tab];
-    if (tab === 'overview') loadOverview();
-    if (tab === 'disputes') loadDisputes();
-    if (tab === 'campaign') loadCampaign();
-    if (tab === 'prototypes') renderPrototypes();
-    if (tab === 'distribution') renderDistribution();
+    if (tab === 'requirements') loadRequirements();
+    if (tab === 'users') loadUsers();
+    if (tab === 'homepage') loadHomepage();
+    if (tab === 'emails') loadEmails();
   }
 
-  async function loadOverview() {
-    const container = document.getElementById('admin-overview-content');
-    container.textContent = '正在生成共创分析…';
+  async function loadRequirements(filters = currentFilters) {
+    currentFilters = filters;
+    const container = document.getElementById('admin-requirements-content');
+    container.textContent = '正在加载需求数据…';
     try {
-      reportData = await api.request('/api/admin/projects/ai-pre-export');
-      container.replaceChildren();
-      const demographic = node('section', 'analytics-summary');
-      demographic.append(node('span', 'eyebrow', '参与者画像'), node('p', '', reportData.demographics));
-      const layout = node('div', 'analytics-grid');
-      const clusters = node('section', 'analytics-panel');
-      clusters.append(node('h2', '', '核心痛点聚类'));
-      reportData.clusters.forEach((cluster) => {
-        const row = node('article', 'analysis-row');
-        row.append(node('strong', '', cluster.topic), node('p', '', cluster.description), node('span', 'analysis-value', `${cluster.total_votes} 票`));
-        clusters.append(row);
-      });
-      const recommendations = node('section', 'analytics-panel');
-      recommendations.append(node('h2', '', '产品优先级建议'));
-      reportData.recommendations.forEach((item) => {
-        const row = node('article', 'analysis-row');
-        row.append(node('span', 'status-badge', item.priority), node('strong', '', item.topic), node('p', '', item.value));
-        recommendations.append(row);
-      });
-      layout.append(clusters, recommendations);
-      const actions = node('div', 'admin-actions');
-      const markdown = node('button', 'secondary-button', '导出 Markdown');
-      const csv = node('button', 'primary-button', '导出 CSV');
-      markdown.type = csv.type = 'button';
-      markdown.addEventListener('click', () => exportReport('markdown'));
-      csv.addEventListener('click', () => exportReport('csv'));
-      actions.append(markdown, csv);
-      container.append(demographic, layout, actions);
+      const query = new URLSearchParams(filters);
+      const response = await api.request(`/api/admin/wishes?${query.toString()}`);
+      currentWishes = response.items;
+      renderRequirements(container);
     } catch (error) {
       container.textContent = error.message;
     }
   }
 
-  async function exportReport(format) {
-    try {
-      const result = await api.download('/api/admin/projects/export-document', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ format, reportData })
+  function renderRequirements(container) {
+    container.replaceChildren();
+    const toolbar = node('form', 'admin-toolbar');
+    const search = document.createElement('input');
+    search.name = 'search';
+    search.placeholder = '搜索标题、内容、同工、教会或邮箱';
+    search.value = currentFilters.search;
+    const status = document.createElement('select');
+    status.name = 'status';
+    status.append(option('all', '全部状态', currentFilters.status), ...STATUSES.map(([value, label]) => option(value, label, currentFilters.status)));
+    const category = document.createElement('input');
+    category.name = 'category';
+    category.placeholder = '分类，留空为全部';
+    category.value = currentFilters.category === 'all' ? '' : currentFilters.category;
+    const apply = node('button', 'secondary-button', '筛选');
+    apply.type = 'submit';
+    toolbar.append(field('搜索', search), field('状态', status), field('分类', category), apply);
+    toolbar.addEventListener('submit', (event) => {
+      event.preventDefault();
+      loadRequirements({
+        search: search.value.trim(),
+        status: status.value,
+        category: category.value.trim() || 'all'
       });
-      downloadBlob(result.blob, result.filename);
+    });
+
+    const actions = node('div', 'admin-actions');
+    const exportAll = node('button', 'secondary-button', '导出全部');
+    const exportFiltered = node('button', 'secondary-button', '导出当前筛选');
+    const exportSelected = node('button', 'primary-button', '导出选中');
+    exportAll.type = exportFiltered.type = exportSelected.type = 'button';
+    exportAll.addEventListener('click', () => exportWishes({ scope: 'all' }));
+    exportFiltered.addEventListener('click', () => exportWishes({ scope: 'filtered', filters: currentFilters }));
+    exportSelected.addEventListener('click', () => exportWishes({ scope: 'selected', ids: [...selectedWishIds] }));
+    actions.append(exportAll, exportFiltered, exportSelected);
+
+    const list = node('div', 'admin-list');
+    if (!currentWishes.length) list.append(node('p', 'admin-empty', '当前没有匹配的需求。'));
+    currentWishes.forEach((wish) => list.append(renderWishRow(wish)));
+    container.append(toolbar, actions, list);
+    refreshIcons();
+  }
+
+  function renderWishRow(wish) {
+    const row = node('article', 'admin-record');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = selectedWishIds.has(wish.id);
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) selectedWishIds.add(wish.id);
+      else selectedWishIds.delete(wish.id);
+    });
+
+    const body = node('div', 'admin-record-body');
+    const meta = node('div', 'wish-meta');
+    meta.append(node('span', 'category-badge', wish.category), node('span', `status-badge status-${wish.status}`, wishStatusLabel(wish.status)));
+    body.append(meta, node('h2', '', wish.title), node('p', '', wish.content), node('small', '', `${wish.author.nickname} · ${wish.author.church_name} · ${wish.author.email}`));
+
+    const controls = node('form', 'admin-row-controls');
+    const status = document.createElement('select');
+    STATUSES.forEach(([value, label]) => status.append(option(value, label, wish.status)));
+    const reply = document.createElement('textarea');
+    reply.rows = 2;
+    reply.placeholder = '官方回复';
+    reply.value = wish.admin_reply || '';
+    const save = node('button', 'primary-button', '保存');
+    save.type = 'submit';
+    controls.append(status, reply, save);
+    controls.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const response = await api.request(`/api/admin/wishes/${wish.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: status.value, admin_reply: reply.value })
+        });
+        showToast(response.message, { tone: 'success' });
+        window.dispatchEvent(new CustomEvent('churchos:wishes-changed'));
+        loadRequirements();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+
+    row.append(checkbox, body, controls);
+    return row;
+  }
+
+  async function exportWishes(payload) {
+    if (payload.scope === 'selected' && !payload.ids.length) {
+      showToast('请先选择要导出的需求', { tone: 'error' });
+      return;
+    }
+    try {
+      const response = await api.request('/api/admin/wishes/export', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      downloadText('churchos-requirements-export.json', response.text);
+      showToast('需求数据已导出', { tone: 'success' });
     } catch (error) {
       showToast(error.message, { tone: 'error' });
     }
   }
 
-  async function loadDisputes() {
-    const container = document.getElementById('admin-disputes-list');
-    container.textContent = '正在加载申诉…';
+  async function loadUsers() {
+    const container = document.getElementById('admin-users-content');
+    container.textContent = '正在加载用户…';
     try {
-      const [disputes, wishes] = await Promise.all([
-        api.request('/api/admin/disputes'),
-        api.request('/api/wishes')
-      ]);
+      const response = await api.request('/api/admin/users');
       container.replaceChildren();
-      const mergeForm = node('form', 'merge-form');
-      const sourceLabel = node('label', '', '待合并需求');
-      const sourceSelect = node('select');
-      sourceSelect.name = 'source_wish_id';
-      const targetLabel = node('label', '', '合并至');
-      const targetSelect = node('select');
-      targetSelect.name = 'target_wish_id';
-      wishes.filter((wish) => wish.status !== 'merged').forEach((wish) => {
-        const sourceOption = node('option', '', wish.title);
-        sourceOption.value = wish.id;
-        const targetOption = sourceOption.cloneNode(true);
-        sourceSelect.append(sourceOption);
-        targetSelect.append(targetOption);
-      });
-      sourceLabel.append(sourceSelect);
-      targetLabel.append(targetSelect);
-      const reasonLabel = node('label', '', '合并原因');
-      const reason = node('textarea');
-      reason.name = 'reason';
-      reason.rows = 3;
-      reason.required = true;
-      reasonLabel.append(reason);
-      const mergeButton = node('button', 'secondary-button', '执行合并');
-      mergeButton.type = 'submit';
-      mergeForm.append(node('h2', '', '需求合并管理'), sourceLabel, targetLabel, reasonLabel, mergeButton);
-      mergeForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const values = Object.fromEntries(new FormData(mergeForm));
-        if (values.source_wish_id === values.target_wish_id) {
-          showToast('合并源和目标不能相同', { tone: 'error' });
-          return;
-        }
-        const response = await api.request('/api/admin/wishes/merge', {
-          method: 'POST',
-          body: JSON.stringify(values)
-        });
-        showToast(response.message, { tone: 'success' });
-        window.dispatchEvent(new CustomEvent('churchos:wishes-changed'));
-        loadDisputes();
-      });
-      container.append(mergeForm);
-      if (!disputes.length) {
-        container.append(node('p', 'admin-empty', '当前没有待处理的拆分申诉。'));
-        return;
-      }
-      for (const dispute of disputes) {
-        const card = node('article', 'dispute-row');
-        card.append(node('h2', '', dispute.title), node('p', '', dispute.dispute_reason), node('small', '', `${dispute.author_nickname} · 合并至 ${dispute.parent_title}`));
-        const actions = node('div', 'admin-actions');
-        for (const [action, label, className] of [['reject', '驳回', 'secondary-button'], ['approve', '同意拆分', 'primary-button']]) {
-          const button = node('button', className, label);
-          button.type = 'button';
-          button.addEventListener('click', async () => {
-            const response = await api.request(`/api/admin/wishes/${dispute.id}/resolve-dispute`, { method: 'POST', body: JSON.stringify({ action }) });
-            showToast(response.message, { tone: 'success' });
-            loadDisputes();
+      const list = node('div', 'admin-list');
+      response.items.forEach((user) => {
+        const row = node('article', 'admin-record');
+        const body = node('div', 'admin-record-body');
+        body.append(
+          node('h2', '', user.nickname),
+          node('p', '', `${user.role_category} · ${user.church_name}`),
+          node('small', '', `${user.email} · ${user.country} ${user.state} ${user.city} · 需求 ${user.requirement_count} · 同感 ${user.vote_count} · 评论 ${user.comment_count}`)
+        );
+        const button = node('button', user.disabled ? 'primary-button' : 'secondary-button', user.disabled ? '恢复账号' : '停用账号');
+        button.type = 'button';
+        button.addEventListener('click', async () => {
+          const result = await api.request(`/api/admin/users/${user.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ disabled: !user.disabled })
           });
-          actions.append(button);
-        }
-        card.append(actions);
-        container.append(card);
-      }
+          showToast(result.message, { tone: 'success' });
+          loadUsers();
+        });
+        row.append(body, button);
+        list.append(row);
+      });
+      container.append(list);
     } catch (error) {
       container.textContent = error.message;
     }
   }
 
-  async function loadCampaign() {
-    const campaign = await api.request('/api/campaign');
-    document.getElementById('campaign-enabled').checked = campaign.enabled;
-    document.getElementById('campaign-deadline').value = campaign.deadline ? campaign.deadline.slice(0, 16) : '';
-  }
-
-  campaignForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const response = await api.request('/api/admin/campaign', {
-      method: 'PATCH',
-      body: JSON.stringify({
-        enabled: document.getElementById('campaign-enabled').checked,
-        deadline: document.getElementById('campaign-deadline').value
-      })
-    });
-    store.set({ campaign: response });
-    showToast('活动设置已保存', { tone: 'success' });
-  });
-
-  function renderPrototypes() {
-    const container = document.getElementById('admin-prototypes-content');
-    container.replaceChildren();
-    const tabs = node('div', 'prototype-tabs');
-    const stage = node('div', 'prototype-stage');
-    const prototypes = {
-      schedule: {
-        label: '智能排班日历',
-        render() {
-          stage.innerHTML = '<div class="schedule-prototype"><div class="prototype-heading"><strong>7月主日服侍排班</strong><span class="status-badge">AI 冲突检测已开启</span></div><div class="schedule-grid"><span>服侍</span><span>第一堂</span><span>第二堂</span><strong>诗班</strong><span>Tim Zhang</span><span>Grace Li</span><strong>音控</strong><span class="conflict-cell">Tim Zhang · 冲突</span><span>David Chen</span><strong>接待</strong><span>Anna Wu</span><span>Michael Ho</span></div></div>';
-        }
-      },
-      finance: {
-        label: '奉献凭证批处理',
-        render() {
-          stage.innerHTML = '<div class="finance-prototype"><div class="prototype-heading"><strong>2026 年度奉献凭证</strong><span class="status-badge">CRA 合规检查通过</span></div><div class="finance-progress"><span>已核对 286 / 300</span><progress value="286" max="300"></progress></div><div class="finance-actions"><button class="secondary-button" type="button">预览 PDF</button><button class="primary-button" type="button">批量生成并寄送</button></div></div>';
-        }
-      }
-    };
-    Object.entries(prototypes).forEach(([key, prototype], index) => {
-      const button = node('button', index === 0 ? 'active' : '', prototype.label);
-      button.type = 'button';
-      button.addEventListener('click', () => {
-        tabs.querySelectorAll('button').forEach((item) => item.classList.toggle('active', item === button));
-        prototype.render();
-      });
-      tabs.append(button);
-    });
-    container.append(tabs, stage);
-    prototypes.schedule.render();
-  }
-
-  function renderDistribution() {
-    const container = document.getElementById('admin-distribution-content');
-    container.replaceChildren();
-    const actions = node('div', 'admin-actions');
-    const share = node('button', 'primary-button', '预览分享海报');
-    const email = node('button', 'secondary-button', '模拟发送结案邮件');
-    share.type = email.type = 'button';
-    share.addEventListener('click', sharing.open);
-    const log = node('pre', 'email-log', '等待发送');
-    email.addEventListener('click', async () => {
-      log.textContent = '正在开始模拟发送…\n';
-      try {
-        const response = await fetch('/api/admin/projects/send-emails', {
-          headers: { Authorization: `Bearer ${store.get().token}` }
+  async function loadHomepage() {
+    const container = document.getElementById('admin-homepage-content');
+    container.textContent = '正在加载首页内容…';
+    try {
+      const response = await api.request('/api/admin/homepage');
+      const homepage = response.homepage;
+      const form = node('form', 'settings-form');
+      const heroTitle = document.createElement('input');
+      heroTitle.value = homepage.hero_title || '';
+      const tagline = document.createElement('textarea');
+      tagline.rows = 2;
+      tagline.value = homepage.hero_tagline || '';
+      const finalTitle = document.createElement('input');
+      finalTitle.value = homepage.final_cta_title || '';
+      const share = document.createElement('input');
+      share.type = 'checkbox';
+      share.checked = Boolean(homepage.show_share_button);
+      const save = node('button', 'primary-button', '保存首页内容');
+      save.type = 'submit';
+      form.append(
+        field('首页主标题', heroTitle),
+        field('首页副标题', tagline),
+        field('底部行动标题', finalTitle),
+        field('显示邀请同工按钮', share),
+        save
+      );
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const result = await api.request('/api/admin/homepage', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            hero_title: heroTitle.value,
+            hero_tagline: tagline.value,
+            final_cta_title: finalTitle.value,
+            show_share_button: share.checked
+          })
         });
-        if (!response.ok) throw new Error('邮件模拟请求失败');
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const chunks = buffer.split('\n\n');
-          buffer = chunks.pop();
-          chunks.forEach((chunk) => {
-            const payload = chunk.replace(/^data:\s*/, '');
-            if (payload) log.textContent += `${JSON.parse(payload).log}\n`;
-          });
-        }
+        showToast(result.message, { tone: 'success' });
+      });
+      container.replaceChildren(form);
+    } catch (error) {
+      container.textContent = error.message;
+    }
+  }
+
+  async function loadEmails() {
+    const container = document.getElementById('admin-emails-content');
+    container.textContent = '正在加载邮件记录…';
+    try {
+      const logs = await api.request('/api/admin/progress-emails/logs');
+      container.replaceChildren(renderEmailForm(), renderEmailLogs(logs.items));
+    } catch (error) {
+      container.textContent = error.message;
+    }
+  }
+
+  function renderEmailForm() {
+    const form = node('form', 'settings-form');
+    const subject = document.createElement('input');
+    subject.placeholder = '例如：ChurchOS 第一阶段开发进度';
+    const body = document.createElement('textarea');
+    body.rows = 8;
+    body.placeholder = '写给所有提交过建议的同工。当前为模拟发送，会记录历史。';
+    const send = node('button', 'primary-button', '模拟发送给提过建议的邮箱');
+    send.type = 'submit';
+    form.append(field('邮件标题', subject), field('邮件正文', body), send);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const result = await api.request('/api/admin/progress-emails/send', {
+          method: 'POST',
+          body: JSON.stringify({ subject: subject.value, body: body.value })
+        });
+        showToast(result.message, { tone: 'success' });
+        loadEmails();
       } catch (error) {
-        log.textContent += `${error.message}\n`;
+        showToast(error.message, { tone: 'error' });
       }
     });
-    actions.append(share, email);
-    container.append(actions, log);
+    return form;
+  }
+
+  function renderEmailLogs(logs) {
+    const list = node('div', 'admin-list');
+    list.append(node('h2', '', '发送历史'));
+    if (!logs.length) {
+      list.append(node('p', 'admin-empty', '还没有发送记录。'));
+      return list;
+    }
+    logs.forEach((log) => {
+      const row = node('article', 'admin-record');
+      const body = node('div', 'admin-record-body');
+      body.append(node('h2', '', log.subject), node('p', '', log.body), node('small', '', `${log.status} · ${log.recipient_count} 位收件人`));
+      row.append(body);
+      list.append(row);
+    });
+    return list;
   }
 
   function open() {
     if (!store.get().user?.is_admin) return;
     view.hidden = false;
     document.body.classList.add('dialog-open');
-    switchTab('overview');
+    switchTab('requirements');
     refreshIcons();
   }
 
