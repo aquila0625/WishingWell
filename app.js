@@ -30,6 +30,7 @@ function createApp({
   databaseProvider,
   supabaseUrl,
   supabaseServiceRoleKey,
+  tablePrefix,
   fetchImpl,
   adminAccount,
   sessionSecret,
@@ -42,6 +43,7 @@ function createApp({
     filePath: dbFilePath,
     supabaseUrl,
     supabaseServiceRoleKey,
+    tablePrefix,
     fetchImpl
   });
   const upload = createUpload(uploadDir);

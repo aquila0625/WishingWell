@@ -12,16 +12,22 @@ function assertKnownTable(table) {
   }
 }
 
-function createSupabaseDatabase({ url, serviceRoleKey, fetchImpl = fetch } = {}) {
+function createSupabaseDatabase({ url, serviceRoleKey, fetchImpl = fetch, tablePrefix = '' } = {}) {
   if (!url || !serviceRoleKey) {
     throw new Error('Supabase database requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
   }
   const baseUrl = String(url).replace(/\/$/, '');
+  const prefix = String(tablePrefix || '').trim();
+
+  function physicalTable(table) {
+    assertKnownTable(table);
+    return `${prefix}${table}`;
+  }
 
   function endpoint(table, params = new URLSearchParams()) {
-    assertKnownTable(table);
+    const physical = physicalTable(table);
     const query = params.toString();
-    return `${baseUrl}/rest/v1/${table}${query ? `?${query}` : ''}`;
+    return `${baseUrl}/rest/v1/${physical}${query ? `?${query}` : ''}`;
   }
 
   function headers(extra = {}) {
@@ -266,7 +272,8 @@ function createConfiguredDatabase(options = {}) {
     return createSupabaseDatabase({
       url: options.supabaseUrl,
       serviceRoleKey: options.supabaseServiceRoleKey,
-      fetchImpl: options.fetchImpl
+      fetchImpl: options.fetchImpl,
+      tablePrefix: options.tablePrefix
     });
   }
   return createDatabase(options);

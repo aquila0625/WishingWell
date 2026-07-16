@@ -45,6 +45,23 @@ test('Supabase database adapter reads and writes rows through PostgREST', async 
   assert.ok(calls.some((call) => call.options.method === 'DELETE'));
 });
 
+test('Supabase database adapter applies a configured table prefix', async () => {
+  const calls = [];
+  const database = createSupabaseDatabase({
+    url: 'https://example.supabase.co',
+    serviceRoleKey: 'service-role',
+    tablePrefix: 'staging_',
+    fetchImpl: async (url, options) => {
+      calls.push({ url: String(url), options });
+      return createJsonResponse([]);
+    }
+  });
+
+  await database.read('wishes');
+
+  assert.match(calls[0].url, /\/rest\/v1\/staging_wishes\?select=id%2Cdata&order=id\.asc$/);
+});
+
 test('Supabase database adapter rejects unknown tables', async () => {
   const database = createSupabaseDatabase({
     url: 'https://churchos.supabase.co',

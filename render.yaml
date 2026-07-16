@@ -13,6 +13,8 @@ services:
         value: 24
       - key: CHURCHOS_DB_PROVIDER
         value: supabase
+      - key: CHURCHOS_TABLE_PREFIX
+        value: ""
       - key: CHURCHOS_PUBLIC_URL
         value: https://churchosapp.org
       - key: SUPABASE_URL
@@ -20,4 +22,34 @@ services:
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: CHURCHOS_SESSION_SECRET
+        sync: false
+  - type: web
+    name: churchosapp-staging
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 24
+      - key: CHURCHOS_DB_PROVIDER
+        value: supabase
+      - key: CHURCHOS_TABLE_PREFIX
+        value: staging_
+      - key: CHURCHOS_PUBLIC_URL
+        value: https://churchosapp-staging.onrender.com
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: CHURCHOS_SESSION_SECRET
+        sync: false
+      - key: CHURCHOS_ADMIN_EMAIL
+        sync: false
+      - key: CHURCHOS_ADMIN_PASSWORD
+        sync: false
+      - key: CHURCHOS_ADMIN_NAME
         sync: false

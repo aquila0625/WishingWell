@@ -29,24 +29,30 @@ test('unknown API paths return structured JSON errors', async (t) => {
 
 test('createApp can initialize with the Supabase database provider', async () => {
   const { createApp } = require('../app');
-  const fetchImpl = async () => ({
-    ok: true,
-    async json() {
-      return [];
-    },
-    async text() {
-      return '[]';
-    }
-  });
+  const calls = [];
+  const fetchImpl = async (url) => {
+    calls.push(String(url));
+    return {
+      ok: true,
+      async json() {
+        return [];
+      },
+      async text() {
+        return '[]';
+      }
+    };
+  };
 
   const response = await request(createApp({
     databaseProvider: 'supabase',
     supabaseUrl: 'https://churchos.supabase.co',
     supabaseServiceRoleKey: 'service-key',
+    tablePrefix: 'staging_',
     fetchImpl
   }))
     .get('/api/health')
     .expect(200);
 
   assert.deepEqual(response.body, { status: 'ok' });
+  assert.ok(calls.some((url) => url.includes('/rest/v1/staging_churches?')));
 });

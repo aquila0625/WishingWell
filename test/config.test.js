@@ -44,6 +44,14 @@ test('resolveConfig provides deployable defaults', () => {
   assert.equal(config.adminAccount, null);
 });
 
+test('resolveConfig exposes an optional database table prefix', () => {
+  const config = resolveConfig({
+    CHURCHOS_TABLE_PREFIX: 'staging_'
+  });
+
+  assert.equal(config.tablePrefix, 'staging_');
+});
+
 test('loadEnvFile reads local .env values without overriding existing env', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'churchos-env-'));
   const file = path.join(dir, '.env');
@@ -72,4 +80,24 @@ test('Render blueprint documents deployment commands without embedding secrets',
   assert.match(blueprint, /SUPABASE_URL/);
   assert.match(blueprint, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.doesNotMatch(blueprint, /service-role-key|wang1234|254351776/);
+});
+
+test('Render blueprint defines isolated production and staging table prefixes', () => {
+  const blueprint = fs.readFileSync(path.join(__dirname, '..', 'render.yaml'), 'utf8');
+
+  assert.match(blueprint, /name:\s*churchosapp\b/);
+  assert.match(blueprint, /name:\s*churchosapp-staging\b/);
+  assert.match(blueprint, /key:\s*CHURCHOS_TABLE_PREFIX\s*\n\s*value:\s*staging_/);
+  assert.match(blueprint, /key:\s*SUPABASE_SERVICE_ROLE_KEY\s*\n\s*sync:\s*false/);
+});
+
+test('Supabase schema documents staging tables', () => {
+  const schema = fs.readFileSync(path.join(__dirname, '..', 'docs', 'supabase-schema.sql'), 'utf8');
+
+  for (const table of ['churches', 'users', 'wishes', 'comments', 'notifications', 'settings', 'email_logs']) {
+    assert.match(schema, new RegExp(`create table if not exists staging_${table}\\b`));
+  }
+  assert.match(schema, /staging_wishes_created_at_idx/);
+  assert.match(schema, /staging_users_email_idx/);
+  assert.match(schema, /staging_notifications_user_id_idx/);
 });
