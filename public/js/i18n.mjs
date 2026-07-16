@@ -143,7 +143,78 @@ const dictionaries = {
     'drawer.submit': 'Submit a Need',
     'drawer.share': 'Share This Page'
   },
-  'zh-TW': {},
+  'zh-TW': {
+    documentTitle: 'ChurchOS 教會通 APP · 早期需求共創計畫',
+    'brand.subtitle': '教會通 APP · 需求共創',
+    home: '首頁',
+    wall: '需求廣場',
+    login: '登入',
+    submit: '提出需要',
+    'campaign.remaining': '距離本階段需求徵集截止還有',
+    'hero.eyebrow': 'ChurchOS 教會通 APP · 早期需求共創計畫',
+    'hero.title': 'ChurchOS 教會通 APP',
+    'hero.tagline': '與全球教會同工一起，形塑未來全場景的數位事奉平台',
+    'hero.description': 'ChurchOS 教會通是一款正在籌備中的數位教會管理與事工協作 APP。它將串連教牧、長執、行政、會友、財務、兒少、宣教，以及場地設備等事工場景。在正式開發第一版之前，我們希望先聽見教會現場真實的聲音。',
+    'stats.participants': '參與調研',
+    'stats.needs': '真實需要',
+    'stats.planned': '納入規劃',
+    'pain.eyebrow': '從真實問題出發',
+    'pain.title': '我們正在為教會真實面對的問題，打造一款真正實用的 APP',
+    'pain.body': 'ChurchOS 不會從功能想像出發，而是從教牧與同工每天實際面對的問題開始。您所分享的每一個真實困難，都可能成為 ChurchOS 未來的重要能力。',
+    'pain.pastoral.title': '牧養紀錄難以延續',
+    'pain.pastoral.body': '講章、牧養紀錄與代禱事項多半靠人工整理，團隊不容易長期掌握牧養狀況。',
+    'pain.governance.title': '治理與事務協作不易',
+    'pain.governance.body': '會議決議、專案追蹤與服事排程分散在不同工具中，責任歸屬與進度不夠清楚。',
+    'pain.members.title': '會友資料分散不易維護',
+    'pain.members.body': '資料散落在試算表與個別裝置裡，更新容易落後，家庭與關係網絡也難以長期維護。',
+    'pain.silos.title': '各事工容易形成資訊孤島',
+    'pain.silos.body': '宣教、兒少、財務、場地與設備各自記錄，資訊不易流通，溝通協作成本也隨之提高。',
+    'ministry.eyebrow': '未來的 ChurchOS 教會通 APP',
+    'ministry.title': '它能為教會做什麼？',
+    'ministry.body': 'ChurchOS 預計以模組化方式串連教會主要的事工場景。以下是目前的初步產品方向；最終功能範圍與開發優先順序，會依照這次全球需求共創計畫持續調整。',
+    'module.pastoral.title': '教牧管理',
+    'module.pastoral.body': '主日講台排程、講章保存、牧養紀錄與代禱追蹤。',
+    'module.governance.title': '長執治理',
+    'module.governance.body': '會議決議協作、專案追蹤與長執會事務排程。',
+    'module.members.title': '會友服務',
+    'module.members.body': '電子名冊、家庭關係網絡與會友資料自助更新。',
+    'module.mission.title': '宣教關懷',
+    'module.mission.body': '宣教工場近況、探訪登記與關懷紀錄。',
+    'module.youth.title': '兒少事工',
+    'module.youth.body': '主日學安全報到、家長聯繫與成長紀錄。',
+    'module.finance.title': '財務管理',
+    'module.finance.body': '多幣別奉獻紀錄、預算編列與符合稅務規範的收據。',
+    'module.space.title': '場地設備',
+    'module.space.body': '場地預約、音控直播設備，以及資產保養與借還。',
+    'module.discipleship.title': '初信造就',
+    'module.discipleship.body': '慕道課程、洗禮管理與門徒訓練成長歷程。',
+    'module.more.title': '更多事工',
+    'module.more.body': '依照全球教會的真實需要，持續擴充教會圖書館、主日交通接送，以及更多事工模組。',
+    'cocreation.eyebrow': '從調研走向產品',
+    'cocreation.title': 'ChurchOS 第一版要做什麼，將由您與第一線同工共同決定',
+    'cocreation.body': '每間教會都有獨特的服事現場。我們邀請您把第一線經驗帶進 ChurchOS，與全球同工一起形塑第一版的功能範圍與開發順序。',
+    'step.submit.title': '提出真實需要',
+    'step.submit.body': '分享您在教會服事、管理與協作中遇到的問題，以及期待 APP 提供的幫助。',
+    'step.discuss.title': '一起討論與支持',
+    'step.discuss.body': '為其他同工的建議按讚、留言，並補充實際情境，讓需求有更完整的依據。',
+    'step.plan.title': '進入產品規劃',
+    'step.plan.body': '共鳴高、價值明確的需要，將優先納入 ChurchOS APP 的產品路線圖。',
+    'recognition.eyebrow': '共創致謝牆',
+    'recognition.title': '您的建議，將成為 ChurchOS 的一部分',
+    'recognition.body1': '當一項需要被 ChurchOS APP 正式採納，提出者、參與補充的同工，以及所屬教會，將一同列入 ChurchOS 共創致謝牆。',
+    'recognition.body2': '我們想記錄的不只是一個名字，更是全球教會同工共同參與產品建造的真實歷程。',
+    'final.eyebrow': '從一個真實需要開始',
+    'final.title': '一起定義 ChurchOS 教會通 APP 的第一版',
+    'final.body': '告訴我們您最希望 ChurchOS 解決什麼問題。您提出的一個真實需要，可能成為未來許多教會共同使用的功能。',
+    'action.submitNeed': '提出我的需要',
+    'action.invite': '邀請同工參與',
+    'drawer.collapse': '收合快捷入口',
+    'drawer.expand': '展開快捷入口',
+    'drawer.auth': '註冊 / 登入',
+    'drawer.wall': '查看需求',
+    'drawer.submit': '我要提需求',
+    'drawer.share': '分享本頁'
+  },
   es: {
     documentTitle: 'ChurchOS App Iglesia Conectada · Co-creación temprana de necesidades',
     'brand.subtitle': 'App Iglesia Conectada · Co-creación',
@@ -361,29 +432,6 @@ const dictionaries = {
     'drawer.share': 'Partager cette page'
   }
 };
-
-dictionaries['zh-TW'] = Object.fromEntries(Object.entries(dictionaries['zh-CN']).map(([key, value]) => [
-  key,
-  String(value)
-    .replaceAll('教会', '教會')
-    .replaceAll('协作', '協作')
-    .replaceAll('数字化', '數位化')
-    .replaceAll('长执', '長執')
-    .replaceAll('会友', '會友')
-    .replaceAll('财务', '財務')
-    .replaceAll('儿青', '兒青')
-    .replaceAll('设备', '設備')
-    .replaceAll('真实', '真實')
-    .replaceAll('问题', '問題')
-    .replaceAll('团队', '團隊')
-    .replaceAll('规划', '規劃')
-    .replaceAll('开发', '開發')
-    .replaceAll('记录', '記錄')
-    .replaceAll('登录', '登入')
-    .replaceAll('注册', '註冊')
-    .replaceAll('提交', '提交')
-    .replaceAll('需求', '需求')
-]));
 
 let activeLocale = 'zh-CN';
 

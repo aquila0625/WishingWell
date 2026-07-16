@@ -49,6 +49,9 @@ test('setLocale translates launch-page copy across built-in locales', () => {
 
   assert.equal(setLocale('zh-TW'), 'zh-TW');
   assert.equal(title.textContent, 'ChurchOS 教會通 APP');
+  assert.match(description.textContent, /數位教會管理/);
+  assert.match(description.textContent, /在正式開發第一版之前/);
+  assert.equal(submit.textContent, '提出我的需要');
 
   assert.equal(setLocale('zh-CN'), 'zh-CN');
   assert.equal(title.textContent, 'ChurchOS 教会通 APP');
