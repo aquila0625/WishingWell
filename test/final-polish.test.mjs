@@ -99,6 +99,9 @@ test('admin homepage tools expose draft publish and one-time cleanup actions', (
 
   assert.match(admin, /保存草稿/);
   assert.match(admin, /预览草稿/);
+  assert.match(admin, /草稿预览中/);
+  assert.match(admin, /返回后台继续编辑/);
+  assert.match(admin, /退出预览/);
   assert.match(admin, /发布到正式首页/);
   assert.match(admin, /首次上线清空测试数据/);
   assert.match(admin, /确认首次上线清空/);

@@ -523,6 +523,38 @@ textarea:focus {
 .toast-success { border-color: rgba(52, 211, 153, 0.55); }
 .toast-error { border-color: rgba(251, 113, 133, 0.6); }
 
+.draft-preview-bar {
+  position: fixed;
+  z-index: 65;
+  left: 50%;
+  bottom: calc(18px + var(--safe-bottom));
+  display: flex;
+  width: min(720px, calc(100vw - 24px));
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(34, 211, 238, 0.38);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.94);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-text);
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+}
+
+.draft-preview-bar span {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.draft-preview-bar button {
+  flex: 0 0 auto;
+  padding-inline: 14px;
+}
+
 .quick-drawer {
   position: fixed;
   z-index: 35;

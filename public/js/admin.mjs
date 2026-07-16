@@ -44,6 +44,32 @@ export function initAdmin({ api, store }) {
   let selectedWishIds = new Set();
   let currentFilters = { search: '', status: 'all', category: 'all' };
 
+  function removeDraftPreviewBar() {
+    document.getElementById('draft-preview-bar')?.remove();
+  }
+
+  function showDraftPreviewBar() {
+    removeDraftPreviewBar();
+    const bar = node('div', 'draft-preview-bar');
+    bar.id = 'draft-preview-bar';
+    bar.setAttribute('role', 'status');
+    const label = node('span', '', '草稿预览中，刷新或退出预览后会恢复正式首页。');
+    const back = node('button', 'primary-button', '返回后台继续编辑');
+    back.type = 'button';
+    const exit = node('button', 'secondary-button', '退出预览');
+    exit.type = 'button';
+    back.addEventListener('click', () => {
+      open();
+      switchTab('homepage');
+    });
+    exit.addEventListener('click', () => {
+      window.location.reload();
+    });
+    bar.append(label, back, exit);
+    document.body.append(bar);
+    refreshIcons();
+  }
+
   function switchTab(tab) {
     document.querySelectorAll('[data-admin-tab]').forEach((button) => button.classList.toggle('active', button.dataset.adminTab === tab));
     document.querySelectorAll('[data-admin-panel]').forEach((panel) => { panel.hidden = panel.dataset.adminPanel !== tab; });
@@ -262,6 +288,7 @@ export function initAdmin({ api, store }) {
         document.getElementById('home-final-share-button').hidden = draft.show_share_button === false;
         close();
         document.getElementById('brand-home-button').click();
+        showDraftPreviewBar();
         showToast('正在预览草稿，刷新页面后会恢复正式内容', { tone: 'success' });
       };
       form.addEventListener('submit', async (event) => {
