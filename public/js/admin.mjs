@@ -212,7 +212,8 @@ export function initAdmin({ api, store }) {
     container.textContent = '正在加载首页内容…';
     try {
       const response = await api.request('/api/admin/homepage');
-      const homepage = response.homepage;
+      const cleanup = await api.request('/api/admin/launch-cleanup');
+      const homepage = response.draft || response.homepage;
       const form = node('form', 'settings-form');
       const heroTitle = document.createElement('input');
       heroTitle.value = homepage.hero_title || '';
@@ -224,32 +225,99 @@ export function initAdmin({ api, store }) {
       const share = document.createElement('input');
       share.type = 'checkbox';
       share.checked = Boolean(homepage.show_share_button);
-      const save = node('button', 'primary-button', '保存首页内容');
+      const save = node('button', 'primary-button', '保存草稿');
       save.type = 'submit';
+      const preview = node('button', 'secondary-button', '预览草稿');
+      preview.type = 'button';
+      const publish = node('button', 'secondary-button', '发布到正式首页');
+      publish.type = 'button';
+      const status = node(
+        'p',
+        'field-hint',
+        response.has_unpublished_changes
+          ? '当前有尚未发布的草稿修改。正式首页仍显示上一次发布的内容。'
+          : `草稿与正式首页一致${response.published_at ? ` · 上次发布：${new Date(response.published_at).toLocaleString()}` : ''}`
+      );
+      const actions = node('div', 'admin-actions');
+      actions.append(save, preview, publish);
       form.append(
+        status,
         field('首页主标题', heroTitle),
         field('首页副标题', tagline),
         field('底部行动标题', finalTitle),
         field('显示邀请同工按钮', share),
-        save
+        actions
       );
+      const currentDraft = () => ({
+        hero_title: heroTitle.value,
+        hero_tagline: tagline.value,
+        final_cta_title: finalTitle.value,
+        show_share_button: share.checked
+      });
+      const applyDraftPreview = () => {
+        const draft = currentDraft();
+        document.querySelector('.hero-copy h1').textContent = draft.hero_title;
+        document.querySelector('.hero-tagline').textContent = draft.hero_tagline;
+        document.getElementById('home-final-title').textContent = draft.final_cta_title;
+        document.getElementById('home-final-share-button').hidden = draft.show_share_button === false;
+        close();
+        document.getElementById('brand-home-button').click();
+        showToast('正在预览草稿，刷新页面后会恢复正式内容', { tone: 'success' });
+      };
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const result = await api.request('/api/admin/homepage', {
           method: 'PATCH',
-          body: JSON.stringify({
-            hero_title: heroTitle.value,
-            hero_tagline: tagline.value,
-            final_cta_title: finalTitle.value,
-            show_share_button: share.checked
-          })
+          body: JSON.stringify(currentDraft())
         });
         showToast(result.message, { tone: 'success' });
+        loadHomepage();
       });
-      container.replaceChildren(form);
+      preview.addEventListener('click', applyDraftPreview);
+      publish.addEventListener('click', async () => {
+        await api.request('/api/admin/homepage', {
+          method: 'PATCH',
+          body: JSON.stringify(currentDraft())
+        });
+        const result = await api.request('/api/admin/homepage/publish', { method: 'POST' });
+        showToast(result.message, { tone: 'success' });
+        loadHomepage();
+      });
+      container.replaceChildren(form, renderLaunchCleanup(cleanup));
     } catch (error) {
       container.textContent = error.message;
     }
+  }
+
+  function renderLaunchCleanup(cleanup) {
+    const panel = node('section', 'admin-list');
+    panel.append(node('h2', '', '上线准备'));
+    if (cleanup.initial_cleanup_done) {
+      panel.append(node('p', 'admin-empty', '首次上线清空测试数据已完成，后续不能再次清空。'));
+      return panel;
+    }
+    panel.append(node('p', 'field-hint', '首次正式发布前可清空测试数据。此操作只保留管理员账号、首页内容、活动设置、教会基础资料和系统配置。执行后将永久关闭此功能。'));
+    const counts = cleanup.counts || {};
+    panel.append(node('p', 'field-hint', `当前将清空：普通用户 ${counts.users || 0}、需求 ${counts.wishes || 0}、评论 ${counts.comments || 0}、通知 ${counts.notifications || 0}、邮件记录 ${counts.email_logs || 0}`));
+    const button = node('button', 'secondary-button', '首次上线清空测试数据');
+    button.type = 'button';
+    button.addEventListener('click', async () => {
+      const confirmation = cleanup.confirmation || '确认首次上线清空';
+      const confirmText = window.prompt(`此操作只能执行一次。请输入“${confirmation}”确认。`);
+      if (confirmText === null) return;
+      try {
+        const result = await api.request('/api/admin/launch-cleanup', {
+          method: 'POST',
+          body: JSON.stringify({ confirm: confirmText })
+        });
+        showToast(result.message, { tone: 'success' });
+        loadHomepage();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+    panel.append(button);
+    return panel;
   }
 
   async function loadEmails() {

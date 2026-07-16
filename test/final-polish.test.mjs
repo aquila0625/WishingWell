@@ -93,3 +93,13 @@ test('notification badge is anchored to the bell button', () => {
   assert.match(css, /#notification-button\s*\{[^}]*position:\s*relative/s);
   assert.match(css, /\.notification-badge\s*\{[^}]*position:\s*absolute/s);
 });
+
+test('admin homepage tools expose draft publish and one-time cleanup actions', () => {
+  const admin = fs.readFileSync(new URL('../public/js/admin.mjs', import.meta.url), 'utf8');
+
+  assert.match(admin, /保存草稿/);
+  assert.match(admin, /预览草稿/);
+  assert.match(admin, /发布到正式首页/);
+  assert.match(admin, /首次上线清空测试数据/);
+  assert.match(admin, /确认首次上线清空/);
+});

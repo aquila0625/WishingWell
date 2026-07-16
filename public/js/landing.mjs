@@ -63,8 +63,8 @@ export function initLanding({ api, store }) {
   async function loadCampaign() {
     const campaign = await api.request('/api/campaign');
     store.set({ campaign });
-    applyHomepage(campaign.homepage);
     setLocale(getLocale());
+    applyHomepage(campaign.homepage);
     startCountdown(campaign);
   }
 

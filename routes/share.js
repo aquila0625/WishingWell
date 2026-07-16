@@ -11,7 +11,12 @@ function createShareRouter({ database }) {
       && settings.deadline
       && Date.now() >= Date.parse(settings.deadline)
     );
-    res.json({ ...settings, homepage: settings.homepage || null, closed });
+    res.json({
+      enabled: Boolean(settings.enabled),
+      deadline: settings.deadline || null,
+      homepage: settings.homepage_published || settings.homepage || null,
+      closed
+    });
   });
 
   router.get('/share/qr', async (req, res, next) => {

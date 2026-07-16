@@ -5,10 +5,48 @@ const WISH_STATUSES = new Set([
   'voting', 'accepted', 'planned', 'developing', 'testing', 'completed', 'rejected', 'merged', 'hidden'
 ]);
 
+const DEFAULT_HOMEPAGE = {
+  hero_title: 'ChurchOS 教会通 APP',
+  hero_tagline: '与全球教会同工一起，定义未来的全场景数字化服侍平台',
+  final_cta_title: '共同定义 ChurchOS 教会通 APP 的第一版',
+  show_share_button: true
+};
+
+const INITIAL_CLEANUP_CONFIRMATION = '确认首次上线清空';
+
 function createAdminRouter({ database, sessionSecret }) {
   const router = express.Router();
   const requireAdmin = adminAuthenticate(database, { sessionSecret });
   router.use(requireAdmin);
+
+  async function readSettings() {
+    const settings = (await database.read('settings'))[0] || {};
+    return { id: 1, enabled: false, deadline: null, ...settings };
+  }
+
+  async function writeSettings(updates) {
+    const settings = await readSettings();
+    const nextSettings = { ...settings, ...updates, id: Number(settings.id || 1) };
+    await database.write('settings', [nextSettings]);
+    return nextSettings;
+  }
+
+  function normalizeHomepage(homepage) {
+    return { ...DEFAULT_HOMEPAGE, ...(homepage || {}) };
+  }
+
+  function homepageState(settings) {
+    const draft = normalizeHomepage(settings.homepage_draft || settings.homepage || settings.homepage_published);
+    const published = normalizeHomepage(settings.homepage_published || settings.homepage);
+    const hasUnpublishedChanges = JSON.stringify(draft) !== JSON.stringify(published);
+    return {
+      homepage: draft,
+      draft,
+      published,
+      has_unpublished_changes: hasUnpublishedChanges,
+      published_at: settings.homepage_published_at || null
+    };
+  }
 
   async function notify(userId, type, message) {
     await database.insert('notifications', { user_id: Number(userId), type, message, read: false });
@@ -52,16 +90,6 @@ function createAdminRouter({ database, sessionSecret }) {
       }
     }
     return results;
-  }
-
-  async function getHomepageSettings() {
-    const settings = (await database.read('settings'))[0] || {};
-    return settings.homepage || {
-      hero_title: 'ChurchOS 教会通 APP',
-      hero_tagline: '与全球教会同工一起，定义未来的全场景数字化服侍平台',
-      final_cta_title: '共同定义 ChurchOS 教会通 APP 的第一版',
-      show_share_button: true
-    };
   }
 
   router.get('/wishes', async (req, res) => {
@@ -162,11 +190,10 @@ function createAdminRouter({ database, sessionSecret }) {
   });
 
   router.get('/homepage', async (req, res) => {
-    res.json({ homepage: await getHomepageSettings() });
+    res.json(homepageState(await readSettings()));
   });
 
   router.patch('/homepage', async (req, res) => {
-    const settings = (await database.read('settings'))[0] || { id: 1, enabled: false, deadline: null };
     const homepage = {
       hero_title: String(req.body.hero_title || '').trim(),
       hero_tagline: String(req.body.hero_tagline || '').trim(),
@@ -176,8 +203,65 @@ function createAdminRouter({ database, sessionSecret }) {
     if (!homepage.hero_title || !homepage.hero_tagline || !homepage.final_cta_title) {
       return res.status(400).json({ error: '首页主要文案不能为空' });
     }
-    await database.write('settings', [{ ...settings, homepage }]);
-    res.json({ message: '首页内容已保存', homepage });
+    const settings = await writeSettings({ homepage_draft: homepage });
+    res.json({ message: '首页草稿已保存', ...homepageState(settings) });
+  });
+
+  router.post('/homepage/publish', async (req, res) => {
+    const settings = await readSettings();
+    const draft = normalizeHomepage(settings.homepage_draft || settings.homepage || settings.homepage_published);
+    const nextSettings = await writeSettings({
+      homepage_draft: draft,
+      homepage_published: draft,
+      homepage_published_at: new Date().toISOString()
+    });
+    res.json({ message: '首页内容已发布到正式网站', ...homepageState(nextSettings) });
+  });
+
+  async function launchCleanupCounts() {
+    const users = (await database.read('users')).filter((user) => !user.is_admin).length;
+    const wishes = (await database.read('wishes')).length;
+    const comments = (await database.read('comments')).length;
+    const notifications = (await database.read('notifications')).length;
+    const emailLogs = (await database.read('email_logs')).length;
+    return { users, wishes, comments, notifications, email_logs: emailLogs };
+  }
+
+  router.get('/launch-cleanup', async (req, res) => {
+    const settings = await readSettings();
+    res.json({
+      initial_cleanup_done: Boolean(settings.initial_cleanup_done),
+      confirmation: INITIAL_CLEANUP_CONFIRMATION,
+      counts: await launchCleanupCounts()
+    });
+  });
+
+  router.post('/launch-cleanup', async (req, res) => {
+    const settings = await readSettings();
+    if (settings.initial_cleanup_done) {
+      return res.status(409).json({ error: '首次上线清空已经执行过，后续不能再次清空数据' });
+    }
+    if (String(req.body.confirm || '').trim() !== INITIAL_CLEANUP_CONFIRMATION) {
+      return res.status(400).json({ error: `请输入“${INITIAL_CLEANUP_CONFIRMATION}”确认操作` });
+    }
+
+    const adminUsers = (await database.read('users')).filter((user) => user.is_admin);
+    await database.write('users', adminUsers);
+    await database.write('wishes', []);
+    await database.write('comments', []);
+    await database.write('notifications', []);
+    await database.write('email_logs', []);
+    await writeSettings({
+      initial_cleanup_done: true,
+      initial_cleanup_done_at: new Date().toISOString(),
+      initial_cleanup_done_by: req.user.id
+    });
+
+    res.json({
+      message: '首次上线测试数据已清空，此操作后续不可再次执行',
+      initial_cleanup_done: true,
+      counts: await launchCleanupCounts()
+    });
   });
 
   router.post('/progress-emails/send', async (req, res) => {
@@ -214,8 +298,7 @@ function createAdminRouter({ database, sessionSecret }) {
     if (enabled && (!deadline || Number.isNaN(deadline.getTime()))) {
       return res.status(400).json({ error: '请选择有效的截止时间' });
     }
-    const settings = { id: 1, enabled, deadline: deadline ? deadline.toISOString() : null };
-    await database.write('settings', [settings]);
+    const settings = await writeSettings({ enabled, deadline: deadline ? deadline.toISOString() : null });
     res.json({ ...settings, closed: Boolean(enabled && deadline && deadline.getTime() <= Date.now()) });
   });
 

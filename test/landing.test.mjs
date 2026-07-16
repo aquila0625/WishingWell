@@ -18,6 +18,12 @@ test('quick drawer stays open until the user clicks its handle', () => {
   assert.doesNotMatch(source, /addEventListener\('scroll'/);
 });
 
+test('published homepage content is applied after locale reset', () => {
+  const source = fs.readFileSync(new URL('../public/js/landing.mjs', import.meta.url), 'utf8');
+
+  assert.match(source, /setLocale\(getLocale\(\)\);\s*applyHomepage\(campaign\.homepage\);/s);
+});
+
 test('visual tokens preserve the approved navy and cyan reference palette', () => {
   const css = fs.readFileSync(new URL('../public/styles/tokens.css', import.meta.url), 'utf8');
   assert.match(css, /--color-bg:\s*#0b1120/i);

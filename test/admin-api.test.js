@@ -14,6 +14,8 @@ test('admin can update campaign settings and public users can read them', async 
   const response = await request(context.app).get('/api/campaign').expect(200);
   assert.equal(response.body.enabled, true);
   assert.equal(response.body.closed, false);
+  assert.equal(response.body.homepage_draft, undefined);
+  assert.equal(response.body.initial_cleanup_done, undefined);
 });
 
 test('non-admin users cannot access analysis', async (t) => {
@@ -120,7 +122,7 @@ test('admin can list and disable users', async (t) => {
     .expect(403);
 });
 
-test('admin can update homepage content settings', async (t) => {
+test('admin can draft and publish homepage content settings', async (t) => {
   const context = createApiContext(t);
 
   const payload = {
@@ -136,13 +138,90 @@ test('admin can update homepage content settings', async (t) => {
     .send(payload)
     .expect(200);
 
-  assert.deepEqual(saved.body.homepage, payload);
+  assert.deepEqual(saved.body.draft, payload);
+  assert.equal(saved.body.has_unpublished_changes, true);
+
+  const publicBeforePublish = await request(context.app)
+    .get('/api/campaign')
+    .expect(200);
+  assert.notEqual(publicBeforePublish.body.homepage?.hero_tagline, '共同定义第一版');
+  assert.equal(publicBeforePublish.body.homepage_draft, undefined);
 
   const read = await request(context.app)
     .get('/api/admin/homepage')
     .set('Authorization', authHeader(1))
     .expect(200);
-  assert.equal(read.body.homepage.hero_tagline, '共同定义第一版');
+  assert.equal(read.body.draft.hero_tagline, '共同定义第一版');
+  assert.notEqual(read.body.published.hero_tagline, '共同定义第一版');
+
+  const published = await request(context.app)
+    .post('/api/admin/homepage/publish')
+    .set('Authorization', authHeader(1))
+    .expect(200);
+
+  assert.deepEqual(published.body.published, payload);
+  assert.equal(published.body.has_unpublished_changes, false);
+
+  const publicAfterPublish = await request(context.app)
+    .get('/api/campaign')
+    .expect(200);
+  assert.equal(publicAfterPublish.body.homepage.hero_tagline, '共同定义第一版');
+  assert.equal(publicAfterPublish.body.homepage.show_share_button, false);
+});
+
+test('admin can run initial launch cleanup only once', async (t) => {
+  const context = createApiContext(t);
+
+  const before = await request(context.app)
+    .get('/api/admin/launch-cleanup')
+    .set('Authorization', authHeader(1))
+    .expect(200);
+
+  assert.equal(before.body.initial_cleanup_done, false);
+  assert.ok(before.body.counts.users > 0);
+  assert.ok(before.body.counts.wishes > 0);
+  assert.ok(before.body.counts.comments > 0);
+
+  await request(context.app)
+    .post('/api/admin/launch-cleanup')
+    .set('Authorization', authHeader(1))
+    .send({ confirm: '清空' })
+    .expect(400);
+
+  const cleaned = await request(context.app)
+    .post('/api/admin/launch-cleanup')
+    .set('Authorization', authHeader(1))
+    .send({ confirm: '确认首次上线清空' })
+    .expect(200);
+
+  assert.equal(cleaned.body.initial_cleanup_done, true);
+  assert.equal(cleaned.body.counts.users, 0);
+  assert.equal(cleaned.body.counts.wishes, 0);
+  assert.equal(cleaned.body.counts.comments, 0);
+  assert.equal(cleaned.body.counts.notifications, 0);
+  assert.equal(cleaned.body.counts.email_logs, 0);
+
+  const users = await request(context.app)
+    .get('/api/admin/users')
+    .set('Authorization', authHeader(1))
+    .expect(200);
+  assert.equal(users.body.items.length, 0);
+
+  const publicWishes = await request(context.app)
+    .get('/api/wishes')
+    .expect(200);
+  assert.equal(publicWishes.body.length, 0);
+
+  const campaign = await request(context.app)
+    .get('/api/campaign')
+    .expect(200);
+  assert.ok(Object.prototype.hasOwnProperty.call(campaign.body, 'enabled'));
+
+  await request(context.app)
+    .post('/api/admin/launch-cleanup')
+    .set('Authorization', authHeader(1))
+    .send({ confirm: '确认首次上线清空' })
+    .expect(409);
 });
 
 test('admin can simulate progress email and read send history', async (t) => {
