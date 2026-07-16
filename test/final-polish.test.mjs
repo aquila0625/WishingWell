@@ -43,6 +43,7 @@ test('live page no longer references obsolete monolithic assets', () => {
 
 test('home page presents the revised co-creation invitation', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const i18n = fs.readFileSync(new URL('../public/js/i18n.mjs', import.meta.url), 'utf8');
 
   assert.match(html, /ChurchOS 教会通 APP · 早期需求共创计划/);
   assert.match(html, /<h1[^>]*data-i18n="hero\.title"[^>]*>ChurchOS 教会通 APP<\/h1>/);
@@ -56,6 +57,9 @@ test('home page presents the revised co-creation invitation', () => {
   assert.match(html, /id="pain-points"/);
   assert.match(html, /id="co-creation-path"/);
   assert.match(html, /id="home-final-cta"/);
+  assert.doesNotMatch(html, /亲爱的教牧同工/);
+  assert.doesNotMatch(html, /data-i18n="pain\.greeting"/);
+  assert.doesNotMatch(i18n, /'pain\.greeting'/);
 });
 
 test('home final share action uses the shared dialog binding', () => {
