@@ -12,7 +12,7 @@ function createElement(text, key) {
   };
 }
 
-test('setLocale translates launch-page copy across four built-in locales', () => {
+test('setLocale translates launch-page copy across built-in locales', () => {
   const title = createElement('ChurchOS 教会通 APP', 'hero.title');
   const description = createElement('', 'hero.description');
   const submit = createElement('提交我的需求', 'action.submitNeed');
@@ -36,6 +36,16 @@ test('setLocale translates launch-page copy across four built-in locales', () =>
   assert.equal(title.textContent, 'ChurchOS App Iglesia Conectada');
   assert.match(description.textContent, /gestión digital/);
   assert.equal(submit.textContent, 'Enviar mi necesidad');
+
+  assert.equal(setLocale('ko'), 'ko');
+  assert.equal(title.textContent, 'ChurchOS 교회통 앱');
+  assert.match(description.textContent, /디지털 교회 관리/);
+  assert.equal(submit.textContent, '내 필요 제출');
+
+  assert.equal(setLocale('fr'), 'fr');
+  assert.equal(title.textContent, 'ChurchOS App Église Connectée');
+  assert.match(description.textContent, /gestion numérique/);
+  assert.equal(submit.textContent, 'Soumettre mon besoin');
 
   assert.equal(setLocale('zh-TW'), 'zh-TW');
   assert.equal(title.textContent, 'ChurchOS 教會通 APP');

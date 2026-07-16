@@ -3,16 +3,18 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { getSupportedLocales } from '../public/js/i18n.mjs';
 
-test('language switcher exposes the four launch locales', () => {
+test('language switcher exposes the built-in homepage locales', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
 
-  assert.deepEqual(getSupportedLocales(), ['zh-CN', 'zh-TW', 'en', 'es']);
+  assert.deepEqual(getSupportedLocales(), ['zh-CN', 'zh-TW', 'en', 'es', 'ko', 'fr']);
   assert.match(html, /data-locale="zh-CN"/);
   assert.match(html, /data-locale="zh-TW"/);
   assert.match(html, /data-locale="en"/);
   assert.match(html, /data-locale="es"/);
+  assert.match(html, /data-locale="ko"/);
+  assert.match(html, /data-locale="fr"/);
   assert.doesNotMatch(html, /data-locale="pt"/);
-  assert.doesNotMatch(html, /data-locale="fr"/);
+  assert.doesNotMatch(html, /data-locale="de"/);
 });
 
 test('HTML includes concise administrator console tabs', () => {
