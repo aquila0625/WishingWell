@@ -76,6 +76,16 @@ test('home final share action uses the shared dialog binding', () => {
   assert.match(sharing, /querySelectorAll\('\[data-open-share\]'\)/);
 });
 
+test('wish wall invites broad participation around real needs', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+
+  assert.match(html, /ChurchOS 第一版需求共创/);
+  assert.match(html, /<h1[^>]*data-i18n="wall\.title"[^>]*>真实需求共创墙<\/h1>/);
+  assert.match(html, /这里收集来自教会生活、服侍协作和管理流程中的真实问题/);
+  assert.match(html, /提出一个新需求，还是为别人的建议表达同感、补充经历/);
+  assert.doesNotMatch(html, /<h1>需求许愿墙<\/h1>/);
+});
+
 test('hero removes duplicate actions without breaking optional shell bindings', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const app = fs.readFileSync(new URL('../public/js/app.mjs', import.meta.url), 'utf8');
