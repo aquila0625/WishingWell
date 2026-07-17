@@ -137,7 +137,7 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.font = '400 25px sans-serif';
   context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 118);
   context.font = '400 20px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 54);
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 70);
   context.textAlign = 'left';
 }
 

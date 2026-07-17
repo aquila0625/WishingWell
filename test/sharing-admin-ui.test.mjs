@@ -30,7 +30,7 @@ test('poster QR caption uses larger type and roomier spacing', async () => {
   assert.match(source, /context\.font = '400 25px sans-serif';/);
   assert.match(source, /context\.fillText\(model\.qrSubtitle, width \/ 2, qrY \+ qrSize \+ 118\)/);
   assert.match(source, /context\.font = '400 20px sans-serif';/);
-  assert.match(source, /width \/ 2, height - 54\)/);
+  assert.match(source, /width \/ 2, height - 70\)/);
 });
 
 test('notification summary counts unread items only', () => {
