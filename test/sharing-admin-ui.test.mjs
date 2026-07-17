@@ -20,6 +20,19 @@ test('poster model uses the current URL and campaign title', () => {
   );
 });
 
+test('poster QR caption uses larger type and roomier spacing', async () => {
+  const source = await import('node:fs/promises')
+    .then((fs) => fs.readFile(new URL('../public/js/sharing.mjs', import.meta.url), 'utf8'));
+
+  assert.match(source, /context\.font = '700 34px sans-serif';/);
+  assert.match(source, /const qrY = height - 470;/);
+  assert.match(source, /context\.fillText\(model\.qrTitle, width \/ 2, qrY \+ qrSize \+ 70\)/);
+  assert.match(source, /context\.font = '400 25px sans-serif';/);
+  assert.match(source, /context\.fillText\(model\.qrSubtitle, width \/ 2, qrY \+ qrSize \+ 118\)/);
+  assert.match(source, /context\.font = '400 20px sans-serif';/);
+  assert.match(source, /width \/ 2, height - 54\)/);
+});
+
 test('notification summary counts unread items only', () => {
   assert.deepEqual(
     notificationSummary([{ read: false }, { read: true }, { read: false }]),

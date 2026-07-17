@@ -125,19 +125,19 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
 
   const qrSize = 250;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 410;
+  const qrY = height - 470;
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
   context.drawImage(qr, qrX, qrY, qrSize, qrSize);
   context.fillStyle = '#f8fafc';
-  context.font = '700 30px sans-serif';
-  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 62);
+  context.font = '700 34px sans-serif';
+  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 70);
   context.fillStyle = '#94a3b8';
-  context.font = '400 22px sans-serif';
-  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 100);
-  context.font = '400 18px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 78);
+  context.font = '400 25px sans-serif';
+  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 118);
+  context.font = '400 20px sans-serif';
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 54);
   context.textAlign = 'left';
 }
 
