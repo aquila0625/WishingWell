@@ -52,6 +52,29 @@
   font-size: 1rem;
 }
 
+.survey-participant-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 12px 16px;
+  border: 1px solid rgba(34, 211, 238, 0.38);
+  border-radius: 999px;
+  color: var(--color-text);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.16), rgba(99, 102, 241, 0.14));
+  box-shadow: var(--shadow-glow);
+  font-weight: 600;
+}
+
+.survey-participant-callout i {
+  color: var(--color-primary);
+}
+
+.survey-participant-callout strong {
+  color: var(--color-primary);
+  font-size: 1.35rem;
+}
+
 .hero-signal {
   display: grid;
   border-block: 1px solid var(--color-border);

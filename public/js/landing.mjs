@@ -9,6 +9,10 @@ export function formatRemainingTime(deadline, now = Date.now()) {
   return `${String(days).padStart(2, '0')}天 ${String(hours).padStart(2, '0')}时 ${String(minutes).padStart(2, '0')}分 ${String(seconds).padStart(2, '0')}秒`;
 }
 
+function formatCounter(value) {
+  return new Intl.NumberFormat(getLocale()).format(Number(value) || 0);
+}
+
 export function initLanding({ api, store }) {
   const drawer = document.getElementById('quick-drawer');
   const handle = document.getElementById('drawer-handle');
@@ -60,6 +64,27 @@ export function initLanding({ api, store }) {
     if (shareButton) shareButton.hidden = homepage.show_share_button === false;
   }
 
+  function renderPublicStats(stats = {}) {
+    const values = {
+      participants: stats.participants,
+      requirements: stats.requirements,
+      planned: stats.planned
+    };
+    for (const [key, value] of Object.entries(values)) {
+      document.querySelectorAll(`[data-stat="${key}"]`).forEach((node) => {
+        node.textContent = formatCounter(value);
+      });
+    }
+  }
+
+  async function loadPublicStats() {
+    try {
+      renderPublicStats(await api.request('/api/public-stats'));
+    } catch (error) {
+      console.warn('Public statistics unavailable', error);
+    }
+  }
+
   async function loadCampaign() {
     const campaign = await api.request('/api/campaign');
     store.set({ campaign });
@@ -75,5 +100,5 @@ export function initLanding({ api, store }) {
       startCountdown(state.campaign);
     }
   });
-  return { loadCampaign, setExpanded };
+  return { loadCampaign, loadPublicStats, renderPublicStats, setExpanded };
 }

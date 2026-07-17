@@ -100,6 +100,7 @@ async function bootstrapApp() {
   try {
     const landing = initLanding({ api, store });
     await landing.loadCampaign();
+    await landing.loadPublicStats();
   } catch (error) {
     console.warn('Campaign settings unavailable', error);
   }

@@ -98,6 +98,21 @@ function createApp({
       staging
     });
   });
+  app.get('/api/public-stats', async (req, res) => {
+    const [users, wishes, comments] = await Promise.all([
+      database.read('users'),
+      database.read('wishes'),
+      database.read('comments')
+    ]);
+    const visibleWishes = wishes.filter((wish) => wish.status !== 'hidden');
+    const plannedStatuses = new Set(['accepted', 'planned', 'developing', 'testing', 'completed']);
+    res.json({
+      participants: users.filter((user) => !user.is_admin && !user.disabled).length,
+      requirements: visibleWishes.length,
+      planned: visibleWishes.filter((wish) => plannedStatuses.has(wish.status)).length,
+      comments: comments.length
+    });
+  });
   app.use('/api', createShareRouter({ database }));
   app.use('/api', createAuthRouter({ database, upload, sessionSecret }));
   app.use('/api', createWishesRouter({ database, upload, sessionSecret }));

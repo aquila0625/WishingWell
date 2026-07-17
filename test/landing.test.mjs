@@ -24,6 +24,14 @@ test('published homepage content is applied after locale reset', () => {
   assert.match(source, /setLocale\(getLocale\(\)\);\s*applyHomepage\(campaign\.homepage\);/s);
 });
 
+test('homepage loads public statistics into visible counters', () => {
+  const source = fs.readFileSync(new URL('../public/js/landing.mjs', import.meta.url), 'utf8');
+
+  assert.match(source, /api\.request\('\/api\/public-stats'\)/);
+  assert.match(source, /function renderPublicStats/);
+  assert.match(source, /\[data-stat/);
+});
+
 test('visual tokens preserve the approved navy and cyan reference palette', () => {
   const css = fs.readFileSync(new URL('../public/styles/tokens.css', import.meta.url), 'utf8');
   assert.match(css, /--color-bg:\s*#0b1120/i);
