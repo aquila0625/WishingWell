@@ -131,12 +131,12 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   });
 
   context.fillStyle = '#94a3b8';
-  context.font = '500 24px sans-serif';
+  context.font = '500 22px sans-serif';
   context.textAlign = 'center';
   const qrSize = 220;
   const qrX = (width - qrSize) / 2;
   const qrY = height - 430;
-  context.fillText(model.audience, width / 2, qrY - 58);
+  context.fillText(model.audience, width / 2, qrY - 32);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
