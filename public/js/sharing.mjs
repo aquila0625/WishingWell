@@ -52,19 +52,22 @@ function textTokens(text) {
 }
 
 function measureLines(context, text, maxWidth) {
-  const tokens = textTokens(String(text || ''));
   const lines = [];
-  let line = '';
-  for (const token of tokens) {
-    const next = line + token;
-    if (context.measureText(next).width > maxWidth && line) {
-      lines.push(line.trimEnd());
-      line = token.trimStart();
-    } else {
-      line = next;
+  const paragraphs = String(text || '').split('\n');
+  for (const paragraph of paragraphs) {
+    const tokens = textTokens(paragraph);
+    let line = '';
+    for (const token of tokens) {
+      const next = line + token;
+      if (context.measureText(next).width > maxWidth && line) {
+        lines.push(line.trimEnd());
+        line = token.trimStart();
+      } else {
+        line = next;
+      }
     }
+    if (line) lines.push(line.trim());
   }
-  if (line) lines.push(line.trim());
   return lines.length ? lines : [''];
 }
 
@@ -151,7 +154,7 @@ export function calculatePosterLayout(context, model, width) {
     font: '600 30px sans-serif',
     x: width / 2,
     y: cursor + 42,
-    maxWidth: width - 440,
+    maxWidth: width - 150,
     lineHeight: 36,
     align: 'center'
   });
