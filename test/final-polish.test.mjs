@@ -180,6 +180,9 @@ test('admin homepage tools expose campaign deadline settings', () => {
   assert.match(admin, /datetime-local/);
   assert.match(admin, /\/api\/admin\/campaign/);
   assert.match(admin, /重新设置未来时间后，普通用户可再次提交、助力和评论/);
+  assert.match(admin, /立即截止，进入只读/);
+  assert.match(admin, /重新开放征集/);
+  assert.doesNotMatch(admin, /关闭截止限制/);
 });
 
 test('wish wall presents read-only mode after campaign deadline', () => {

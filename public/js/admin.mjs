@@ -348,15 +348,17 @@ export function initAdmin({ api, store }) {
     deadline.value = toDatetimeLocal(campaign.deadline);
     const save = node('button', 'primary-button', '保存截止时间');
     save.type = 'submit';
-    const disable = node('button', 'secondary-button', '关闭截止限制');
-    disable.type = 'button';
+    const closeNow = node('button', 'secondary-button', '立即截止，进入只读');
+    closeNow.type = 'button';
+    const reopen = node('button', 'secondary-button', '重新开放征集');
+    reopen.type = 'button';
     form.append(
       field('开启本阶段需求征集截止时间', enabled),
       field('截止到哪天几点', deadline),
-      node('p', 'field-hint', '到达截止时间后，普通用户仍可查看需求，但不能再提交需求、助力或评论。'),
+      node('p', 'field-hint', '到达截止时间后，普通用户仍可查看需求，但不能再提交需求、助力或评论。若要马上停止收集，请点击“立即截止，进入只读”。'),
       node('div', 'admin-actions')
     );
-    form.querySelector('.admin-actions').append(save, disable);
+    form.querySelector('.admin-actions').append(save, closeNow, reopen);
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       try {
@@ -374,14 +376,27 @@ export function initAdmin({ api, store }) {
         showToast(error.message, { tone: 'error' });
       }
     });
-    disable.addEventListener('click', async () => {
+    closeNow.addEventListener('click', async () => {
+      try {
+        const result = await api.request('/api/admin/campaign', {
+          method: 'PATCH',
+          body: JSON.stringify({ enabled: true, deadline: new Date(Date.now() - 1000).toISOString() })
+        });
+        store.set({ campaign: result });
+        showToast('已立即截止，普通用户进入只读模式', { tone: 'success' });
+        loadHomepage();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+    reopen.addEventListener('click', async () => {
       try {
         const result = await api.request('/api/admin/campaign', {
           method: 'PATCH',
           body: JSON.stringify({ enabled: false, deadline: null })
         });
         store.set({ campaign: result });
-        showToast('已关闭截止限制，普通用户可继续参与', { tone: 'success' });
+        showToast('已重新开放征集，普通用户可继续参与', { tone: 'success' });
         loadHomepage();
       } catch (error) {
         showToast(error.message, { tone: 'error' });
