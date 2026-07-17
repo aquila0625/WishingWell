@@ -372,7 +372,8 @@
   font-weight: 700;
 }
 
-.select-field {
+.select-field,
+.sort-menu {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -381,6 +382,40 @@
 
 .select-field select {
   width: auto;
+}
+
+.sort-menu {
+  position: relative;
+}
+
+.sort-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 70;
+  width: 150px;
+  padding: 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  background: rgba(17, 24, 39, 0.98);
+  box-shadow: var(--shadow-panel);
+}
+
+.sort-options button {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--color-text);
+  background: transparent;
+  text-align: left;
+}
+
+.sort-options button:hover,
+.sort-options button[aria-selected="true"] {
+  color: var(--color-primary);
+  background: rgba(34, 211, 238, 0.08);
 }
 
 .wish-grid {

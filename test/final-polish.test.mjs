@@ -86,6 +86,19 @@ test('wish wall invites broad participation around real needs', () => {
   assert.doesNotMatch(html, /<h1>需求许愿墙<\/h1>/);
 });
 
+test('wish wall sort menu is anchored below its trigger', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const css = fs.readFileSync(new URL('../public/styles/pages.css', import.meta.url), 'utf8');
+  const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+
+  assert.match(html, /id="wish-sort-button"[^>]+aria-controls="wish-sort-menu"/);
+  assert.match(html, /id="wish-sort-menu"[^>]+hidden/);
+  assert.doesNotMatch(html, /id="wish-sort"[^>]*<option/);
+  assert.match(css, /\.sort-menu\s*\{[^}]*position:\s*relative/s);
+  assert.match(css, /\.sort-options\s*\{[^}]*position:\s*absolute[^}]*top:\s*calc\(100% \+ 8px\)/s);
+  assert.match(wishes, /wishSortButton\.setAttribute\('aria-expanded'/);
+});
+
 test('hero removes duplicate actions without breaking optional shell bindings', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const app = fs.readFileSync(new URL('../public/js/app.mjs', import.meta.url), 'utf8');

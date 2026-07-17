@@ -53,7 +53,10 @@ function element(tag, className, text) {
 export function initWishWall({ api, store, auth }) {
   const grid = document.getElementById('wish-grid');
   const empty = document.getElementById('wish-empty-state');
-  const sortSelect = document.getElementById('wish-sort');
+  const sortControl = document.getElementById('wish-sort-control');
+  const wishSortButton = document.getElementById('wish-sort-button');
+  const wishSortMenu = document.getElementById('wish-sort-menu');
+  const wishSortLabel = document.getElementById('wish-sort-label');
   const categoryTabs = document.getElementById('category-tabs');
   const wishDialog = document.getElementById('wish-form-dialog');
   const wishForm = document.getElementById('wish-form');
@@ -572,9 +575,35 @@ export function initWishWall({ api, store, auth }) {
     render();
   });
 
-  sortSelect.addEventListener('change', () => {
-    sort = sortSelect.value;
+  function closeSortMenu() {
+    wishSortMenu.hidden = true;
+    wishSortButton.setAttribute('aria-expanded', 'false');
+  }
+
+  wishSortButton.addEventListener('click', () => {
+    wishSortMenu.hidden = !wishSortMenu.hidden;
+    wishSortButton.setAttribute('aria-expanded', String(!wishSortMenu.hidden));
+  });
+
+  wishSortMenu.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-sort]');
+    if (!option) return;
+    sort = option.dataset.sort;
+    wishSortLabel.textContent = option.textContent;
+    wishSortMenu.querySelectorAll('[data-sort]').forEach((button) => {
+      button.setAttribute('aria-selected', String(button === option));
+    });
+    closeSortMenu();
     render();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (sortControl.contains(event.target)) return;
+    closeSortMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeSortMenu();
   });
 
   ['wall-submit-button', 'drawer-submit-button'].forEach((id) => {

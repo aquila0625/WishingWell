@@ -203,8 +203,14 @@
     flex: 0 0 auto;
   }
 
-  .select-field {
+  .select-field,
+  .sort-menu {
     justify-content: space-between;
+  }
+
+  .sort-options {
+    right: 0;
+    left: auto;
   }
 
   .wish-card {

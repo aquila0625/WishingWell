@@ -149,7 +149,14 @@
             <button type="button" data-category="初信造就" aria-selected="false">初信造就</button>
             <button type="button" data-category="更多事工" aria-selected="false">更多事工</button>
           </div>
-          <label class="select-field">排序<select id="wish-sort"><option value="votes">同感热度</option><option value="date">最新发布</option></select></label>
+          <div class="sort-menu" id="wish-sort-control">
+            <span>排序</span>
+            <button class="compact-button" id="wish-sort-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="wish-sort-menu"><span id="wish-sort-label">同感热度</span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="sort-options" id="wish-sort-menu" role="listbox" aria-label="排序方式" hidden>
+              <button type="button" data-sort="votes" role="option" aria-selected="true">同感热度</button>
+              <button type="button" data-sort="date" role="option" aria-selected="false">最新发布</button>
+            </div>
+          </div>
         </div>
         <div class="wish-grid" id="wish-grid" aria-live="polite"></div>
         <div class="empty-state" id="wish-empty-state" hidden><i data-lucide="inbox" aria-hidden="true"></i><h2>这个分类还没有需求</h2><p>成为第一位提出服侍痛点的同工。</p><button class="primary-button" type="button" data-open-wish>提交需求</button></div>
