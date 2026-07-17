@@ -173,6 +173,26 @@ test('admin homepage tools expose draft publish and one-time cleanup actions', (
   assert.match(admin, /确认首次上线清空/);
 });
 
+test('admin homepage tools expose campaign deadline settings', () => {
+  const admin = fs.readFileSync(new URL('../public/js/admin.mjs', import.meta.url), 'utf8');
+
+  assert.match(admin, /需求征集截止时间/);
+  assert.match(admin, /datetime-local/);
+  assert.match(admin, /\/api\/admin\/campaign/);
+  assert.match(admin, /重新设置未来时间后，普通用户可再次提交、助力和评论/);
+});
+
+test('wish wall presents read-only mode after campaign deadline', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+
+  assert.match(html, /id="readonly-campaign-notice"/);
+  assert.match(wishes, /function campaignIsClosed/);
+  assert.match(wishes, /readonly-campaign-notice/);
+  assert.match(wishes, /本阶段需求征集已截止，您仍可查看已有需求/);
+  assert.match(wishes, /vote\.disabled = campaignIsClosed\(\)/);
+});
+
 test('staging environment badge is rendered only from environment metadata', () => {
   const app = fs.readFileSync(new URL('../public/js/app.mjs', import.meta.url), 'utf8');
   const css = fs.readFileSync(new URL('../public/styles/components.css', import.meta.url), 'utf8');

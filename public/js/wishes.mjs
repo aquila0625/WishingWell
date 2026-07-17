@@ -58,6 +58,7 @@ function element(tag, className, text) {
 export function initWishWall({ api, store, auth }) {
   const grid = document.getElementById('wish-grid');
   const empty = document.getElementById('wish-empty-state');
+  const readonlyNotice = document.getElementById('readonly-campaign-notice');
   const sortControl = document.getElementById('wish-sort-control');
   const wishSortButton = document.getElementById('wish-sort-button');
   const wishSortMenu = document.getElementById('wish-sort-menu');
@@ -87,6 +88,26 @@ export function initWishWall({ api, store, auth }) {
   let audioChunks = [];
   let recordingStream = null;
   let discardRecording = false;
+
+  function campaignIsClosed() {
+    const campaign = store.get().campaign || {};
+    return Boolean(campaign.closed || (
+      campaign.enabled
+      && campaign.deadline
+      && Date.now() >= Date.parse(campaign.deadline)
+    ));
+  }
+
+  function updateReadonlyMode() {
+    const closed = campaignIsClosed();
+    if (readonlyNotice) readonlyNotice.hidden = !closed;
+    document.querySelectorAll('[data-open-wish], #wall-submit-button, #drawer-submit-button').forEach((button) => {
+      button.disabled = closed;
+      button.classList.toggle('is-disabled', closed);
+      if (closed) button.setAttribute('aria-disabled', 'true');
+      else button.removeAttribute('aria-disabled');
+    });
+  }
 
   function replaceWish(updated) {
     store.set({
@@ -140,8 +161,13 @@ export function initWishWall({ api, store, auth }) {
     vote.setAttribute('aria-label', `${wish.votes || 0} 位同工表示同感`);
     const voted = store.get().user && (wish.voted_users || []).includes(store.get().user.id);
     vote.classList.toggle('active', Boolean(voted));
+    vote.disabled = campaignIsClosed();
     vote.innerHTML = `<i data-lucide="heart" aria-hidden="true"></i><strong>${wish.votes || 0}</strong><small>${voted ? '已同感' : '同感'}</small>`;
     vote.addEventListener('click', () => auth.requireAuth(async () => {
+      if (campaignIsClosed()) {
+        showToast('本阶段需求征集已截止，您仍可查看已有需求', { tone: 'info' });
+        return;
+      }
       const previous = wish;
       const optimistic = { ...wish, ...updateVoteState(wish, store.get().user.id) };
       replaceWish(optimistic);
@@ -169,6 +195,7 @@ export function initWishWall({ api, store, auth }) {
     );
     grid.replaceChildren(...wishes.map(renderCard));
     empty.hidden = wishes.length > 0;
+    updateReadonlyMode();
     refreshIcons();
   }
 
@@ -271,6 +298,10 @@ export function initWishWall({ api, store, auth }) {
 
   function openWishForm() {
     auth.requireAuth(() => {
+      if (campaignIsClosed()) {
+        showToast('本阶段需求征集已截止，您仍可查看已有需求', { tone: 'info' });
+        return;
+      }
       wishForm.reset();
       similarPanel.hidden = true;
       audioResult.hidden = true;
@@ -633,22 +664,26 @@ export function initWishWall({ api, store, auth }) {
     commentList.append(...commentTree.map((comment) => renderComment(comment, wish)));
     if (!commentTree.length) commentList.append(element('p', 'muted-copy', '还没有评论，成为第一位回应的同工。'));
     const commentForm = element('form', 'comment-form');
-    commentForm.innerHTML = '<span class="reply-context"></span><input name="parent_comment_id" type="hidden"><input name="reply_to_nickname" type="hidden"><label>发表评论<textarea name="content" rows="3" required></textarea></label><button class="primary-button" type="submit">发表评论</button>';
-    commentForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      auth.requireAuth(async () => {
-      const values = Object.fromEntries(new FormData(commentForm));
-      try {
-        const response = await comments.add(wish.id, values);
-        showToast(response.message, { tone: 'success' });
-        commentForm.reset();
-        await renderComments(wish, commentList);
-        await load({ force: true });
-      } catch (error) {
-        showToast(error.message, { tone: 'error' });
-      }
+    if (campaignIsClosed()) {
+      commentForm.innerHTML = '<p class="muted-copy">本阶段需求征集已截止，评论已暂时关闭。</p>';
+    } else {
+      commentForm.innerHTML = '<span class="reply-context"></span><input name="parent_comment_id" type="hidden"><input name="reply_to_nickname" type="hidden"><label>发表评论<textarea name="content" rows="3" required></textarea></label><button class="primary-button" type="submit">发表评论</button>';
+      commentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        auth.requireAuth(async () => {
+        const values = Object.fromEntries(new FormData(commentForm));
+        try {
+          const response = await comments.add(wish.id, values);
+          showToast(response.message, { tone: 'success' });
+          commentForm.reset();
+          await renderComments(wish, commentList);
+          await load({ force: true });
+        } catch (error) {
+          showToast(error.message, { tone: 'error' });
+        }
+        });
       });
-    });
+    }
     commentSection.append(commentList, commentForm);
     detailContent.append(commentSection);
     refreshIcons();
@@ -704,5 +739,7 @@ export function initWishWall({ api, store, auth }) {
   window.addEventListener('churchos:open-wish', (event) => openWishDetail(event.detail.wish));
   window.addEventListener('churchos:open-my-wishes', openMyWishes);
   window.addEventListener('churchos:wishes-changed', () => load({ force: true }));
+  store.subscribe(() => updateReadonlyMode());
+  updateReadonlyMode();
   return { load, openMyWishes, openWishDetail, openWishForm, render, replaceWish };
 }

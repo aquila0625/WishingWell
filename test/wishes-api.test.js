@@ -50,6 +50,49 @@ test('wish listing includes public author data and comment counts', async (t) =>
   assert.equal(typeof response.body[0].comment_count, 'number');
 });
 
+test('expired campaign makes public participation read-only until reopened', async (t) => {
+  const context = createApiContext(t);
+  await request(context.app)
+    .patch('/api/admin/campaign')
+    .set('Authorization', authHeader(1))
+    .send({ enabled: true, deadline: '2020-01-01T00:00:00.000Z' })
+    .expect(200);
+
+  await request(context.app)
+    .post('/api/wishes')
+    .set('Authorization', authHeader(2))
+    .send({
+      category: '排班事工',
+      title: '截止后不能提交需求',
+      content: '截止后普通用户不能继续提交新的需求内容。'
+    })
+    .expect(423);
+
+  await request(context.app)
+    .post('/api/wishes/1/vote')
+    .set('Authorization', authHeader(2))
+    .expect(423);
+
+  await request(context.app)
+    .post('/api/wishes/1/comment')
+    .set('Authorization', authHeader(2))
+    .send({ content: '截止后不能评论。' })
+    .expect(423);
+
+  const future = new Date(Date.now() + 86400000).toISOString();
+  await request(context.app)
+    .patch('/api/admin/campaign')
+    .set('Authorization', authHeader(1))
+    .send({ enabled: true, deadline: future })
+    .expect(200);
+
+  await request(context.app)
+    .post('/api/wishes/1/comment')
+    .set('Authorization', authHeader(2))
+    .send({ content: '重新开放后可以评论。' })
+    .expect(201);
+});
+
 test('audio transcription uses OpenAI when configured', async (t) => {
   const temp = createTestDb();
   t.after(() => temp.cleanup());

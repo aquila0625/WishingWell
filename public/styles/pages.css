@@ -20,6 +20,28 @@
   color: var(--color-primary);
 }
 
+.readonly-campaign-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(251, 191, 36, 0.38);
+  border-radius: var(--radius-card);
+  color: #fde68a;
+  background: rgba(120, 53, 15, 0.24);
+}
+
+.readonly-campaign-notice strong,
+.readonly-campaign-notice span {
+  display: block;
+}
+
+.readonly-campaign-notice span {
+  margin-top: 3px;
+  color: var(--color-muted);
+}
+
 .hero-section {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);

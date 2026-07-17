@@ -44,9 +44,11 @@ export function initLanding({ api, store }) {
     }
     banner.hidden = false;
     const update = () => {
-      countdown.textContent = campaign.closed
+      const closed = campaign.closed || Date.now() >= Date.parse(campaign.deadline);
+      countdown.textContent = closed
         ? '本阶段征集已截止'
         : formatRemainingTime(campaign.deadline);
+      if (closed && !campaign.closed) store.set({ campaign: { ...campaign, closed: true } });
     };
     update();
     timer = setInterval(update, 1000);

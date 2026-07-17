@@ -37,6 +37,18 @@ function downloadText(filename, text) {
   downloadBlob(new Blob([text], { type: 'application/json;charset=utf-8' }), filename);
 }
 
+function toDatetimeLocal(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
+function fromDatetimeLocal(value) {
+  return value ? new Date(value).toISOString() : null;
+}
+
 export function initAdmin({ api, store }) {
   const view = document.getElementById('admin-view');
   const title = document.getElementById('admin-page-title');
@@ -239,6 +251,7 @@ export function initAdmin({ api, store }) {
     try {
       const response = await api.request('/api/admin/homepage');
       const cleanup = await api.request('/api/admin/launch-cleanup');
+      const campaign = await api.request('/api/campaign');
       const homepage = response.draft || response.homepage;
       const form = node('form', 'settings-form');
       const heroTitle = document.createElement('input');
@@ -310,10 +323,72 @@ export function initAdmin({ api, store }) {
         showToast(result.message, { tone: 'success' });
         loadHomepage();
       });
-      container.replaceChildren(form, renderLaunchCleanup(cleanup));
+      container.replaceChildren(form, renderCampaignSettings(campaign), renderLaunchCleanup(cleanup));
     } catch (error) {
       container.textContent = error.message;
     }
+  }
+
+  function renderCampaignSettings(campaign) {
+    const panel = node('section', 'admin-list campaign-settings-panel');
+    panel.append(node('h2', '', '需求征集截止时间'));
+    const status = campaign.closed
+      ? '当前状态：已截止，普通用户只能查看需求。'
+      : campaign.enabled
+        ? '当前状态：征集中，首页按截止时间显示倒计时。'
+        : '当前状态：未开启截止时间。';
+    panel.append(node('p', 'field-hint', `${status} 重新设置未来时间后，普通用户可再次提交、助力和评论。`));
+
+    const form = node('form', 'settings-form');
+    const enabled = document.createElement('input');
+    enabled.type = 'checkbox';
+    enabled.checked = Boolean(campaign.enabled);
+    const deadline = document.createElement('input');
+    deadline.type = 'datetime-local';
+    deadline.value = toDatetimeLocal(campaign.deadline);
+    const save = node('button', 'primary-button', '保存截止时间');
+    save.type = 'submit';
+    const disable = node('button', 'secondary-button', '关闭截止限制');
+    disable.type = 'button';
+    form.append(
+      field('开启本阶段需求征集截止时间', enabled),
+      field('截止到哪天几点', deadline),
+      node('p', 'field-hint', '到达截止时间后，普通用户仍可查看需求，但不能再提交需求、助力或评论。'),
+      node('div', 'admin-actions')
+    );
+    form.querySelector('.admin-actions').append(save, disable);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const result = await api.request('/api/admin/campaign', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            enabled: enabled.checked,
+            deadline: fromDatetimeLocal(deadline.value)
+          })
+        });
+        store.set({ campaign: result });
+        showToast(result.closed ? '已保存，当前为只读模式' : '截止时间已保存', { tone: 'success' });
+        loadHomepage();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+    disable.addEventListener('click', async () => {
+      try {
+        const result = await api.request('/api/admin/campaign', {
+          method: 'PATCH',
+          body: JSON.stringify({ enabled: false, deadline: null })
+        });
+        store.set({ campaign: result });
+        showToast('已关闭截止限制，普通用户可继续参与', { tone: 'success' });
+        loadHomepage();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+    panel.append(form);
+    return panel;
   }
 
   function renderLaunchCleanup(cleanup) {
