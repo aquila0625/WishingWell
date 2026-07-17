@@ -84,11 +84,55 @@
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 7px;
-  color: var(--color-primary-ink);
-  background: var(--color-primary);
-  box-shadow: 0 0 22px rgba(34, 211, 238, 0.28);
-  font-weight: 700;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 11px;
+  color: #e0fbff;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.34), transparent 28%),
+    linear-gradient(145deg, #22d3ee 0%, #0f7ea5 42%, #13233f 100%);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.26));
+}
+
+.brand-logo-house {
+  fill: rgba(11, 17, 32, 0.46);
+  stroke: rgba(224, 251, 255, 0.92);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.brand-logo-roof,
+.brand-logo-cross,
+.brand-logo-circuit {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brand-logo-roof {
+  stroke-width: 2.3;
+}
+
+.brand-logo-cross {
+  stroke-width: 2.45;
+}
+
+.brand-logo-circuit {
+  opacity: 0.82;
+  stroke-width: 1.8;
+}
+
+.brand-logo-dot {
+  fill: currentColor;
+  opacity: 0.92;
 }
 
 .brand-copy,
