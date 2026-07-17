@@ -83,6 +83,38 @@ test('Supabase database adapter does not seed fixture data into prefixed tables'
   assert.ok(!postUrls.some((url) => url.includes('/rest/v1/staging_users')));
 });
 
+test('Supabase database adapter does not reseed demo data after launch cleanup', async () => {
+  const calls = [];
+  const database = createSupabaseDatabase({
+    url: 'https://example.supabase.co',
+    serviceRoleKey: 'service-role',
+    fetchImpl: async (url, options = {}) => {
+      const textUrl = String(url);
+      calls.push({ url: textUrl, options });
+      if (options.method === 'POST') return createJsonResponse([{ id: 1, data: { id: 1 } }]);
+      if (textUrl.includes('/rest/v1/settings')) {
+        return createJsonResponse([
+          { id: 1, data: { id: 1, initial_cleanup_done: true } }
+        ]);
+      }
+      if (textUrl.includes('/rest/v1/users')) {
+        return createJsonResponse([
+          { id: 4, data: { id: 4, email: '254351776@qq.com', is_admin: true } }
+        ]);
+      }
+      return createJsonResponse([]);
+    }
+  });
+
+  await database.seed();
+
+  const postUrls = calls.filter((call) => call.options.method === 'POST').map((call) => call.url);
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/wishes')));
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/comments')));
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/notifications')));
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/email_logs')));
+});
+
 test('Supabase database adapter rejects unknown tables', async () => {
   const database = createSupabaseDatabase({
     url: 'https://churchos.supabase.co',

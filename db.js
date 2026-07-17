@@ -122,8 +122,14 @@ function createSupabaseDatabase({ url, serviceRoleKey, fetchImpl = fetch, tableP
   }
 
   async function seed() {
+    const settingsRows = await read('settings');
+    const launchCleanupDone = settingsRows.some((row) => row.initial_cleanup_done);
+    const protectedAfterLaunchCleanup = new Set(['users', 'wishes', 'comments', 'notifications', 'email_logs']);
+
     for (const table of SEED_TABLES) {
-      if ((await read(table)).length > 0) continue;
+      const rows = table === 'settings' ? settingsRows : await read(table);
+      if (rows.length > 0) continue;
+      if (launchCleanupDone && protectedAfterLaunchCleanup.has(table)) continue;
       if (prefix && table !== 'settings') continue;
       const source = path.join(SEED_DIR, `${table}.json`);
       if (fs.existsSync(source)) {
