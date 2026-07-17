@@ -189,11 +189,11 @@ export function initAuth({ api, store }) {
       renderChurches();
       return;
     }
-    const params = new URLSearchParams({
-      query,
-      city: registerForm.elements.city.value,
-      state: registerForm.elements.state.value
-    });
+    const params = new URLSearchParams({ query });
+    const city = registerForm.elements.city.value.trim();
+    const state = registerForm.elements.state.value.trim();
+    if (city) params.set('city', city);
+    if (state) params.set('state', state);
     try {
       churchMatches = await api.request(`/api/churches/autocomplete?${params}`);
       activeChurchIndex = -1;

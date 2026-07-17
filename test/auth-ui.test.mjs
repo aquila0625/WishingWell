@@ -68,3 +68,13 @@ test('registration explains required fields and identity usage', () => {
   assert.match(html, /id="register-name-hint"[^>]*>[^<]*真实姓名[^<]*共创致谢墙/);
   assert.match(html, /aria-describedby="register-name-hint"/);
 });
+
+test('registration location fields avoid inaccurate default city and church can be typed manually', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+
+  assert.doesNotMatch(html, /name="country"[^>]*value="加拿大 \(Canada\)"/);
+  assert.doesNotMatch(html, /name="state"[^>]*value="Ontario"/);
+  assert.doesNotMatch(html, /name="city"[^>]*value="Toronto"/);
+  assert.match(html, /id="register-church-hint"[^>]*>[^<]*搜索不到[^<]*手动填写/);
+  assert.match(html, /name="church_name"[^>]*placeholder="[^"]*教会全称[^"]*"/);
+});
