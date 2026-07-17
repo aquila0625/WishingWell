@@ -23,6 +23,10 @@ services:
         sync: false
       - key: CHURCHOS_SESSION_SECRET
         sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_TRANSCRIPTION_MODEL
+        value: gpt-4o-mini-transcribe
   - type: web
     name: churchosapp-staging
     runtime: node
@@ -47,6 +51,10 @@ services:
         sync: false
       - key: CHURCHOS_SESSION_SECRET
         sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_TRANSCRIPTION_MODEL
+        value: gpt-4o-mini-transcribe
       - key: CHURCHOS_ADMIN_EMAIL
         sync: false
       - key: CHURCHOS_ADMIN_PASSWORD

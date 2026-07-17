@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
 const { authHeader, createApiContext } = require('./helpers/api-context');
+const { createTestDb } = require('./helpers/test-db');
 
 test('authenticated users can create, vote, comment, and translate a wish', async (t) => {
   const context = createApiContext(t);
@@ -47,4 +48,59 @@ test('wish listing includes public author data and comment counts', async (t) =>
   assert.ok(response.body.length >= 3);
   assert.equal(response.body[0].author.password, undefined);
   assert.equal(typeof response.body[0].comment_count, 'number');
+});
+
+test('audio transcription uses OpenAI when configured', async (t) => {
+  const temp = createTestDb();
+  t.after(() => temp.cleanup());
+  const { createApp } = require('../app');
+  const calls = [];
+  const app = createApp({
+    dbDir: temp.dir,
+    openaiApiKey: 'test-openai-key',
+    openaiTranscriptionModel: 'gpt-4o-mini-transcribe',
+    openaiFetchImpl: async (url, options) => {
+      calls.push({ url: String(url), options });
+      return {
+        ok: true,
+        async json() {
+          return { text: 'Transcribed real church need from audio.' };
+        },
+        async text() {
+          return JSON.stringify({ text: 'Transcribed real church need from audio.' });
+        }
+      };
+    }
+  });
+
+  const response = await request(app)
+    .post('/api/wishes/audio-transcribe')
+    .set('Authorization', authHeader(2))
+    .attach('audio', Buffer.from('fake-webm-audio'), {
+      filename: 'need.webm',
+      contentType: 'audio/webm'
+    })
+    .expect(200);
+
+  assert.equal(response.body.text, 'Transcribed real church need from audio.');
+  assert.equal(response.body.confidence, 100);
+  assert.match(response.body.audioUrl, /^\/uploads\//);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, 'https://api.openai.com/v1/audio/transcriptions');
+  assert.equal(calls[0].options.headers.Authorization, 'Bearer test-openai-key');
+});
+
+test('audio transcription reports missing OpenAI configuration', async (t) => {
+  const context = createApiContext(t);
+
+  const response = await request(context.app)
+    .post('/api/wishes/audio-transcribe')
+    .set('Authorization', authHeader(2))
+    .attach('audio', Buffer.from('fake-webm-audio'), {
+      filename: 'need.webm',
+      contentType: 'audio/webm'
+    })
+    .expect(503);
+
+  assert.match(response.body.error, /OpenAI/);
 });

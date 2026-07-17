@@ -32,8 +32,11 @@ function createApp({
   supabaseServiceRoleKey,
   tablePrefix,
   fetchImpl,
+  openaiFetchImpl,
   adminAccount,
   sessionSecret,
+  openaiApiKey,
+  openaiTranscriptionModel,
   uploadDir = path.join(__dirname, 'public', 'uploads')
 } = {}) {
   const app = express();
@@ -115,14 +118,21 @@ function createApp({
   });
   app.use('/api', createShareRouter({ database }));
   app.use('/api', createAuthRouter({ database, upload, sessionSecret }));
-  app.use('/api', createWishesRouter({ database, upload, sessionSecret }));
+  app.use('/api', createWishesRouter({
+    database,
+    upload,
+    sessionSecret,
+    openaiApiKey,
+    openaiTranscriptionModel,
+    openaiFetchImpl
+  }));
   app.use('/api/admin', createAdminRouter({ database, sessionSecret }));
   app.use('/vendor/lucide', express.static(path.join(__dirname, 'node_modules', 'lucide', 'dist', 'umd')));
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/api', (req, res) => res.status(404).json({ error: '接口不存在' }));
   app.use((error, req, res, next) => {
-    console.error(error);
+    if (!error.publicMessage) console.error(error);
     res.status(error.status || 500).json({
       error: error.publicMessage || '服务暂时不可用，请稍后重试'
     });

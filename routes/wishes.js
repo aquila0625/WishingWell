@@ -1,8 +1,16 @@
 const express = require('express');
+const fs = require('node:fs/promises');
 const { authenticate } = require('../lib/http');
 const { publicUser } = require('../lib/serializers');
 
-function createWishesRouter({ database, upload, sessionSecret }) {
+function createWishesRouter({
+  database,
+  upload,
+  sessionSecret,
+  openaiApiKey,
+  openaiTranscriptionModel = 'gpt-4o-mini-transcribe',
+  openaiFetchImpl = globalThis.fetch
+}) {
   const router = express.Router();
   const requireUser = authenticate(database, { sessionSecret });
 
@@ -66,16 +74,65 @@ function createWishesRouter({ database, upload, sessionSecret }) {
     res.json(await Promise.all(matches.map(serializeWish)));
   });
 
-  router.post('/wishes/audio-transcribe', requireUser, upload.single('audio'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: '请选择录音文件' });
-    const unclear = /noisy|unclear/i.test(req.file.originalname);
-    res.json({
-      text: unclear
-        ? '录音中有较多杂音，请检查并手动修改转写内容。'
-        : '希望系统支持把主日服侍安排一键同步到 Apple Calendar 和 Google Calendar。',
-      confidence: unclear ? 55 : 94,
-      audioUrl: `/uploads/${req.file.filename}`
+  async function transcribeWithOpenAI(file) {
+    if (!openaiApiKey) {
+      const error = new Error('OpenAI 语音转录尚未配置，请先在服务端设置 OPENAI_API_KEY。');
+      error.status = 503;
+      error.publicMessage = error.message;
+      throw error;
+    }
+    if (typeof openaiFetchImpl !== 'function') {
+      const error = new Error('当前运行环境不支持服务端转录请求。');
+      error.status = 500;
+      error.publicMessage = error.message;
+      throw error;
+    }
+
+    const audio = await fs.readFile(file.path);
+    const form = new FormData();
+    form.append('file', new Blob([audio], { type: file.mimetype || 'application/octet-stream' }), file.originalname || file.filename);
+    form.append('model', openaiTranscriptionModel);
+
+    const response = await openaiFetchImpl('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${openaiApiKey}`
+      },
+      body: form
     });
+
+    if (!response.ok) {
+      let message = 'OpenAI 语音转录失败，请稍后重试。';
+      try {
+        const payload = await response.json();
+        message = payload?.error?.message || message;
+      } catch (error) {
+        try {
+          message = await response.text() || message;
+        } catch {}
+      }
+      const error = new Error(message);
+      error.status = response.status || 502;
+      error.publicMessage = message;
+      throw error;
+    }
+
+    const payload = await response.json();
+    return String(payload.text || '').trim();
+  }
+
+  router.post('/wishes/audio-transcribe', requireUser, upload.single('audio'), async (req, res, next) => {
+    if (!req.file) return res.status(400).json({ error: '请选择录音文件' });
+    try {
+      const text = await transcribeWithOpenAI(req.file);
+      res.json({
+        text,
+        confidence: text ? 100 : 0,
+        audioUrl: `/uploads/${req.file.filename}`
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 
   router.post('/wishes', requireUser, rejectIfClosed, upload.array('images', 3), async (req, res) => {

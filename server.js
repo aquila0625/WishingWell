@@ -13,6 +13,8 @@ createApp({
   tablePrefix: config.tablePrefix,
   adminAccount: config.adminAccount,
   sessionSecret: config.sessionSecret,
+  openaiApiKey: config.openaiApiKey,
+  openaiTranscriptionModel: config.openaiTranscriptionModel,
   uploadDir: config.uploadDir
 }).listen(config.port, () => {
   console.log(`ChurchOS running at http://localhost:${config.port}`);
