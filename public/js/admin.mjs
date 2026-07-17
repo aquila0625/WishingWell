@@ -174,7 +174,10 @@ export function initAdmin({ api, store }) {
     reply.value = wish.admin_reply || '';
     const save = node('button', 'primary-button', '保存');
     save.type = 'submit';
-    controls.append(status, reply, save);
+    const hidden = wish.status === 'hidden';
+    const visibility = node('button', hidden ? 'primary-button' : 'secondary-button', hidden ? '恢复展示' : '屏蔽展示');
+    visibility.type = 'button';
+    controls.append(status, reply, save, visibility);
     controls.addEventListener('submit', async (event) => {
       event.preventDefault();
       try {
@@ -183,6 +186,19 @@ export function initAdmin({ api, store }) {
           body: JSON.stringify({ status: status.value, admin_reply: reply.value })
         });
         showToast(response.message, { tone: 'success' });
+        window.dispatchEvent(new CustomEvent('churchos:wishes-changed'));
+        loadRequirements();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+    visibility.addEventListener('click', async () => {
+      try {
+        await api.request(`/api/admin/wishes/${wish.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: hidden ? 'voting' : 'hidden', admin_reply: reply.value })
+        });
+        showToast(hidden ? '已恢复展示，前台可重新看到该需求' : '已屏蔽展示，前台不再显示该需求', { tone: 'success' });
         window.dispatchEvent(new CustomEvent('churchos:wishes-changed'));
         loadRequirements();
       } catch (error) {

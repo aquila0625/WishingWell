@@ -185,6 +185,15 @@ test('admin homepage tools expose campaign deadline settings', () => {
   assert.doesNotMatch(admin, /关闭截止限制/);
 });
 
+test('admin requirements list exposes moderation visibility controls', () => {
+  const admin = fs.readFileSync(new URL('../public/js/admin.mjs', import.meta.url), 'utf8');
+
+  assert.match(admin, /屏蔽展示/);
+  assert.match(admin, /恢复展示/);
+  assert.match(admin, /已屏蔽展示，前台不再显示该需求/);
+  assert.match(admin, /status:\s*hidden \? 'voting' : 'hidden'/);
+});
+
 test('wish wall presents read-only mode after campaign deadline', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
