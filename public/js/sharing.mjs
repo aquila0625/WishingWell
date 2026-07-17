@@ -44,24 +44,164 @@ function loadImage(source) {
   });
 }
 
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
+function textTokens(text) {
   const tokens = /[A-Za-z0-9]/.test(text) && text.includes(' ')
     ? text.split(/(\s+)/)
     : [...text];
+  return tokens;
+}
+
+function measureLines(context, text, maxWidth) {
+  const tokens = textTokens(String(text || ''));
+  const lines = [];
   let line = '';
-  let offset = 0;
   for (const token of tokens) {
     const next = line + token;
     if (context.measureText(next).width > maxWidth && line) {
-      context.fillText(line.trimEnd(), x, y + offset);
+      lines.push(line.trimEnd());
       line = token.trimStart();
-      offset += lineHeight;
     } else {
       line = next;
     }
   }
-  if (line) context.fillText(line.trim(), x, y + offset);
-  return y + offset;
+  if (line) lines.push(line.trim());
+  return lines.length ? lines : [''];
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight, lines = measureLines(context, text, maxWidth)) {
+  let offset = 0;
+  for (const line of lines) {
+    context.fillText(line, x, y + offset);
+    offset += lineHeight;
+  }
+  return y + Math.max(0, lines.length - 1) * lineHeight;
+}
+
+function withFont(context, font, fn) {
+  context.font = font;
+  return fn();
+}
+
+function textBlock(context, text, { font, x, y, maxWidth, lineHeight, align = 'left' }) {
+  return withFont(context, font, () => {
+    const lines = measureLines(context, text, maxWidth);
+    return {
+      text,
+      font,
+      x,
+      y,
+      maxWidth,
+      lineHeight,
+      align,
+      lines,
+      bottom: y + lines.length * lineHeight
+    };
+  });
+}
+
+export function calculatePosterLayout(context, model, width) {
+  const minimumHeight = 1420;
+  const inset = 86;
+  const qrSize = 290;
+
+  const title = textBlock(context, model.title, {
+    font: '700 58px sans-serif',
+    x: inset,
+    y: 246,
+    maxWidth: width - inset * 2,
+    lineHeight: 72
+  });
+  const subtitle = textBlock(context, model.subtitle, {
+    font: '400 28px sans-serif',
+    x: inset,
+    y: title.bottom + 36,
+    maxWidth: width - inset * 2,
+    lineHeight: 42
+  });
+
+  let cursor = subtitle.bottom + 44;
+  const prompts = model.prompts.map((label, index) => {
+    const labelBlock = textBlock(context, label, {
+      font: '600 30px sans-serif',
+      x: 174,
+      y: cursor + 43,
+      maxWidth: width - 284,
+      lineHeight: 38
+    });
+    const height = Math.max(76, labelBlock.lines.length * 38 + 34);
+    const prompt = {
+      index,
+      label,
+      x: inset,
+      y: cursor,
+      width: width - inset * 2,
+      height,
+      labelBlock: {
+        ...labelBlock,
+        y: cursor + 43
+      },
+      numberY: cursor + Math.min(48, Math.round(height / 2 + 10)),
+      bottom: cursor + height
+    };
+    cursor = prompt.bottom + 18;
+    return prompt;
+  });
+
+  const audience = textBlock(context, model.audience, {
+    font: '600 30px sans-serif',
+    x: width / 2,
+    y: cursor + 42,
+    maxWidth: width - 150,
+    lineHeight: 36,
+    align: 'center'
+  });
+  const qrY = audience.bottom + 42;
+  const qrTitle = textBlock(context, model.qrTitle, {
+    font: '700 38px sans-serif',
+    x: width / 2,
+    y: qrY + qrSize + 70,
+    maxWidth: width - 170,
+    lineHeight: 48,
+    align: 'center'
+  });
+  const qrSubtitle = textBlock(context, model.qrSubtitle, {
+    font: '400 24px sans-serif',
+    x: width / 2,
+    y: qrTitle.bottom + 18,
+    maxWidth: width - 170,
+    lineHeight: 32,
+    align: 'center'
+  });
+  const url = textBlock(context, model.url.replace(/^https?:\/\//, ''), {
+    font: '400 25px sans-serif',
+    x: width / 2,
+    y: qrSubtitle.bottom + 50,
+    maxWidth: width - 150,
+    lineHeight: 34,
+    align: 'center'
+  });
+  const height = Math.max(minimumHeight, Math.ceil(url.bottom + 82));
+
+  return {
+    width,
+    height,
+    inset,
+    qrSize,
+    title,
+    subtitle,
+    prompts,
+    audience,
+    qrY,
+    qrTitle,
+    qrSubtitle,
+    url
+  };
+}
+
+function drawTextBlock(context, block) {
+  context.font = block.font;
+  context.textAlign = block.align;
+  wrapText(context, block.text, block.x, block.y, block.maxWidth, block.lineHeight, block.lines);
 }
 
 function roundRect(context, x, y, width, height, radius) {
@@ -76,9 +216,12 @@ function roundRect(context, x, y, width, height, radius) {
 }
 
 export async function drawSharePoster(canvas, model, qrDataUrl) {
-  const context = canvas.getContext('2d');
   const qr = await loadImage(qrDataUrl);
+  let context = canvas.getContext('2d');
   const width = canvas.width;
+  const layout = calculatePosterLayout(context, model, width);
+  if (canvas.height !== layout.height) canvas.height = layout.height;
+  context = canvas.getContext('2d');
   const height = canvas.height;
 
   const gradient = context.createLinearGradient(0, 0, width, height);
@@ -118,48 +261,42 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.fillText(model.product, 168, 154);
 
   context.fillStyle = '#f8fafc';
-  context.font = '700 58px sans-serif';
-  const titleBottom = wrapText(context, model.title, 86, 246, width - 172, 72);
+  drawTextBlock(context, layout.title);
   context.fillStyle = '#cbd5e1';
-  context.font = '400 28px sans-serif';
-  const subtitleBottom = wrapText(context, model.subtitle, 86, titleBottom + 54, width - 172, 42);
+  drawTextBlock(context, layout.subtitle);
 
-  const promptTop = subtitleBottom + 72;
-  const promptHeight = 72;
-  model.prompts.forEach((label, index) => {
-    const y = promptTop + index * 88;
+  layout.prompts.forEach((prompt) => {
+    const y = prompt.y;
+    const index = prompt.index;
     context.fillStyle = index === 2 ? 'rgba(34, 211, 238, 0.18)' : 'rgba(15, 23, 42, 0.9)';
-    roundRect(context, 86, y, width - 172, promptHeight, 18);
+    roundRect(context, prompt.x, y, prompt.width, prompt.height, 18);
     context.fill();
     context.strokeStyle = 'rgba(148, 163, 184, 0.22)';
     context.stroke();
     context.fillStyle = '#22d3ee';
     context.font = '700 26px sans-serif';
-    context.fillText(`0${index + 1}`, 116, y + 46);
+    context.textAlign = 'left';
+    context.fillText(`0${index + 1}`, 116, prompt.numberY);
     context.fillStyle = '#f8fafc';
-    context.font = '600 30px sans-serif';
-    context.fillText(label, 174, y + 47);
+    drawTextBlock(context, prompt.labelBlock);
   });
 
   context.fillStyle = '#a8b3c7';
-  context.font = '600 30px sans-serif';
   context.textAlign = 'center';
-  const qrSize = 290;
+  const qrSize = layout.qrSize;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 559;
-  wrapText(context, model.audience, width / 2, qrY - 68, width - 150, 34);
+  const qrY = layout.qrY;
+  drawTextBlock(context, layout.audience);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
   context.drawImage(qr, qrX, qrY, qrSize, qrSize);
   context.fillStyle = '#f8fafc';
-  context.font = '700 38px sans-serif';
-  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 67);
+  drawTextBlock(context, layout.qrTitle);
   context.fillStyle = '#94a3b8';
-  context.font = '400 24px sans-serif';
-  wrapText(context, model.qrSubtitle, width / 2, qrY + qrSize + 115, width - 170, 32);
+  drawTextBlock(context, layout.qrSubtitle);
   context.font = '400 25px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 88);
+  drawTextBlock(context, layout.url);
   context.textAlign = 'left';
 }
 

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPosterModel, buildShareText } from '../public/js/sharing.mjs';
+import { buildPosterModel, buildShareText, calculatePosterLayout } from '../public/js/sharing.mjs';
 import { notificationSummary } from '../public/js/notifications.mjs';
 
 test('poster model uses the current URL and campaign title', () => {
@@ -36,11 +36,38 @@ test('poster canvas is taller and keeps roomy QR caption spacing', async () => {
 
   assert.match(html, /id="share-poster" width="848" height="1420"/);
   assert.match(source, /const qrSize = 290;/);
-  assert.match(source, /const qrY = height - 559;/);
-  assert.match(source, /wrapText\(context, model\.audience, width \/ 2, qrY - 68, width - 150, 34\)/);
-  assert.match(source, /wrapText\(context, model\.qrSubtitle, width \/ 2, qrY \+ qrSize \+ 115, width - 170, 32\)/);
+  assert.match(source, /canvas\.height = layout\.height;/);
   assert.match(source, /context\.font = '400 25px sans-serif';/);
-  assert.match(source, /width \/ 2, height - 88\)/);
+});
+
+test('poster layout wraps long locale text and grows height without shrinking fonts', () => {
+  const model = {
+    ...buildPosterModel({ url: 'https://churchosapp.org/', locale: 'fr' }),
+    title: 'Aidez toute votre communauté à décider ensemble ce que ChurchOS doit construire en premier pour mieux servir les églises',
+    subtitle: 'Avant le développement officiel, nous recueillons les besoins réels, les difficultés concrètes et les situations vécues dans la vie quotidienne de l’église.',
+    prompts: [
+      'Aucune compétence technique particulière n’est nécessaire',
+      'Aucune solution complète ou parfaitement rédigée n’est demandée',
+      'Partagez simplement un vrai problème rencontré dans votre contexte'
+    ],
+    audience: 'Responsables d’église · Collaborateurs de service · Croyants engagés · Personnes en cheminement · Équipes administratives',
+    qrSubtitle: 'Partagez un besoin réel et aidez ChurchOS à rester proche du terrain des églises locales'
+  };
+  const fakeContext = {
+    font: '',
+    measureText(text) {
+      const size = Number(this.font.match(/(\d+)px/)?.[1] || 24);
+      return { width: String(text).length * size * 0.54 };
+    }
+  };
+
+  const layout = calculatePosterLayout(fakeContext, model, 848);
+
+  assert.ok(layout.height > 1420);
+  assert.ok(layout.qrY > layout.audience.bottom + 32);
+  assert.ok(layout.url.y > layout.qrSubtitle.bottom + 32);
+  assert.equal(layout.title.font, '700 58px sans-serif');
+  assert.equal(layout.qrSubtitle.font, '400 24px sans-serif');
 });
 
 test('notification summary counts unread items only', () => {
