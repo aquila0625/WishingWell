@@ -28,7 +28,8 @@ function renderEnvironmentBadge(environment) {
   badge.className = 'environment-badge';
   badge.setAttribute('aria-label', '当前为测试环境');
   badge.innerHTML = `<strong>${environment.label || '测试环境'}</strong><span>${environment.badge || 'STAGING'}</span>`;
-  document.body.append(badge);
+  const headerActions = document.querySelector('.header-actions');
+  (headerActions || document.body).append(badge);
 }
 
 async function loadEnvironmentBadge() {

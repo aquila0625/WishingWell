@@ -115,7 +115,9 @@ test('staging environment badge is rendered only from environment metadata', () 
   assert.match(app, /environment-badge/);
   assert.match(app, /测试环境/);
   assert.match(app, /STAGING/);
-  assert.match(css, /\.environment-badge\s*\{/);
+  assert.match(app, /querySelector\('\.header-actions'\)/);
+  assert.doesNotMatch(app, /document\.body\.append\(badge\)/);
+  assert.match(css, /\.environment-badge\s*\{[^}]*position:\s*absolute/);
   assert.match(css, /opacity:\s*0\.5/);
   assert.match(css, /\.environment-badge::before/);
   assert.match(css, /\.environment-badge::after/);

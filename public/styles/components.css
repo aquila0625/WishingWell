@@ -14,10 +14,10 @@
 }
 
 .environment-badge {
-  position: fixed;
+  position: absolute;
   z-index: 120;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: -18px;
   width: 138px;
   height: 138px;
   overflow: hidden;
