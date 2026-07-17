@@ -133,22 +133,22 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.fillStyle = '#94a3b8';
   context.font = '500 24px sans-serif';
   context.textAlign = 'center';
-  const qrSize = 250;
+  const qrSize = 220;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 470;
-  context.fillText(model.audience, width / 2, qrY - 46);
+  const qrY = height - 430;
+  context.fillText(model.audience, width / 2, qrY - 58);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
   context.drawImage(qr, qrX, qrY, qrSize, qrSize);
   context.fillStyle = '#f8fafc';
-  context.font = '700 34px sans-serif';
-  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 70);
+  context.font = '700 32px sans-serif';
+  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 56);
   context.fillStyle = '#94a3b8';
-  context.font = '400 25px sans-serif';
-  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 118);
+  context.font = '400 23px sans-serif';
+  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 96);
   context.font = '400 20px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 70);
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 58);
   context.textAlign = 'left';
 }
 

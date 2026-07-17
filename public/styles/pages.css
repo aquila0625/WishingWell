@@ -923,16 +923,16 @@
 
 .share-dialog canvas {
   display: block;
-  width: min(100%, 380px);
+  width: min(100%, 320px);
   height: auto;
-  margin: 18px auto;
+  margin: 16px auto 18px;
   border-radius: 8px;
   background: var(--color-surface-soft);
 }
 
 .share-actions-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
