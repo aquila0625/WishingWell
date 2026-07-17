@@ -57,24 +57,11 @@
 .environment-badge strong {
   position: absolute;
   z-index: 1;
-  top: 30px;
+  top: 36px;
   right: -30px;
   width: 142px;
-  font-size: 0.86rem;
+  font-size: 0.9rem;
   line-height: 1.1;
-  transform: rotate(45deg);
-}
-
-.environment-badge span {
-  position: absolute;
-  z-index: 1;
-  top: 43px;
-  right: -30px;
-  width: 142px;
-  font-size: 0.66rem;
-  font-weight: 800;
-  line-height: 1;
-  opacity: 0.9;
   transform: rotate(45deg);
 }
 
