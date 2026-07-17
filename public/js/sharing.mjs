@@ -231,6 +231,74 @@ function roundRect(context, x, y, width, height, radius) {
   context.closePath();
 }
 
+function drawPosterLogo(context, x, y, size) {
+  const radius = size * 0.26;
+  const gradient = context.createLinearGradient(x, y, x + size, y + size);
+  gradient.addColorStop(0, '#67e8f9');
+  gradient.addColorStop(0.42, '#0891b2');
+  gradient.addColorStop(1, '#13233f');
+  context.fillStyle = gradient;
+  roundRect(context, x, y, size, size, radius);
+  context.fill();
+  context.strokeStyle = 'rgba(255, 255, 255, 0.26)';
+  context.lineWidth = 1.4;
+  context.stroke();
+
+  context.save();
+  context.translate(x, y);
+  const scale = size / 40;
+  context.scale(scale, scale);
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+
+  context.fillStyle = 'rgba(11, 17, 32, 0.48)';
+  context.strokeStyle = 'rgba(224, 251, 255, 0.94)';
+  context.lineWidth = 1.8;
+  context.beginPath();
+  context.moveTo(8, 16.2);
+  context.lineTo(20, 8);
+  context.lineTo(32, 16.2);
+  context.lineTo(32, 30.4);
+  context.quadraticCurveTo(32, 34, 28.4, 34);
+  context.lineTo(11.6, 34);
+  context.quadraticCurveTo(8, 34, 8, 30.4);
+  context.closePath();
+  context.fill();
+  context.stroke();
+
+  context.strokeStyle = '#e0fbff';
+  context.lineWidth = 2.3;
+  context.beginPath();
+  context.moveTo(6.7, 16.8);
+  context.lineTo(20, 7.7);
+  context.lineTo(33.3, 16.8);
+  context.stroke();
+
+  context.lineWidth = 2.45;
+  context.beginPath();
+  context.moveTo(20, 13.1);
+  context.lineTo(20, 24.9);
+  context.moveTo(15.2, 17.8);
+  context.lineTo(24.8, 17.8);
+  context.stroke();
+
+  context.globalAlpha = 0.82;
+  context.lineWidth = 1.8;
+  context.beginPath();
+  context.moveTo(12.2, 28.2);
+  context.lineTo(27.8, 28.2);
+  context.moveTo(15.7, 31);
+  context.lineTo(24.3, 31);
+  context.stroke();
+  context.fillStyle = '#e0fbff';
+  context.globalAlpha = 0.92;
+  context.beginPath();
+  context.arc(12.2, 28.2, 1.35, 0, Math.PI * 2);
+  context.arc(27.8, 28.2, 1.35, 0, Math.PI * 2);
+  context.fill();
+  context.restore();
+}
+
 export async function drawSharePoster(canvas, model, qrDataUrl) {
   const qr = await loadImage(qrDataUrl);
   let context = canvas.getContext('2d');
@@ -263,12 +331,7 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.lineWidth = 2;
   context.stroke();
 
-  context.fillStyle = '#22d3ee';
-  roundRect(context, 86, 92, 64, 64, 16);
-  context.fill();
-  context.fillStyle = '#06232a';
-  context.font = '700 44px sans-serif';
-  context.fillText('✝', 100, 139);
+  drawPosterLogo(context, 86, 92, 64);
   context.fillStyle = '#f8fafc';
   context.font = '700 32px sans-serif';
   context.fillText(model.brand, 168, 124);
