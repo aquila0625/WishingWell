@@ -152,9 +152,9 @@ const dictionaries = {
     'share.poster.audience': '邀请教会领袖、服侍同工、弟兄姊妹和慕道朋友一起参与',
     'share.poster.qrTitle': '扫码参与调研',
     'share.poster.qrSubtitle': '提交真实问题，帮助 ChurchOS 更贴近教会现场',
-    'share.text.intro': '我想邀请你一起参与 ChurchOS（教会通）APP 的前期需求调研。',
-    'share.text.body': '在正式开发前，我们希望先收集教会现场真实发生的问题与需要。无论你是教牧同工、服侍同工、弟兄姊妹，还是慕道朋友，只要你在教会生活或服侍中遇到过不方便的地方，都欢迎写下来。',
-    'share.text.recognition': '你的一个真实场景，可能会帮助 ChurchOS 第一版更贴近教会实际需要；被采纳的需求，也有机会记录在 ChurchOS 共创致谢墙中。',
+    'share.text.intro': '我想邀请您一起参与 ChurchOS（教会通）APP 的前期需求调研。',
+    'share.text.body': 'ChurchOS 正在筹备成为一款帮助教会进行数字化管理与服侍协作的 APP。在正式开发前，我们希望先听见来自教会的真实需求。无论您是教牧同工、服侍同工、弟兄姊妹，还是慕道朋友，只要您在教会生活、服侍配搭、关怀探访、财务报销、主日学、场地设备或行政协作中遇到过不方便的地方，都欢迎写下来。',
+    'share.text.recognition': '您的一个真实场景，可能会帮助 ChurchOS 第一版更贴近教会实际需要；若需求未来被采纳，也有机会被记录在 ChurchOS 共创致谢墙中。',
     'share.text.linkLabel': '参与链接：'
   },
   en: {
