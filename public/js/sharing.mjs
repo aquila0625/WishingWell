@@ -14,6 +14,18 @@ export function buildPosterModel({ url }) {
   };
 }
 
+export function buildShareText({ url }) {
+  return [
+    '我正在邀请大家参与 ChurchOS（教会通）APP 前期需求调研。',
+    '',
+    '如果你在教会服侍、聚会参与、会友关怀、财务报销、主日学、场地设备等方面遇到过真实问题，欢迎一起提交建议。',
+    '',
+    '你的一个真实场景，可能会帮助 ChurchOS 第一版更贴近教会现场，也可能被未来的共创致谢墙永久纪念。',
+    '',
+    `参与链接：${url}`
+  ].join('\n');
+}
+
 function loadImage(source) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -121,11 +133,10 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.fillStyle = '#94a3b8';
   context.font = '500 24px sans-serif';
   context.textAlign = 'center';
-  context.fillText(model.audience, width / 2, promptTop + 318);
-
   const qrSize = 250;
   const qrX = (width - qrSize) / 2;
   const qrY = height - 470;
+  context.fillText(model.audience, width / 2, qrY - 46);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
@@ -141,16 +152,29 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.textAlign = 'left';
 }
 
+function canvasToPosterFile(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error('海报生成失败，请重试'));
+        return;
+      }
+      resolve(new File([blob], 'ChurchOS-CoCreation-Poster.png', { type: 'image/png' }));
+    }, 'image/png');
+  });
+}
+
 export function initSharing({ api }) {
   const dialog = document.getElementById('share-dialog');
-  const urlInput = document.getElementById('share-url');
+  const messageInput = document.getElementById('share-message');
   const copyButton = document.getElementById('copy-share-button');
+  const nativeShareButton = document.getElementById('native-share-button');
   const canvas = document.getElementById('share-poster');
   const downloadButton = document.getElementById('download-poster-button');
 
   async function open() {
     const url = window.location.href;
-    urlInput.value = url;
+    messageInput.value = buildShareText({ url });
     openDialog(dialog);
     try {
       const qr = await api.request(`/api/share/qr?${new URLSearchParams({ url })}`);
@@ -162,12 +186,39 @@ export function initSharing({ api }) {
 
   copyButton.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(urlInput.value);
+      await navigator.clipboard.writeText(messageInput.value);
     } catch (error) {
-      urlInput.select();
+      messageInput.select();
       document.execCommand('copy');
     }
-    showToast('分享链接已复制', { tone: 'success' });
+    showToast('分享文案和链接已复制', { tone: 'success' });
+  });
+
+  nativeShareButton.addEventListener('click', async () => {
+    try {
+      const posterFile = await canvasToPosterFile(canvas);
+      const shareData = {
+        title: 'ChurchOS（教会通）调研',
+        text: messageInput.value,
+        files: [posterFile]
+      };
+
+      if (navigator.canShare?.({ files: [posterFile] })) {
+        await navigator.share(shareData);
+        return;
+      }
+
+      if (navigator.share) {
+        await navigator.share({ title: shareData.title, text: shareData.text });
+        showToast('当前设备不支持直接带上海报，可再下载海报配图发送', { tone: 'info' });
+        return;
+      }
+
+      await navigator.clipboard.writeText(messageInput.value);
+      showToast('已复制文案，请下载海报后一起发送', { tone: 'info' });
+    } catch (error) {
+      if (error.name !== 'AbortError') showToast(error.message, { tone: 'error' });
+    }
   });
 
   downloadButton.addEventListener('click', () => {

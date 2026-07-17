@@ -241,6 +241,10 @@
     flex-direction: column;
   }
 
+  .share-actions-row {
+    grid-template-columns: 1fr;
+  }
+
   .merge-form {
     grid-template-columns: 1fr;
   }

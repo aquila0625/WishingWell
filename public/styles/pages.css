@@ -930,6 +930,12 @@
   background: var(--color-surface-soft);
 }
 
+.share-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 .similar-panel,
 .recording-field,
 .audio-result {
