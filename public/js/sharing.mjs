@@ -140,11 +140,11 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   });
 
   context.fillStyle = '#a8b3c7';
-  context.font = '600 26px sans-serif';
+  context.font = '600 30px sans-serif';
   context.textAlign = 'center';
   const qrSize = 290;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 535;
+  const qrY = height - 559;
   context.fillText(model.audience, width / 2, qrY - 48);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
@@ -156,8 +156,8 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.fillStyle = '#94a3b8';
   context.font = '400 26px sans-serif';
   context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 117);
-  context.font = '400 22px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 64);
+  context.font = '400 25px sans-serif';
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 88);
   context.textAlign = 'left';
 }
 
