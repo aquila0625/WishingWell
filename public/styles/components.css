@@ -656,6 +656,14 @@ textarea:focus {
   transition: opacity 160ms ease;
 }
 
+.quick-actions[data-action-count="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.quick-actions[data-action-count="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .quick-drawer.collapsed .quick-actions {
   pointer-events: none;
   opacity: 0;

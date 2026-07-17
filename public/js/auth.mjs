@@ -51,6 +51,7 @@ export function initAuth({ api, store }) {
     document.getElementById('user-menu').hidden = !loggedIn;
     document.getElementById('notification-button').hidden = !loggedIn;
     document.getElementById('drawer-auth-button').hidden = loggedIn;
+    document.querySelector('.quick-actions')?.setAttribute('data-action-count', loggedIn ? '3' : '4');
     document.getElementById('admin-open-button').hidden = !user?.is_admin;
     if (!user) return;
     document.getElementById('header-user-name').textContent = user.nickname;
