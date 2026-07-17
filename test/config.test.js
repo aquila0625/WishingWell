@@ -91,6 +91,12 @@ test('Render blueprint defines isolated production and staging table prefixes', 
   assert.match(blueprint, /key:\s*SUPABASE_SERVICE_ROLE_KEY\s*\n\s*sync:\s*false/);
 });
 
+test('server passes configured table prefix into the app', () => {
+  const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
+
+  assert.match(server, /tablePrefix:\s*config\.tablePrefix/);
+});
+
 test('Supabase schema documents staging tables', () => {
   const schema = fs.readFileSync(path.join(__dirname, '..', 'docs', 'supabase-schema.sql'), 'utf8');
 

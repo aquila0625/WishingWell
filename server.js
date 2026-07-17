@@ -10,6 +10,7 @@ createApp({
   dbFilePath: config.dbFilePath,
   supabaseUrl: config.supabaseUrl,
   supabaseServiceRoleKey: config.supabaseServiceRoleKey,
+  tablePrefix: config.tablePrefix,
   adminAccount: config.adminAccount,
   sessionSecret: config.sessionSecret,
   uploadDir: config.uploadDir
