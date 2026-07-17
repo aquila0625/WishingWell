@@ -139,25 +139,25 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
     context.fillText(label, 174, y + 47);
   });
 
-  context.fillStyle = '#94a3b8';
-  context.font = '500 22px sans-serif';
+  context.fillStyle = '#a8b3c7';
+  context.font = '600 26px sans-serif';
   context.textAlign = 'center';
-  const qrSize = 260;
+  const qrSize = 290;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 500;
-  context.fillText(model.audience, width / 2, qrY - 42);
+  const qrY = height - 535;
+  context.fillText(model.audience, width / 2, qrY - 48);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
   context.drawImage(qr, qrX, qrY, qrSize, qrSize);
   context.fillStyle = '#f8fafc';
-  context.font = '700 32px sans-serif';
-  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 56);
+  context.font = '700 38px sans-serif';
+  context.fillText(model.qrTitle, width / 2, qrY + qrSize + 67);
   context.fillStyle = '#94a3b8';
-  context.font = '400 23px sans-serif';
-  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 96);
-  context.font = '400 20px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 70);
+  context.font = '400 26px sans-serif';
+  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 117);
+  context.font = '400 22px sans-serif';
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 64);
   context.textAlign = 'left';
 }
 

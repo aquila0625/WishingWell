@@ -35,11 +35,11 @@ test('poster canvas is taller and keeps roomy QR caption spacing', async () => {
     .then((fs) => fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8'));
 
   assert.match(html, /id="share-poster" width="848" height="1420"/);
-  assert.match(source, /const qrSize = 260;/);
-  assert.match(source, /const qrY = height - 500;/);
-  assert.match(source, /context\.fillText\(model\.audience, width \/ 2, qrY - 42\)/);
-  assert.match(source, /context\.font = '400 20px sans-serif';/);
-  assert.match(source, /width \/ 2, height - 70\)/);
+  assert.match(source, /const qrSize = 290;/);
+  assert.match(source, /const qrY = height - 535;/);
+  assert.match(source, /context\.fillText\(model\.audience, width \/ 2, qrY - 48\)/);
+  assert.match(source, /context\.font = '400 22px sans-serif';/);
+  assert.match(source, /width \/ 2, height - 64\)/);
 });
 
 test('notification summary counts unread items only', () => {
