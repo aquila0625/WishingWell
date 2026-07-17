@@ -34,13 +34,31 @@ export function setBusy(button, busy, label = '处理中') {
 }
 
 export function showToast(message, { tone = 'info', duration = 2800 } = {}) {
-  const root = document.getElementById('toast-root');
+  let root = document.getElementById('toast-root');
+  if (!root) {
+    root = document.createElement('div');
+    root.id = 'toast-root';
+    root.className = 'toast-root';
+    root.setAttribute('aria-live', 'polite');
+    root.setAttribute('aria-atomic', 'true');
+    document.body.append(root);
+  }
   const toast = document.createElement('div');
   toast.className = `toast toast-${tone}`;
   toast.setAttribute('role', tone === 'error' ? 'alert' : 'status');
-  toast.textContent = message;
+  const icons = {
+    success: 'check-circle-2',
+    error: 'circle-alert',
+    info: 'info'
+  };
+  toast.innerHTML = `<span class="toast-icon"><i data-lucide="${icons[tone] || icons.info}" aria-hidden="true"></i></span><span class="toast-message"></span>`;
+  toast.querySelector('.toast-message').textContent = message;
   root.append(toast);
-  setTimeout(() => toast.remove(), duration);
+  refreshIcons();
+  setTimeout(() => {
+    toast.classList.add('toast-leaving');
+    setTimeout(() => toast.remove(), 220);
+  }, duration);
 }
 
 export function refreshIcons() {

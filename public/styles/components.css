@@ -556,24 +556,86 @@ textarea:focus {
 
 .toast-root {
   position: fixed;
-  z-index: 100;
-  right: 16px;
-  bottom: calc(16px + var(--safe-bottom));
+  z-index: 160;
+  right: clamp(14px, 4vw, 28px);
+  bottom: calc(22px + var(--safe-bottom));
   display: grid;
-  gap: 8px;
-  width: min(360px, calc(100vw - 32px));
+  gap: 10px;
+  width: min(420px, calc(100vw - 28px));
+  pointer-events: none;
 }
 
 .toast {
-  padding: 12px 14px;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
-  background: var(--color-surface-raised);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid rgba(34, 211, 238, 0.34);
+  border-radius: 14px;
+  color: var(--color-text);
+  background:
+    linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(99, 102, 241, 0.08)),
+    rgba(15, 23, 42, 0.94);
   box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(18px);
+  animation: toast-enter 220ms ease-out both;
 }
 
-.toast-success { border-color: rgba(52, 211, 153, 0.55); }
-.toast-error { border-color: rgba(251, 113, 133, 0.6); }
+.toast-icon {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--color-primary);
+  background: rgba(34, 211, 238, 0.14);
+}
+
+.toast-message {
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.toast-success {
+  border-color: rgba(52, 211, 153, 0.55);
+}
+
+.toast-success .toast-icon {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.toast-error {
+  border-color: rgba(251, 113, 133, 0.6);
+}
+
+.toast-error .toast-icon {
+  color: #fda4af;
+  background: rgba(244, 63, 94, 0.14);
+}
+
+.toast-leaving {
+  animation: toast-leave 220ms ease-in both;
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-leave {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
 
 .draft-preview-bar {
   position: fixed;
