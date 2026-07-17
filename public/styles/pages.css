@@ -923,7 +923,7 @@
 
 .share-dialog canvas {
   display: block;
-  width: min(100%, 320px);
+  width: min(100%, 420px);
   height: auto;
   margin: 16px auto 18px;
   border-radius: 8px;

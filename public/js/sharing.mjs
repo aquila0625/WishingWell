@@ -1,28 +1,37 @@
 import { closeDialog, downloadBlob, openDialog, showToast } from './ui.mjs';
+import { getLocale, translate } from './i18n.mjs';
 
-export function buildPosterModel({ url }) {
+function t(key, locale) {
+  return translate(key, locale);
+}
+
+export function buildPosterModel({ url, locale = getLocale() }) {
   return {
     url,
     brand: 'ChurchOS',
-    product: '教会通 APP',
-    title: '一起决定 ChurchOS 第一版先做什么',
-    subtitle: '在正式开发前，我们正在收集教会现场的真实问题与需要。',
-    prompts: ['不需要技术背景', '不需要完整方案', '只要说出您真实遇到的问题'],
-    audience: '教会领袖 · 服侍同工 · 弟兄姊妹 · 慕道朋友',
-    qrTitle: '扫码参与调研',
-    qrSubtitle: '提交真实问题，帮助 ChurchOS 更贴近教会现场'
+    product: t('share.poster.product', locale),
+    title: t('share.poster.title', locale),
+    subtitle: t('share.poster.subtitle', locale),
+    prompts: [
+      t('share.poster.prompt1', locale),
+      t('share.poster.prompt2', locale),
+      t('share.poster.prompt3', locale)
+    ],
+    audience: t('share.poster.audience', locale),
+    qrTitle: t('share.poster.qrTitle', locale),
+    qrSubtitle: t('share.poster.qrSubtitle', locale)
   };
 }
 
-export function buildShareText({ url }) {
+export function buildShareText({ url, locale = getLocale() }) {
   return [
-    '我想邀请你一起参与 ChurchOS（教会通）APP 的前期需求调研。',
+    t('share.text.intro', locale),
     '',
-    '在正式开发前，我们希望先收集教会现场真实发生的问题与需要。无论你是教牧同工、服侍同工、弟兄姊妹，还是慕道朋友，只要你在教会生活或服侍中遇到过不方便的地方，都欢迎写下来。',
+    t('share.text.body', locale),
     '',
-    '你的一个真实场景，可能会帮助 ChurchOS 第一版更贴近教会实际需要；被采纳的需求，也有机会记录在 ChurchOS 共创致谢墙中。',
+    t('share.text.recognition', locale),
     '',
-    `参与链接：${url}`
+    `${t('share.text.linkLabel', locale)}${url}`
   ].join('\n');
 }
 
@@ -133,10 +142,10 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.fillStyle = '#94a3b8';
   context.font = '500 22px sans-serif';
   context.textAlign = 'center';
-  const qrSize = 220;
+  const qrSize = 260;
   const qrX = (width - qrSize) / 2;
-  const qrY = height - 430;
-  context.fillText(model.audience, width / 2, qrY - 32);
+  const qrY = height - 500;
+  context.fillText(model.audience, width / 2, qrY - 42);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
@@ -148,7 +157,7 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.font = '400 23px sans-serif';
   context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 96);
   context.font = '400 20px sans-serif';
-  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 58);
+  context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 70);
   context.textAlign = 'left';
 }
 
@@ -198,7 +207,7 @@ export function initSharing({ api }) {
     try {
       const posterFile = await canvasToPosterFile(canvas);
       const shareData = {
-        title: 'ChurchOS（教会通）调研',
+        title: t('share.systemTitle', getLocale()),
         text: messageInput.value,
         files: [posterFile]
       };

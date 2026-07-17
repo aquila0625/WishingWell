@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPosterModel } from '../public/js/sharing.mjs';
+import { buildPosterModel, buildShareText } from '../public/js/sharing.mjs';
 import { notificationSummary } from '../public/js/notifications.mjs';
 
 test('poster model uses the current URL and campaign title', () => {
@@ -20,15 +20,24 @@ test('poster model uses the current URL and campaign title', () => {
   );
 });
 
-test('poster QR caption uses larger type and roomier spacing', async () => {
+test('share poster and invitation copy follow the selected locale', () => {
+  const url = 'https://churchosapp.org/';
+  assert.equal(buildPosterModel({ url, locale: 'en' }).title, 'Help decide what ChurchOS should build first');
+  assert.equal(buildPosterModel({ url, locale: 'zh-TW' }).qrTitle, '掃碼參與調研');
+  assert.match(buildShareText({ url, locale: 'en' }), /Participation link: https:\/\/churchosapp\.org\//);
+  assert.match(buildShareText({ url, locale: 'zh-TW' }), /參與連結：https:\/\/churchosapp\.org\//);
+});
+
+test('poster canvas is taller and keeps roomy QR caption spacing', async () => {
   const source = await import('node:fs/promises')
     .then((fs) => fs.readFile(new URL('../public/js/sharing.mjs', import.meta.url), 'utf8'));
+  const html = await import('node:fs/promises')
+    .then((fs) => fs.readFile(new URL('../public/index.html', import.meta.url), 'utf8'));
 
-  assert.match(source, /context\.font = '700 34px sans-serif';/);
-  assert.match(source, /const qrY = height - 470;/);
-  assert.match(source, /context\.fillText\(model\.qrTitle, width \/ 2, qrY \+ qrSize \+ 70\)/);
-  assert.match(source, /context\.font = '400 25px sans-serif';/);
-  assert.match(source, /context\.fillText\(model\.qrSubtitle, width \/ 2, qrY \+ qrSize \+ 118\)/);
+  assert.match(html, /id="share-poster" width="848" height="1420"/);
+  assert.match(source, /const qrSize = 260;/);
+  assert.match(source, /const qrY = height - 500;/);
+  assert.match(source, /context\.fillText\(model\.audience, width \/ 2, qrY - 42\)/);
   assert.match(source, /context\.font = '400 20px sans-serif';/);
   assert.match(source, /width \/ 2, height - 70\)/);
 });

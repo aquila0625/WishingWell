@@ -277,14 +277,14 @@
 
   <dialog class="app-dialog share-dialog" id="share-dialog" aria-labelledby="share-title">
     <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
-    <div class="dialog-heading"><span class="eyebrow">邀请更多人参与</span><h2 id="share-title">分享 ChurchOS（教会通）调研</h2></div>
-    <label>分享文案<textarea id="share-message" rows="5" readonly></textarea></label>
+    <div class="dialog-heading"><span class="eyebrow" data-i18n="share.eyebrow">邀请更多人参与</span><h2 id="share-title" data-i18n="share.title">分享 ChurchOS（教会通）调研</h2></div>
+    <label><span data-i18n="share.messageLabel">分享文案</span><textarea id="share-message" rows="5" readonly></textarea></label>
     <div class="share-actions-row">
-      <button class="secondary-button" id="copy-share-button" type="button"><i data-lucide="copy" aria-hidden="true"></i>复制文案和链接</button>
-      <button class="secondary-button" id="native-share-button" type="button"><i data-lucide="share-2" aria-hidden="true"></i>分享文案和海报</button>
+      <button class="secondary-button" id="copy-share-button" type="button"><i data-lucide="copy" aria-hidden="true"></i><span data-i18n="share.copy">复制文案和链接</span></button>
+      <button class="secondary-button" id="native-share-button" type="button"><i data-lucide="share-2" aria-hidden="true"></i><span data-i18n="share.native">分享文案和海报</span></button>
     </div>
-    <canvas id="share-poster" width="848" height="1264" aria-label="ChurchOS 共创分享海报"></canvas>
-    <button class="primary-button full-width" id="download-poster-button" type="button"><i data-lucide="download" aria-hidden="true"></i>下载邀请海报</button>
+    <canvas id="share-poster" width="848" height="1420" aria-label="ChurchOS 共创分享海报"></canvas>
+    <button class="primary-button full-width" id="download-poster-button" type="button"><i data-lucide="download" aria-hidden="true"></i><span data-i18n="share.download">下载邀请海报</span></button>
   </dialog>
 
   <div class="toast-root" id="toast-root" aria-live="polite" aria-atomic="true"></div>
