@@ -931,10 +931,28 @@
 }
 
 .similar-panel,
+.recording-field,
 .audio-result {
   padding: 12px;
   border-left: 2px solid var(--color-primary);
   background: rgba(34, 211, 238, 0.05);
+}
+
+.recording-field {
+  display: grid;
+  gap: 10px;
+  border-left-color: rgba(148, 163, 184, 0.42);
+  border-radius: 0 8px 8px 0;
+}
+
+.recording-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recording-actions button {
+  flex: 1 1 150px;
 }
 
 .similar-row,

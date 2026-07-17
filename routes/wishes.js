@@ -82,9 +82,9 @@ function createWishesRouter({ database, upload, sessionSecret }) {
     const title = String(req.body.title || '').trim();
     const content = String(req.body.content || '').trim();
     const category = String(req.body.category || '').trim();
-    if (!category) return res.status(400).json({ error: '请选择需求分类' });
-    if (title.length < 5 || title.length > 30) return res.status(400).json({ error: '标题需要 5 至 30 个字' });
-    if (content.length < 10) return res.status(400).json({ error: '详细描述至少需要 10 个字' });
+    if (!category) return res.status(400).json({ error: '请选择问题分类' });
+    if (title.length < 5 || title.length > 30) return res.status(400).json({ error: '简短标题需要 5 至 30 个字' });
+    if (content.length < 10) return res.status(400).json({ error: '问题描述至少需要 10 个字' });
 
     const today = new Date().setHours(0, 0, 0, 0);
     const submittedToday = (await database.read('wishes')).filter((wish) => (
@@ -121,9 +121,9 @@ function createWishesRouter({ database, upload, sessionSecret }) {
     const category = String(req.body.category || '').trim();
     const title = String(req.body.title || '').trim();
     const content = String(req.body.content || '').trim();
-    if (!category) return res.status(400).json({ error: '请选择需求分类' });
-    if (title.length < 5 || title.length > 30) return res.status(400).json({ error: '标题需要 5 至 30 个字' });
-    if (content.length < 10) return res.status(400).json({ error: '详细描述至少需要 10 个字' });
+    if (!category) return res.status(400).json({ error: '请选择问题分类' });
+    if (title.length < 5 || title.length > 30) return res.status(400).json({ error: '简短标题需要 5 至 30 个字' });
+    if (content.length < 10) return res.status(400).json({ error: '问题描述至少需要 10 个字' });
 
     const updated = await database.update('wishes', wish.id, { category, title, content });
     res.json({ message: '需求已更新', wish: await serializeWish(updated) });

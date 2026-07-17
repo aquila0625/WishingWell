@@ -99,6 +99,28 @@ test('wish wall sort menu is anchored below its trigger', () => {
   assert.match(wishes, /wishSortButton\.setAttribute\('aria-expanded'/);
 });
 
+test('wish creation form guides real-problem submissions with recording controls', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+
+  assert.match(html, /<span class="eyebrow">分享一个真实问题<\/span>/);
+  assert.match(html, /<h2 id="wish-form-title">提交需求与场景<\/h2>/);
+  assert.match(html, /不需要写成完整方案。请尽量说清楚问题发生在什么场景/);
+  assert.match(html, /问题分类 <span class="required-mark"/);
+  assert.match(html, /简短标题 <span class="required-mark"/);
+  assert.match(html, /问题描述 <span class="required-mark"/);
+  assert.match(html, /id="wish-category-hint"[^>]*>[^<]*更多自定义场景/);
+  assert.match(html, /placeholder="例如：希望主日服侍排班可以自动提醒"/);
+  assert.match(html, /id="wish-content-hint"[^>]*>[^<]*不需要写技术方案/);
+  assert.match(html, /id="audio-record-start"/);
+  assert.match(html, /id="audio-record-stop"/);
+  assert.match(html, /录音会发送到 ChurchOS 后台/);
+  assert.doesNotMatch(html, /id="audio-input"/);
+  assert.match(wishes, /new MediaRecorder/);
+  assert.match(wishes, /audioBlob/);
+  assert.match(wishes, /audioRecordStart/);
+});
+
 test('hero removes duplicate actions without breaking optional shell bindings', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const app = fs.readFileSync(new URL('../public/js/app.mjs', import.meta.url), 'utf8');

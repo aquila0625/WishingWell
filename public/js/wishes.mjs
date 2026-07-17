@@ -34,10 +34,10 @@ export function updateVoteState(wish, userId) {
 
 export function validateWish(values, files = []) {
   const errors = {};
-  if (!values.category) errors.category = '请选择需求分类';
-  if ((values.title || '').trim().length < 5) errors.title = '标题至少需要 5 个字';
-  else if (values.title.trim().length > 30) errors.title = '标题最多 30 个字';
-  if ((values.content || '').trim().length < 10) errors.content = '详细描述至少需要 10 个字';
+  if (!values.category) errors.category = '请选择问题分类';
+  if ((values.title || '').trim().length < 5) errors.title = '简短标题至少需要 5 个字';
+  else if (values.title.trim().length > 30) errors.title = '简短标题最多 30 个字';
+  if ((values.content || '').trim().length < 10) errors.content = '问题描述至少需要 10 个字';
   if (files.length > 3) errors.files = '最多上传 3 张图片';
   else if (files.some((file) => file.size > 5 * 1024 * 1024)) errors.files = '每张图片不能超过 5MB';
   return errors;
@@ -63,7 +63,8 @@ export function initWishWall({ api, store, auth }) {
   const wishTitleInput = document.getElementById('wish-title-input');
   const similarPanel = document.getElementById('similar-panel');
   const similarList = document.getElementById('similar-list');
-  const audioInput = document.getElementById('audio-input');
+  const audioRecordStart = document.getElementById('audio-record-start');
+  const audioRecordStop = document.getElementById('audio-record-stop');
   const audioResult = document.getElementById('audio-result');
   const detailDialog = document.getElementById('wish-detail-dialog');
   const detailContent = document.getElementById('wish-detail-content');
@@ -77,6 +78,10 @@ export function initWishWall({ api, store, auth }) {
   let sort = 'votes';
   let loaded = false;
   let pendingAudioPath = null;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordingStream = null;
+  let discardRecording = false;
 
   function replaceWish(updated) {
     store.set({
@@ -264,6 +269,9 @@ export function initWishWall({ api, store, auth }) {
       wishForm.reset();
       similarPanel.hidden = true;
       audioResult.hidden = true;
+      audioResult.replaceChildren();
+      audioRecordStart.hidden = false;
+      audioRecordStop.hidden = true;
       pendingAudioPath = null;
       closeDialog(myWishesDialog);
       openDialog(wishDialog);
@@ -275,8 +283,8 @@ export function initWishWall({ api, store, auth }) {
     for (const match of matches) {
       const row = element('div', 'similar-row');
       const copy = element('span', '');
-      copy.append(element('strong', '', match.title), element('small', '', `${match.votes} 位同工同感`));
-      const view = element('button', 'text-button', '查看详情');
+      copy.append(element('strong', '', match.title), element('small', '', `${match.votes} 位用户有同感`));
+      const view = element('button', 'text-button', '查看并补充');
       view.type = 'button';
       view.addEventListener('click', () => openWishDetail(match));
       row.append(copy, view);
@@ -303,31 +311,109 @@ export function initWishWall({ api, store, auth }) {
 
   wishTitleInput.addEventListener('input', searchSimilar);
 
-  audioInput.addEventListener('change', () => auth.requireAuth(async () => {
-    const file = audioInput.files[0];
-    if (!file) return;
+  function appendTranscription(response) {
+    pendingAudioPath = response.audioUrl;
+    audioResult.replaceChildren();
+    const text = element('p', '', response.text);
+    const confidence = element('small', response.confidence < 70 ? 'low-confidence' : '', `识别置信度 ${response.confidence}%`);
+    const use = element('button', 'secondary-button', '使用这段转写');
+    use.type = 'button';
+    use.addEventListener('click', () => {
+      const target = wishForm.elements.content;
+      target.value = target.value ? `${target.value}\n${response.text}` : response.text;
+      target.focus();
+    });
+    const redo = element('button', 'ghost-button', '重新录制');
+    redo.type = 'button';
+    redo.addEventListener('click', () => {
+      pendingAudioPath = null;
+      audioResult.hidden = true;
+      audioResult.replaceChildren();
+      audioRecordStart.hidden = false;
+      audioRecordStop.hidden = true;
+    });
+    audioResult.append(text, confidence, use, redo);
+  }
+
+  async function uploadRecording(audioBlob) {
     const data = new FormData();
-    data.append('audio', file);
+    data.append('audio', audioBlob, 'churchos-requirement-recording.webm');
     audioResult.hidden = false;
     audioResult.textContent = '正在转写录音…';
     try {
       const response = await api.request('/api/wishes/audio-transcribe', { method: 'POST', body: data });
-      pendingAudioPath = response.audioUrl;
-      audioResult.replaceChildren();
-      const text = element('p', '', response.text);
-      const confidence = element('small', response.confidence < 70 ? 'low-confidence' : '', `识别置信度 ${response.confidence}%`);
-      const use = element('button', 'secondary-button', '使用这段转写');
-      use.type = 'button';
-      use.addEventListener('click', () => {
-        const target = wishForm.elements.content;
-        target.value = target.value ? `${target.value}\n${response.text}` : response.text;
-        target.focus();
-      });
-      audioResult.append(text, confidence, use);
+      appendTranscription(response);
     } catch (error) {
       audioResult.textContent = error.message;
+    } finally {
+      audioRecordStart.hidden = false;
+      audioRecordStop.hidden = true;
+      audioRecordStop.disabled = false;
+      refreshIcons();
+    }
+  }
+
+  function stopRecordingTracks() {
+    if (!recordingStream) return;
+    recordingStream.getTracks().forEach((track) => track.stop());
+    recordingStream = null;
+  }
+
+  audioRecordStart.addEventListener('click', () => auth.requireAuth(async () => {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      showToast('当前浏览器不支持直接录音，请换用支持麦克风录音的浏览器。', { tone: 'error' });
+      return;
+    }
+    try {
+      recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      discardRecording = false;
+      mediaRecorder = new MediaRecorder(recordingStream);
+      mediaRecorder.addEventListener('dataavailable', (event) => {
+        if (event.data?.size) audioChunks.push(event.data);
+      });
+      mediaRecorder.addEventListener('stop', () => {
+        stopRecordingTracks();
+        if (discardRecording) {
+          audioChunks = [];
+          discardRecording = false;
+          return;
+        }
+        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+        uploadRecording(audioBlob);
+      }, { once: true });
+      mediaRecorder.start();
+      pendingAudioPath = null;
+      audioResult.hidden = false;
+      audioResult.textContent = '正在录音…';
+      audioRecordStart.hidden = true;
+      audioRecordStop.hidden = false;
+      refreshIcons();
+    } catch (error) {
+      stopRecordingTracks();
+      showToast('无法使用麦克风录音，请检查浏览器授权后重试。', { tone: 'error' });
     }
   }));
+
+  audioRecordStop.addEventListener('click', () => {
+    if (mediaRecorder?.state === 'recording') {
+      audioRecordStop.disabled = true;
+      audioResult.textContent = '正在准备转写…';
+      mediaRecorder.stop();
+    }
+  });
+
+  wishDialog.addEventListener('close', () => {
+    if (mediaRecorder?.state === 'recording') {
+      discardRecording = true;
+      mediaRecorder.stop();
+    } else {
+      stopRecordingTracks();
+    }
+    audioRecordStart.hidden = false;
+    audioRecordStop.hidden = true;
+    audioRecordStop.disabled = false;
+  });
 
   wishForm.addEventListener('submit', (event) => {
     event.preventDefault();

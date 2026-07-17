@@ -5,9 +5,9 @@ import { buildCommentTree, translationCacheKey } from '../public/js/comments.mjs
 
 test('wish validation enforces category, title, description, and file limits', () => {
   assert.deepEqual(validateWish({ title: '短', content: '不足', category: '' }, []), {
-    category: '请选择需求分类',
-    title: '标题至少需要 5 个字',
-    content: '详细描述至少需要 10 个字'
+    category: '请选择问题分类',
+    title: '简短标题至少需要 5 个字',
+    content: '问题描述至少需要 10 个字'
   });
   assert.equal(
     validateWish(

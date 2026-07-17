@@ -227,6 +227,10 @@
     min-width: 0;
   }
 
+  .recording-actions button {
+    width: 100%;
+  }
+
   .form-grid,
   .form-grid-three {
     grid-template-columns: 1fr;
