@@ -256,7 +256,6 @@
       <label><span class="field-label"><span data-i18n="wishForm.titleLabel">简短标题</span> <span class="required-mark" aria-hidden="true">*</span><span class="field-note" data-i18n="wishForm.titleNote">5-30 字</span></span><input id="wish-title-input" name="title" maxlength="30" placeholder="例如：希望主日服侍排班可以自动提醒" data-i18n-placeholder="wishForm.titlePlaceholder" aria-describedby="wish-title-hint" required><small class="field-hint" id="wish-title-hint" data-i18n="wishForm.titleHint">请用一句话说明您遇到的问题，尽量包含具体场景或关键词，方便其他用户理解和搜索。</small></label>
       <div class="similar-panel" id="similar-panel" hidden><strong data-i18n="wishForm.similarTitle">可能已有相似需求</strong><p data-i18n="wishForm.similarBody">如果下面已有类似问题，建议先查看并补充场景，避免重复提交，也能让同一个需求获得更多同感。</p><div id="similar-list"></div></div>
       <label><span class="field-label"><span data-i18n="wishForm.contentLabel">问题描述</span> <span class="required-mark" aria-hidden="true">*</span><span class="field-note" data-i18n="wishForm.contentNote">至少 10 字</span></span><textarea name="content" rows="5" placeholder="可以写：这个问题发生在什么时候？目前怎么处理？哪里最不方便？您希望将来可以怎样改善？" data-i18n-placeholder="wishForm.contentPlaceholder" aria-describedby="wish-content-hint" required></textarea><small class="field-hint" id="wish-content-hint" data-i18n="wishForm.contentHint">不需要写技术方案。只要把真实经历、困扰和期待说明白，就已经很有价值。</small></label>
-      <label><span class="field-label"><span data-i18n="wishForm.imagesLabel">补充图片</span> <span class="optional-mark" data-i18n="optional">选填</span><span class="field-note" data-i18n="wishForm.imagesNote">最多 3 张，每张 5MB</span></span><input name="images" type="file" accept="image/*" multiple><small class="field-hint" data-i18n="wishForm.imagesHint">如果有表格、流程截图、纸质记录或现场照片，可以上传帮助我们理解场景。请避免上传敏感个人资料。</small></label>
       <div class="recording-field" aria-labelledby="audio-record-label">
         <span class="field-label" id="audio-record-label"><span data-i18n="wishForm.audioLabel">语音补充</span> <span class="optional-mark" data-i18n="optional">选填</span></span>
         <small class="field-hint" data-i18n="wishForm.audioHint">不方便打字时，可以直接录音说明问题，录音会发送到 ChurchOS 后台用于转写和需求分析。提交前请检查转写内容是否准确。</small>
@@ -266,6 +265,7 @@
         </div>
       </div>
       <div class="audio-result" id="audio-result" hidden></div>
+      <label><span class="field-label"><span data-i18n="wishForm.imagesLabel">补充图片</span> <span class="optional-mark" data-i18n="optional">选填</span><span class="field-note" data-i18n="wishForm.imagesNote">最多 3 张，每张 5MB</span></span><input name="images" type="file" accept="image/*" multiple><small class="field-hint" data-i18n="wishForm.imagesHint">如果有表格、流程截图、纸质记录或现场照片，可以上传帮助我们理解场景。请避免上传敏感个人资料。</small></label>
       <button class="primary-button full-width" type="submit"><i data-lucide="send" aria-hidden="true"></i><span data-i18n="action.submitNeed">提交我的需求</span></button>
     </form>
   </dialog>
