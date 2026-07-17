@@ -45,20 +45,22 @@ function loadImage(source) {
 }
 
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
-  const characters = [...text];
+  const tokens = /[A-Za-z0-9]/.test(text) && text.includes(' ')
+    ? text.split(/(\s+)/)
+    : [...text];
   let line = '';
   let offset = 0;
-  for (const character of characters) {
-    const next = line + character;
+  for (const token of tokens) {
+    const next = line + token;
     if (context.measureText(next).width > maxWidth && line) {
-      context.fillText(line, x, y + offset);
-      line = character;
+      context.fillText(line.trimEnd(), x, y + offset);
+      line = token.trimStart();
       offset += lineHeight;
     } else {
       line = next;
     }
   }
-  if (line) context.fillText(line, x, y + offset);
+  if (line) context.fillText(line.trim(), x, y + offset);
   return y + offset;
 }
 
@@ -145,7 +147,7 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   const qrSize = 290;
   const qrX = (width - qrSize) / 2;
   const qrY = height - 559;
-  context.fillText(model.audience, width / 2, qrY - 48);
+  wrapText(context, model.audience, width / 2, qrY - 68, width - 150, 34);
   context.fillStyle = '#ffffff';
   roundRect(context, qrX - 18, qrY - 18, qrSize + 36, qrSize + 36, 22);
   context.fill();
@@ -154,8 +156,8 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   context.font = '700 38px sans-serif';
   context.fillText(model.qrTitle, width / 2, qrY + qrSize + 67);
   context.fillStyle = '#94a3b8';
-  context.font = '400 26px sans-serif';
-  context.fillText(model.qrSubtitle, width / 2, qrY + qrSize + 117);
+  context.font = '400 24px sans-serif';
+  wrapText(context, model.qrSubtitle, width / 2, qrY + qrSize + 115, width - 170, 32);
   context.font = '400 25px sans-serif';
   context.fillText(model.url.replace(/^https?:\/\//, ''), width / 2, height - 88);
   context.textAlign = 'left';

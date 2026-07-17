@@ -37,7 +37,8 @@ test('poster canvas is taller and keeps roomy QR caption spacing', async () => {
   assert.match(html, /id="share-poster" width="848" height="1420"/);
   assert.match(source, /const qrSize = 290;/);
   assert.match(source, /const qrY = height - 559;/);
-  assert.match(source, /context\.fillText\(model\.audience, width \/ 2, qrY - 48\)/);
+  assert.match(source, /wrapText\(context, model\.audience, width \/ 2, qrY - 68, width - 150, 34\)/);
+  assert.match(source, /wrapText\(context, model\.qrSubtitle, width \/ 2, qrY \+ qrSize \+ 115, width - 170, 32\)/);
   assert.match(source, /context\.font = '400 25px sans-serif';/);
   assert.match(source, /width \/ 2, height - 88\)/);
 });
