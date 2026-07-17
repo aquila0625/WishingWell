@@ -10,6 +10,7 @@ function createWishesRouter({
   sessionSecret,
   openaiApiKey,
   openaiTranscriptionModel = 'gpt-4o-mini-transcribe',
+  openaiTranslationModel = 'gpt-4o-mini',
   openaiFetchImpl = globalThis.fetch
 }) {
   const router = express.Router();
@@ -131,6 +132,86 @@ function createWishesRouter({
 
     const payload = await response.json();
     return String(payload.text || '').trim();
+  }
+
+  function localeName(locale) {
+    return ({
+      'zh-CN': 'Simplified Chinese',
+      'zh-TW': 'Traditional Chinese used in Hong Kong and Taiwan',
+      en: 'English',
+      es: 'Spanish',
+      ko: 'Korean',
+      fr: 'French'
+    })[locale] || 'English';
+  }
+
+  function extractOpenAIText(payload = {}) {
+    if (typeof payload.output_text === 'string' && payload.output_text.trim()) {
+      return payload.output_text.trim();
+    }
+    for (const item of payload.output || []) {
+      for (const content of item.content || []) {
+        if (typeof content.text === 'string' && content.text.trim()) return content.text.trim();
+      }
+    }
+    const choiceText = payload.choices?.[0]?.message?.content;
+    return typeof choiceText === 'string' ? choiceText.trim() : '';
+  }
+
+  async function translateWithOpenAI(text, locale) {
+    if (!openaiApiKey) {
+      return locale.startsWith('zh') ? `中文译文：${text}` : `English translation: ${text}`;
+    }
+    if (typeof openaiFetchImpl !== 'function') {
+      const error = new Error('当前运行环境不支持服务端翻译请求。');
+      error.status = 500;
+      error.publicMessage = error.message;
+      throw error;
+    }
+
+    const response = await openaiFetchImpl('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: openaiTranslationModel,
+        store: false,
+        input: [
+          'Translate the following ChurchOS user-submitted need or comment.',
+          `Target language: ${localeName(locale)}.`,
+          'Preserve church ministry terms, names, URLs, and paragraph breaks. Return only the translation.',
+          '',
+          text
+        ].join('\n')
+      })
+    });
+
+    if (!response.ok) {
+      let message = 'OpenAI 翻译失败，请稍后重试。';
+      try {
+        const payload = await response.json();
+        message = payload?.error?.message || message;
+      } catch (error) {
+        try {
+          message = await response.text() || message;
+        } catch {}
+      }
+      const error = new Error(message);
+      error.status = response.status || 502;
+      error.publicMessage = message;
+      throw error;
+    }
+
+    const translated = extractOpenAIText(await response.json());
+    if (!translated) {
+      const error = new Error('OpenAI 未返回有效翻译内容，请稍后重试。');
+      error.status = 502;
+      error.publicMessage = error.message;
+      throw error;
+    }
+    return translated;
   }
 
   router.post('/wishes/audio-transcribe', requireUser, upload.single('audio'), async (req, res, next) => {
@@ -260,14 +341,15 @@ function createWishesRouter({
     })));
   });
 
-  router.post('/wishes/:id/translate', (req, res) => {
+  router.post('/wishes/:id/translate', async (req, res, next) => {
     const text = String(req.body.text || '').trim();
     const locale = String(req.body.locale || 'en');
     if (!text) return res.status(400).json({ error: '翻译文本不能为空' });
-    const translation = locale.startsWith('zh')
-      ? `中文译文：${text}`
-      : `English translation: ${text}`;
-    res.json({ translation, locale });
+    try {
+      res.json({ translation: await translateWithOpenAI(text, locale), locale });
+    } catch (error) {
+      next(error);
+    }
   });
 
   router.post('/wishes/:id/dispute', requireUser, async (req, res) => {

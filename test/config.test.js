@@ -17,6 +17,7 @@ test('resolveConfig maps production environment variables', () => {
     CHURCHOS_SESSION_SECRET: 'deployment-session-secret',
     OPENAI_API_KEY: 'openai-key',
     OPENAI_TRANSCRIPTION_MODEL: 'gpt-4o-transcribe',
+    OPENAI_TRANSLATION_MODEL: 'gpt-4o-mini',
     CHURCHOS_ADMIN_EMAIL: 'owner@example.org',
     CHURCHOS_ADMIN_PASSWORD: 'secret123',
     CHURCHOS_ADMIN_NAME: 'Owner'
@@ -32,6 +33,7 @@ test('resolveConfig maps production environment variables', () => {
   assert.equal(config.sessionSecret, 'deployment-session-secret');
   assert.equal(config.openaiApiKey, 'openai-key');
   assert.equal(config.openaiTranscriptionModel, 'gpt-4o-transcribe');
+  assert.equal(config.openaiTranslationModel, 'gpt-4o-mini');
   assert.deepEqual(config.adminAccount, {
     email: 'owner@example.org',
     password: 'secret123',
@@ -84,6 +86,7 @@ test('Render blueprint documents deployment commands without embedding secrets',
   assert.match(blueprint, /SUPABASE_URL/);
   assert.match(blueprint, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(blueprint, /OPENAI_API_KEY/);
+  assert.match(blueprint, /OPENAI_TRANSLATION_MODEL/);
   assert.doesNotMatch(blueprint, /service-role-key|wang1234|254351776/);
 });
 
@@ -95,6 +98,7 @@ test('Render blueprint defines isolated production and staging table prefixes', 
   assert.match(blueprint, /key:\s*CHURCHOS_TABLE_PREFIX\s*\n\s*value:\s*staging_/);
   assert.match(blueprint, /key:\s*SUPABASE_SERVICE_ROLE_KEY\s*\n\s*sync:\s*false/);
   assert.match(blueprint, /key:\s*OPENAI_API_KEY\s*\n\s*sync:\s*false/);
+  assert.match(blueprint, /key:\s*OPENAI_TRANSLATION_MODEL\s*\n\s*value:\s*gpt-4o-mini/);
 });
 
 test('server passes configured table prefix into the app', () => {

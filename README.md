@@ -64,6 +64,7 @@ CHURCHOS_ADMIN_PASSWORD=change-this-password
 CHURCHOS_ADMIN_NAME=ChurchOS Admin
 OPENAI_API_KEY=your-openai-api-key
 OPENAI_TRANSCRIPTION_MODEL=gpt-4o-mini-transcribe
+OPENAI_TRANSLATION_MODEL=gpt-4o-mini
 ```
 
 When `CHURCHOS_ADMIN_EMAIL`, `CHURCHOS_ADMIN_PASSWORD`, and `CHURCHOS_ADMIN_NAME` are all set, the service creates or updates that administrator account on startup.
@@ -74,7 +75,7 @@ Back up SQLite by copying the file pointed to by `CHURCHOS_DB_FILE`. To restore,
 
 Supabase credentials should live only in server-side environment variables such as `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; never commit them or put them in frontend code.
 
-Voice transcription uses OpenAI from the server only. Set `OPENAI_API_KEY` to enable real transcription. `OPENAI_TRANSCRIPTION_MODEL` defaults to `gpt-4o-mini-transcribe`; use `gpt-4o-transcribe` if you prefer the higher-capability transcription model.
+Voice transcription and user-triggered translation use OpenAI from the server only. Set `OPENAI_API_KEY` to enable real transcription and real translation. `OPENAI_TRANSCRIPTION_MODEL` defaults to `gpt-4o-mini-transcribe`; use `gpt-4o-transcribe` if you prefer the higher-capability transcription model. `OPENAI_TRANSLATION_MODEL` defaults to `gpt-4o-mini`.
 
 ## Switching to Supabase
 
@@ -118,13 +119,13 @@ After adding the custom domains in Render, return to Namecheap Advanced DNS and 
 - Confirm `.env` is not committed to Git.
 - Confirm `CHURCHOS_SESSION_SECRET` is a long random string.
 - Confirm `SUPABASE_SERVICE_ROLE_KEY` exists only in server-side environment variables.
-- Confirm `OPENAI_API_KEY` exists only in server-side environment variables if voice transcription is enabled.
+- Confirm `OPENAI_API_KEY` exists only in server-side environment variables if voice transcription or translation is enabled.
 - Confirm the default demo administrator `admin@churchos.net` is disabled.
 - Confirm the owner administrator account, for example `254351776@qq.com`, can log in and open the admin workspace.
 
 ## Demo-only Integrations
 
-AI translation, speech transcription, analysis, geolocation, and email delivery use deterministic local demo responses. OAuth, SMS, and real email providers are not connected. Progress emails are currently simulated and logged in the admin workspace until a mail provider is connected.
+Without `OPENAI_API_KEY`, translation, speech transcription, analysis, geolocation, and email delivery use deterministic local demo responses. OAuth, SMS, and real email providers are not connected. Progress emails are currently simulated and logged in the admin workspace until a mail provider is connected.
 
 ## Project Structure
 

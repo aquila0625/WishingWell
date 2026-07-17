@@ -15,6 +15,7 @@ createApp({
   sessionSecret: config.sessionSecret,
   openaiApiKey: config.openaiApiKey,
   openaiTranscriptionModel: config.openaiTranscriptionModel,
+  openaiTranslationModel: config.openaiTranslationModel,
   uploadDir: config.uploadDir
 }).listen(config.port, () => {
   console.log(`ChurchOS running at http://localhost:${config.port}`);

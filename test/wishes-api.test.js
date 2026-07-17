@@ -41,6 +41,46 @@ test('authenticated users can create, vote, comment, and translate a wish', asyn
   assert.equal(typeof translation.body.translation, 'string');
 });
 
+test('wish translation uses OpenAI when configured', async (t) => {
+  const temp = createTestDb();
+  t.after(() => temp.cleanup());
+  const { createApp } = require('../app');
+  const calls = [];
+  const app = createApp({
+    dbDir: temp.dir,
+    openaiApiKey: 'test-openai-key',
+    openaiTranslationModel: 'gpt-4o-mini',
+    openaiFetchImpl: async (url, options) => {
+      calls.push({ url: String(url), body: JSON.parse(options.body), headers: options.headers });
+      return {
+        ok: true,
+        async json() {
+          return {
+            output: [{
+              content: [{ type: 'output_text', text: 'Please translate church needs into English.' }]
+            }]
+          };
+        },
+        async text() {
+          return JSON.stringify({ output: [] });
+        }
+      };
+    }
+  });
+
+  const response = await request(app)
+    .post('/api/wishes/1/translate')
+    .send({ text: '请把教会需求翻译成英文。', locale: 'en' })
+    .expect(200);
+
+  assert.equal(response.body.translation, 'Please translate church needs into English.');
+  assert.equal(calls[0].url, 'https://api.openai.com/v1/responses');
+  assert.equal(calls[0].body.model, 'gpt-4o-mini');
+  assert.equal(calls[0].body.store, false);
+  assert.match(calls[0].body.input, /Target language: English/);
+  assert.match(calls[0].headers.Authorization, /^Bearer test-openai-key$/);
+});
+
 test('wish listing includes public author data and comment counts', async (t) => {
   const context = createApiContext(t);
   const response = await request(context.app).get('/api/wishes').expect(200);

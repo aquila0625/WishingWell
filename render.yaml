@@ -27,6 +27,8 @@ services:
         sync: false
       - key: OPENAI_TRANSCRIPTION_MODEL
         value: gpt-4o-mini-transcribe
+      - key: OPENAI_TRANSLATION_MODEL
+        value: gpt-4o-mini
   - type: web
     name: churchosapp-staging
     runtime: node
@@ -55,6 +57,8 @@ services:
         sync: false
       - key: OPENAI_TRANSCRIPTION_MODEL
         value: gpt-4o-mini-transcribe
+      - key: OPENAI_TRANSLATION_MODEL
+        value: gpt-4o-mini
       - key: CHURCHOS_ADMIN_EMAIL
         sync: false
       - key: CHURCHOS_ADMIN_PASSWORD

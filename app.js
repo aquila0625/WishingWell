@@ -37,6 +37,7 @@ function createApp({
   sessionSecret,
   openaiApiKey,
   openaiTranscriptionModel,
+  openaiTranslationModel,
   uploadDir = path.join(__dirname, 'public', 'uploads')
 } = {}) {
   const app = express();
@@ -124,6 +125,7 @@ function createApp({
     sessionSecret,
     openaiApiKey,
     openaiTranscriptionModel,
+    openaiTranslationModel,
     openaiFetchImpl
   }));
   app.use('/api/admin', createAdminRouter({ database, sessionSecret }));

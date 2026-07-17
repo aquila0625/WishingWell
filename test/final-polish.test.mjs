@@ -207,6 +207,16 @@ test('hidden own wishes show administrator contact guidance', () => {
   assert.match(admin, /\/api\/admin\/contact/);
 });
 
+test('wish and comment translation follow the selected site language', () => {
+  const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+
+  assert.match(wishes, /import \{ getLocale, translate \} from '\.\/i18n\.mjs'/);
+  assert.match(wishes, /comments\.translate\(wish\.id, comment\.content, getLocale\(\)\)/);
+  assert.match(wishes, /comments\.translate\(wish\.id, wish\.content, getLocale\(\)\)/);
+  assert.doesNotMatch(wishes, /comments\.translate\(wish\.id, comment\.content, 'en'\)/);
+  assert.doesNotMatch(wishes, /comments\.translate\(wish\.id, wish\.content, 'en'\)/);
+});
+
 test('wish wall presents read-only mode after campaign deadline', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');

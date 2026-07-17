@@ -1,6 +1,6 @@
 import { debounce, closeDialog, openDialog, refreshIcons, setBusy, showToast } from './ui.mjs';
 import { createCommentService } from './comments.mjs';
-import { translate } from './i18n.mjs';
+import { getLocale, translate } from './i18n.mjs';
 
 export function filterAndSortWishes(wishes, { category = 'all', sort = 'votes' } = {}) {
   const filtered = category === 'all'
@@ -572,7 +572,7 @@ export function initWishWall({ api, store, auth }) {
         return;
       }
       translate.dataset.original = comment.content;
-      const translated = await comments.translate(wish.id, comment.content, 'en');
+      const translated = await comments.translate(wish.id, comment.content, getLocale());
       body.textContent = translated;
       translate.dataset.translation = translated;
       translate.textContent = '显示原文';
@@ -629,7 +629,7 @@ export function initWishWall({ api, store, auth }) {
         translateCard.textContent = '翻译需求内容';
         delete translateCard.dataset.translation;
       } else {
-        const translated = await comments.translate(wish.id, wish.content, 'en');
+        const translated = await comments.translate(wish.id, wish.content, getLocale());
         description.textContent = translated;
         translateCard.dataset.translation = translated;
         translateCard.textContent = '显示原文';
