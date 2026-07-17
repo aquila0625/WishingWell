@@ -124,7 +124,7 @@ export function calculatePosterLayout(context, model, width) {
     const labelBlock = textBlock(context, label, {
       font: '600 30px sans-serif',
       x: 174,
-      y: cursor + 43,
+      y: cursor,
       maxWidth: width - 284,
       lineHeight: 38
     });
@@ -138,9 +138,9 @@ export function calculatePosterLayout(context, model, width) {
       height,
       labelBlock: {
         ...labelBlock,
-        y: cursor + 43
+        y: cursor + height / 2
       },
-      numberY: cursor + Math.min(48, Math.round(height / 2 + 10)),
+      numberY: cursor + height / 2,
       bottom: cursor + height
     };
     cursor = prompt.bottom + 18;
@@ -165,22 +165,22 @@ export function calculatePosterLayout(context, model, width) {
     align: 'center'
   });
   const qrSubtitle = textBlock(context, model.qrSubtitle, {
-    font: '400 24px sans-serif',
+    font: '400 28px sans-serif',
     x: width / 2,
-    y: qrTitle.bottom + 18,
+    y: qrTitle.bottom + 14,
     maxWidth: width - 170,
-    lineHeight: 32,
-    align: 'center'
-  });
-  const url = textBlock(context, model.url.replace(/^https?:\/\//, ''), {
-    font: '400 25px sans-serif',
-    x: width / 2,
-    y: qrSubtitle.bottom + 50,
-    maxWidth: width - 150,
     lineHeight: 34,
     align: 'center'
   });
-  const height = Math.max(minimumHeight, Math.ceil(url.bottom + 82));
+  const url = textBlock(context, model.url.replace(/^https?:\/\//, ''), {
+    font: '400 29px sans-serif',
+    x: width / 2,
+    y: qrSubtitle.bottom + 32,
+    maxWidth: width - 150,
+    lineHeight: 36,
+    align: 'center'
+  });
+  const height = Math.max(minimumHeight, Math.ceil(url.bottom + 70));
 
   return {
     width,
@@ -202,6 +202,19 @@ function drawTextBlock(context, block) {
   context.font = block.font;
   context.textAlign = block.align;
   wrapText(context, block.text, block.x, block.y, block.maxWidth, block.lineHeight, block.lines);
+}
+
+function drawCenteredTextBlock(context, block) {
+  const previousBaseline = context.textBaseline;
+  context.font = block.font;
+  context.textAlign = block.align;
+  context.textBaseline = 'middle';
+  const totalHeight = (block.lines.length - 1) * block.lineHeight;
+  const firstY = block.y - totalHeight / 2;
+  block.lines.forEach((line, index) => {
+    context.fillText(line, block.x, firstY + index * block.lineHeight);
+  });
+  context.textBaseline = previousBaseline;
 }
 
 function roundRect(context, x, y, width, height, radius) {
@@ -276,9 +289,11 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
     context.fillStyle = '#22d3ee';
     context.font = '700 26px sans-serif';
     context.textAlign = 'left';
+    context.textBaseline = 'middle';
     context.fillText(`0${index + 1}`, 116, prompt.numberY);
     context.fillStyle = '#f8fafc';
-    drawTextBlock(context, prompt.labelBlock);
+    drawCenteredTextBlock(context, prompt.labelBlock);
+    context.textBaseline = 'alphabetic';
   });
 
   context.fillStyle = '#a8b3c7';
@@ -295,7 +310,6 @@ export async function drawSharePoster(canvas, model, qrDataUrl) {
   drawTextBlock(context, layout.qrTitle);
   context.fillStyle = '#94a3b8';
   drawTextBlock(context, layout.qrSubtitle);
-  context.font = '400 25px sans-serif';
   drawTextBlock(context, layout.url);
   context.textAlign = 'left';
 }

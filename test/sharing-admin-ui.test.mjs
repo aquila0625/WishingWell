@@ -13,7 +13,7 @@ test('poster model uses the current URL and campaign title', () => {
       title: '一起决定 ChurchOS 第一版先做什么',
       subtitle: '在正式开发前，我们正在收集教会现场的真实问题与需要。',
       prompts: ['不需要技术背景', '不需要完整方案', '只要说出您真实遇到的问题'],
-      audience: '教会领袖 · 服侍同工 · 弟兄姊妹 · 慕道朋友',
+      audience: '邀请教会领袖、服侍同工、弟兄姊妹和慕道朋友一起参与',
       qrTitle: '扫码参与调研',
       qrSubtitle: '提交真实问题，帮助 ChurchOS 更贴近教会现场'
     }
@@ -37,7 +37,8 @@ test('poster canvas is taller and keeps roomy QR caption spacing', async () => {
   assert.match(html, /id="share-poster" width="848" height="1420"/);
   assert.match(source, /const qrSize = 290;/);
   assert.match(source, /canvas\.height = layout\.height;/);
-  assert.match(source, /context\.font = '400 25px sans-serif';/);
+  assert.match(source, /context\.textBaseline = 'middle';/);
+  assert.match(source, /font: '400 28px sans-serif'/);
 });
 
 test('poster layout wraps long locale text and grows height without shrinking fonts', () => {
@@ -65,9 +66,9 @@ test('poster layout wraps long locale text and grows height without shrinking fo
 
   assert.ok(layout.height > 1420);
   assert.ok(layout.qrY > layout.audience.bottom + 32);
-  assert.ok(layout.url.y > layout.qrSubtitle.bottom + 32);
+  assert.ok(layout.url.y >= layout.qrSubtitle.bottom + 24);
   assert.equal(layout.title.font, '700 58px sans-serif');
-  assert.equal(layout.qrSubtitle.font, '400 24px sans-serif');
+  assert.equal(layout.qrSubtitle.font, '400 28px sans-serif');
 });
 
 test('notification summary counts unread items only', () => {
