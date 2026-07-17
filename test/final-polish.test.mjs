@@ -45,11 +45,13 @@ test('home page presents the revised co-creation invitation', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const i18n = fs.readFileSync(new URL('../public/js/i18n.mjs', import.meta.url), 'utf8');
 
-  assert.match(html, /ChurchOS 教会通 APP · 早期需求共创计划/);
-  assert.match(html, /<h1[^>]*data-i18n="hero\.title"[^>]*>ChurchOS 教会通 APP<\/h1>/);
-  assert.match(html, /一款正在筹备中的教会数字化管理与服侍协作 APP/);
-  assert.match(html, /ChurchOS 第一版做什么，由您和一线同工共同决定/);
-  assert.match(html, /为其他同工的建议点赞、评论并补充实际场景，让需求获得更完整的依据。/);
+  assert.match(html, /ChurchOS（教会通）APP · 第一版产品需求调研/);
+  assert.match(html, /<h1[^>]*data-i18n="hero\.title"[^>]*>ChurchOS（教会通）APP<\/h1>/);
+  assert.match(html, /不是凭想象设计，而是从教会现场的问题中长出来/);
+  assert.match(html, /第一版 ChurchOS 做什么，由真实需要共同决定/);
+  assert.match(html, /其他用户可以点赞、评论、补充类似场景，让一个需求背后有更完整的真实依据。/);
+  assert.match(html, /被采纳的建议，将被永久记录与致谢/);
+  assert.match(html, /邀请朋友参与/);
   assert.doesNotMatch(html, /为其他堂会的建议点赞/);
   assert.match(html, /<span[^>]*data-i18n="stats\.participants"[^>]*>参与调研<\/span>/);
   assert.match(html, /<span[^>]*data-i18n="stats\.needs"[^>]*>真实需求<\/span>/);

@@ -18,6 +18,26 @@ test('admin can update campaign settings and public users can read them', async 
   assert.equal(response.body.initial_cleanup_done, undefined);
 });
 
+test('public campaign upgrades legacy default homepage copy', async (t) => {
+  const context = createApiContext(t);
+  await context.app.locals.ready;
+  await context.app.locals.db.write('settings', [{
+    id: 1,
+    homepage_published: {
+      hero_title: 'ChurchOS 教会通 APP',
+      hero_tagline: '与全球教会同工一起，定义未来的全场景数字化服侍平台',
+      final_cta_title: '共同定义 ChurchOS 教会通 APP 的第一版',
+      show_share_button: true
+    }
+  }]);
+
+  const response = await request(context.app).get('/api/campaign').expect(200);
+
+  assert.equal(response.body.homepage.hero_title, 'ChurchOS（教会通）APP');
+  assert.match(response.body.homepage.hero_tagline, /慕道朋友一起参与调研/);
+  assert.equal(response.body.homepage.final_cta_title, '您的一个真实问题，可能成为 ChurchOS 第一版的重要功能');
+});
+
 test('non-admin users cannot access analysis', async (t) => {
   const context = createApiContext(t);
   await request(context.app)

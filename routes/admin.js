@@ -1,16 +1,10 @@
 const express = require('express');
 const { adminAuthenticate } = require('../lib/http');
+const { normalizeHomepage } = require('../lib/homepage');
 
 const WISH_STATUSES = new Set([
   'voting', 'accepted', 'planned', 'developing', 'testing', 'completed', 'rejected', 'merged', 'hidden'
 ]);
-
-const DEFAULT_HOMEPAGE = {
-  hero_title: 'ChurchOS 教会通 APP',
-  hero_tagline: '与全球教会同工一起，定义未来的全场景数字化服侍平台',
-  final_cta_title: '共同定义 ChurchOS 教会通 APP 的第一版',
-  show_share_button: true
-};
 
 const INITIAL_CLEANUP_CONFIRMATION = '确认首次上线清空';
 
@@ -29,10 +23,6 @@ function createAdminRouter({ database, sessionSecret }) {
     const nextSettings = { ...settings, ...updates, id: Number(settings.id || 1) };
     await database.write('settings', [nextSettings]);
     return nextSettings;
-  }
-
-  function normalizeHomepage(homepage) {
-    return { ...DEFAULT_HOMEPAGE, ...(homepage || {}) };
   }
 
   function homepageState(settings) {

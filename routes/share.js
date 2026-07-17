@@ -1,5 +1,6 @@
 const express = require('express');
 const QRCode = require('qrcode');
+const { normalizeHomepage } = require('../lib/homepage');
 
 function createShareRouter({ database }) {
   const router = express.Router();
@@ -14,7 +15,7 @@ function createShareRouter({ database }) {
     res.json({
       enabled: Boolean(settings.enabled),
       deadline: settings.deadline || null,
-      homepage: settings.homepage_published || settings.homepage || null,
+      homepage: normalizeHomepage(settings.homepage_published || settings.homepage),
       closed
     });
   });
