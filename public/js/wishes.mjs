@@ -1,5 +1,6 @@
 import { debounce, closeDialog, openDialog, refreshIcons, setBusy, showToast } from './ui.mjs';
 import { createCommentService } from './comments.mjs';
+import { translate } from './i18n.mjs';
 
 export function filterAndSortWishes(wishes, { category = 'all', sort = 'votes' } = {}) {
   const filtered = category === 'all'
@@ -41,6 +42,10 @@ export function validateWish(values, files = []) {
   if (files.length > 3) errors.files = '最多上传 3 张图片';
   else if (files.some((file) => file.size > 5 * 1024 * 1024)) errors.files = '每张图片不能超过 5MB';
   return errors;
+}
+
+function t(key) {
+  return translate(key);
 }
 
 function element(tag, className, text) {
@@ -174,7 +179,7 @@ export function initWishWall({ api, store, auth }) {
   function openWishEditor(wish) {
     const latestWish = store.get().wishes.find((item) => item.id === wish.id) || wish;
     if (!canEditWish(latestWish)) {
-      showToast('该需求已被官方锁定，不能继续修改', { tone: 'error' });
+      showToast(t('wishEdit.lockedToast'), { tone: 'error' });
       return;
     }
     wishEditForm.elements.id.value = latestWish.id;
@@ -197,9 +202,9 @@ export function initWishWall({ api, store, auth }) {
     copy.append(meta, element('h3', '', wish.title), element('p', '', wish.content));
 
     const actions = element('div', 'my-wish-actions');
-    const view = element('button', 'secondary-button', '查看详情');
+    const view = element('button', 'secondary-button', t('myWishes.view'));
     view.type = 'button';
-    view.innerHTML = '<i data-lucide="eye" aria-hidden="true"></i>查看详情';
+    view.innerHTML = `<i data-lucide="eye" aria-hidden="true"></i>${t('myWishes.view')}`;
     view.addEventListener('click', () => {
       closeDialog(myWishesDialog);
       openWishDetail(wish);
@@ -207,14 +212,14 @@ export function initWishWall({ api, store, auth }) {
     actions.append(view);
 
     if (canEditWish(wish)) {
-      const edit = element('button', 'primary-button', '编辑');
+      const edit = element('button', 'primary-button', t('myWishes.edit'));
       edit.type = 'button';
-      edit.innerHTML = '<i data-lucide="pencil" aria-hidden="true"></i>编辑';
+      edit.innerHTML = `<i data-lucide="pencil" aria-hidden="true"></i>${t('myWishes.edit')}`;
       edit.addEventListener('click', () => openWishEditor(wish));
       actions.append(edit);
     } else {
       const locked = element('span', 'wish-locked-label');
-      locked.innerHTML = '<i data-lucide="lock-keyhole" aria-hidden="true"></i>官方已锁定';
+      locked.innerHTML = `<i data-lucide="lock-keyhole" aria-hidden="true"></i>${t('myWishes.locked')}`;
       actions.append(locked);
     }
 
@@ -315,15 +320,15 @@ export function initWishWall({ api, store, auth }) {
     pendingAudioPath = response.audioUrl;
     audioResult.replaceChildren();
     const text = element('p', '', response.text);
-    const confidence = element('small', response.confidence < 70 ? 'low-confidence' : '', `识别置信度 ${response.confidence}%`);
-    const use = element('button', 'secondary-button', '使用这段转写');
+    const confidence = element('small', response.confidence < 70 ? 'low-confidence' : '', `${t('wishForm.transcriptionConfidence')} ${response.confidence}%`);
+    const use = element('button', 'secondary-button', t('wishForm.useTranscription'));
     use.type = 'button';
     use.addEventListener('click', () => {
       const target = wishForm.elements.content;
       target.value = target.value ? `${target.value}\n${response.text}` : response.text;
       target.focus();
     });
-    const redo = element('button', 'ghost-button', '重新录制');
+    const redo = element('button', 'ghost-button', t('wishForm.recordAgain'));
     redo.type = 'button';
     redo.addEventListener('click', () => {
       pendingAudioPath = null;
@@ -339,7 +344,7 @@ export function initWishWall({ api, store, auth }) {
     const data = new FormData();
     data.append('audio', audioBlob, 'churchos-requirement-recording.webm');
     audioResult.hidden = false;
-    audioResult.textContent = '正在转写录音…';
+    audioResult.textContent = t('wishForm.transcribing');
     try {
       const response = await api.request('/api/wishes/audio-transcribe', { method: 'POST', body: data });
       appendTranscription(response);
@@ -361,7 +366,7 @@ export function initWishWall({ api, store, auth }) {
 
   audioRecordStart.addEventListener('click', () => auth.requireAuth(async () => {
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-      showToast('当前浏览器不支持直接录音，请换用支持麦克风录音的浏览器。', { tone: 'error' });
+      showToast(t('wishForm.recordingUnsupported'), { tone: 'error' });
       return;
     }
     try {
@@ -385,20 +390,20 @@ export function initWishWall({ api, store, auth }) {
       mediaRecorder.start();
       pendingAudioPath = null;
       audioResult.hidden = false;
-      audioResult.textContent = '正在录音…';
+      audioResult.textContent = t('wishForm.recording');
       audioRecordStart.hidden = true;
       audioRecordStop.hidden = false;
       refreshIcons();
     } catch (error) {
       stopRecordingTracks();
-      showToast('无法使用麦克风录音，请检查浏览器授权后重试。', { tone: 'error' });
+      showToast(t('wishForm.microphoneError'), { tone: 'error' });
     }
   }));
 
   audioRecordStop.addEventListener('click', () => {
     if (mediaRecorder?.state === 'recording') {
       audioRecordStop.disabled = true;
-      audioResult.textContent = '正在准备转写…';
+      audioResult.textContent = t('wishForm.preparingTranscription');
       mediaRecorder.stop();
     }
   });
@@ -431,7 +436,7 @@ export function initWishWall({ api, store, auth }) {
     files.forEach((file) => data.append('images', file));
     if (pendingAudioPath) data.append('audio_path', pendingAudioPath);
     const submit = wishForm.querySelector('[type="submit"]');
-    setBusy(submit, true, '提交中');
+    setBusy(submit, true, t('wishForm.submitting'));
     try {
       const response = await api.request('/api/wishes', { method: 'POST', body: data });
       closeDialog(wishDialog);
@@ -457,7 +462,7 @@ export function initWishWall({ api, store, auth }) {
       }
 
       const submit = wishEditForm.querySelector('[type="submit"]');
-      setBusy(submit, true, '保存中');
+      setBusy(submit, true, t('wishEdit.saving'));
       try {
         const response = await api.request(`/api/wishes/${values.id}`, {
           method: 'PATCH',

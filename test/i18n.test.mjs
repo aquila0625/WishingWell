@@ -6,7 +6,9 @@ function createElement(text, key) {
   return {
     textContent: text,
     dataset: { i18n: key },
+    attributes: {},
     setAttribute(name, value) {
+      this.attributes[name] = value;
       this[name] = value;
     }
   };
@@ -62,6 +64,40 @@ test('setLocale translates launch-page copy across built-in locales', () => {
   assert.equal(setLocale('zh-CN'), 'zh-CN');
   assert.equal(title.textContent, 'ChurchOS（教会通）APP');
   assert.equal(wallTitle.textContent, '真实需求共创墙');
+
+  delete globalThis.document;
+});
+
+test('setLocale translates dialog text and placeholders', () => {
+  const myWishesTitle = createElement('我发布的需求', 'myWishes.title');
+  const wishFormTitle = createElement('提交需求与场景', 'wishForm.title');
+  const titleInput = createElement('', '');
+  titleInput.dataset.i18nPlaceholder = 'wishForm.titlePlaceholder';
+  const contentInput = createElement('', '');
+  contentInput.dataset.i18nPlaceholder = 'wishForm.contentPlaceholder';
+  const elements = [myWishesTitle, wishFormTitle];
+  const placeholderElements = [titleInput, contentInput];
+
+  globalThis.document = {
+    documentElement: {},
+    title: '',
+    querySelectorAll(selector) {
+      if (selector === '[data-i18n]') return elements;
+      if (selector === '[data-i18n-placeholder]') return placeholderElements;
+      return [];
+    }
+  };
+
+  assert.equal(setLocale('en'), 'en');
+  assert.equal(myWishesTitle.textContent, 'My submitted needs');
+  assert.equal(wishFormTitle.textContent, 'Submit a need and scenario');
+  assert.match(titleInput.attributes.placeholder, /automatic reminders/);
+  assert.match(contentInput.attributes.placeholder, /When does this happen/);
+
+  assert.equal(setLocale('zh-TW'), 'zh-TW');
+  assert.equal(myWishesTitle.textContent, '我提出的需求');
+  assert.equal(wishFormTitle.textContent, '提交需求與情境');
+  assert.match(titleInput.attributes.placeholder, /主日服事排班/);
 
   delete globalThis.document;
 });

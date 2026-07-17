@@ -80,13 +80,13 @@ test('share dialog and poster use the refined invitation copy', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const sharing = fs.readFileSync(new URL('../public/js/sharing.mjs', import.meta.url), 'utf8');
 
-  assert.match(html, /<span class="eyebrow">邀请更多人参与<\/span>/);
-  assert.match(html, /<h2 id="share-title">分享 ChurchOS（教会通）调研<\/h2>/);
-  assert.match(html, /复制链接/);
+  assert.match(html, /data-i18n="share\.eyebrow">邀请更多人参与<\/span>/);
+  assert.match(html, /id="share-title" data-i18n="share\.title">分享 ChurchOS（教会通）调研<\/h2>/);
+  assert.match(html, /data-i18n="share\.copy">复制文案和链接/);
   assert.match(html, /下载邀请海报/);
-  assert.match(sharing, /一起决定 ChurchOS 第一版先做什么/);
-  assert.match(sharing, /不需要技术背景/);
-  assert.match(sharing, /扫码参与调研/);
+  assert.match(sharing, /share\.poster\.title/);
+  assert.match(sharing, /share\.poster\.prompt1/);
+  assert.match(sharing, /share\.poster\.qrTitle/);
   assert.doesNotMatch(sharing, /全球教会管理 App 需求共创计划/);
   assert.doesNotMatch(sharing, /教牧排班与日历/);
 });
@@ -118,18 +118,18 @@ test('wish creation form guides real-problem submissions with recording controls
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
 
-  assert.match(html, /<span class="eyebrow">分享一个真实问题<\/span>/);
-  assert.match(html, /<h2 id="wish-form-title">提交需求与场景<\/h2>/);
-  assert.match(html, /不需要写成完整方案。请尽量说清楚问题发生在什么场景/);
-  assert.match(html, /问题分类 <span class="required-mark"/);
-  assert.match(html, /简短标题 <span class="required-mark"/);
-  assert.match(html, /问题描述 <span class="required-mark"/);
-  assert.match(html, /id="wish-category-hint"[^>]*>[^<]*更多自定义场景/);
-  assert.match(html, /placeholder="例如：希望主日服侍排班可以自动提醒"/);
-  assert.match(html, /id="wish-content-hint"[^>]*>[^<]*不需要写技术方案/);
+  assert.match(html, /data-i18n="wishForm\.eyebrow">分享一个真实问题<\/span>/);
+  assert.match(html, /id="wish-form-title" data-i18n="wishForm\.title">提交需求与场景<\/h2>/);
+  assert.match(html, /data-i18n="wishForm\.description">不需要写成完整方案/);
+  assert.match(html, /data-i18n="wishForm\.categoryLabel">问题分类/);
+  assert.match(html, /data-i18n="wishForm\.titleLabel">简短标题/);
+  assert.match(html, /data-i18n="wishForm\.contentLabel">问题描述/);
+  assert.match(html, /id="wish-category-hint"[^>]*data-i18n="wishForm\.categoryHint"/);
+  assert.match(html, /data-i18n-placeholder="wishForm\.titlePlaceholder"/);
+  assert.match(html, /id="wish-content-hint"[^>]*data-i18n="wishForm\.contentHint"/);
   assert.match(html, /id="audio-record-start"/);
   assert.match(html, /id="audio-record-stop"/);
-  assert.match(html, /录音会发送到 ChurchOS 后台/);
+  assert.match(html, /data-i18n="wishForm\.audioHint"/);
   assert.doesNotMatch(html, /id="audio-input"/);
   assert.match(wishes, /new MediaRecorder/);
   assert.match(wishes, /audioBlob/);

@@ -230,43 +230,43 @@
 
   <dialog class="app-dialog my-wishes-dialog" id="my-wishes-dialog" aria-labelledby="my-wishes-title">
     <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
-    <div class="dialog-heading align-left"><span class="eyebrow">我的共创记录</span><h2 id="my-wishes-title">我发布的需求</h2><p>查看需求进度，并在官方锁定前继续完善内容。</p></div>
+    <div class="dialog-heading align-left"><span class="eyebrow" data-i18n="myWishes.eyebrow">我的共创记录</span><h2 id="my-wishes-title" data-i18n="myWishes.title">我发布的需求</h2><p data-i18n="myWishes.description">查看需求进度，并在官方锁定前继续完善内容。</p></div>
     <div class="my-wish-list" id="my-wish-list" aria-live="polite"></div>
-    <div class="empty-state my-wish-empty" id="my-wish-empty" hidden><i data-lucide="inbox" aria-hidden="true"></i><h3>还没有发布需求</h3><p>提交您的第一个真实服侍需求。</p><button class="primary-button" type="button" data-open-wish>提交需求</button></div>
+    <div class="empty-state my-wish-empty" id="my-wish-empty" hidden><i data-lucide="inbox" aria-hidden="true"></i><h3 data-i18n="myWishes.emptyTitle">还没有发布需求</h3><p data-i18n="myWishes.emptyBody">提交您的第一个真实服侍需求。</p><button class="primary-button" type="button" data-open-wish><span data-i18n="myWishes.emptyAction">提交需求</span></button></div>
   </dialog>
 
   <dialog class="app-dialog wish-edit-dialog" id="wish-edit-dialog" aria-labelledby="wish-edit-title">
     <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
-    <div class="dialog-heading align-left"><span class="eyebrow">完善需求内容</span><h2 id="wish-edit-title">编辑我的需求</h2><p>需求被官方锁定后将不能继续修改。</p></div>
+    <div class="dialog-heading align-left"><span class="eyebrow" data-i18n="wishEdit.eyebrow">完善需求内容</span><h2 id="wish-edit-title" data-i18n="wishEdit.title">编辑我的需求</h2><p data-i18n="wishEdit.description">需求被官方锁定后将不能继续修改。</p></div>
     <form id="wish-edit-form">
       <input name="id" type="hidden">
-      <label>需求分类<select name="category" required><option value="教牧管理">教牧管理</option><option value="执事治理">执事治理</option><option value="会友服务">会友服务</option><option value="宣教关怀">宣教关怀</option><option value="儿青事工">儿青事工</option><option value="财务管理">财务管理</option><option value="空间设备">空间设备</option><option value="初信造就">初信造就</option><option value="更多事工">更多事工</option></select></label>
-      <label>需求标题<span class="field-note">5-30 字</span><input name="title" maxlength="30" required></label>
-      <label>详细描述<span class="field-note">至少 10 字</span><textarea name="content" rows="6" required></textarea></label>
-      <button class="primary-button full-width" type="submit"><i data-lucide="save" aria-hidden="true"></i>保存修改</button>
+      <label><span data-i18n="wishEdit.category">需求分类</span><select name="category" required><option value="教牧管理" data-i18n="category.pastoral">教牧管理</option><option value="执事治理" data-i18n="category.governance">执事治理</option><option value="会友服务" data-i18n="category.members">会友服务</option><option value="宣教关怀" data-i18n="category.mission">宣教关怀</option><option value="儿青事工" data-i18n="category.youth">儿青事工</option><option value="财务管理" data-i18n="category.finance">财务管理</option><option value="空间设备" data-i18n="category.space">空间设备</option><option value="初信造就" data-i18n="category.discipleship">初信造就</option><option value="更多事工" data-i18n="category.more">更多自定义场景</option></select></label>
+      <label><span data-i18n="wishEdit.titleLabel">需求标题</span><span class="field-note" data-i18n="wishForm.titleNote">5-30 字</span><input name="title" maxlength="30" required></label>
+      <label><span data-i18n="wishEdit.contentLabel">详细描述</span><span class="field-note" data-i18n="wishForm.contentNote">至少 10 字</span><textarea name="content" rows="6" required></textarea></label>
+      <button class="primary-button full-width" type="submit"><i data-lucide="save" aria-hidden="true"></i><span data-i18n="wishEdit.save">保存修改</span></button>
     </form>
   </dialog>
 
   <dialog class="app-dialog wish-form-dialog" id="wish-form-dialog" aria-labelledby="wish-form-title">
     <button class="dialog-close icon-button" type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
-    <div class="dialog-heading align-left"><span class="eyebrow">分享一个真实问题</span><h2 id="wish-form-title">提交需求与场景</h2><p>不需要写成完整方案。请尽量说清楚问题发生在什么场景、为什么困扰，以及您希望 ChurchOS 将来可以怎样帮助。</p></div>
+    <div class="dialog-heading align-left"><span class="eyebrow" data-i18n="wishForm.eyebrow">分享一个真实问题</span><h2 id="wish-form-title" data-i18n="wishForm.title">提交需求与场景</h2><p data-i18n="wishForm.description">不需要写成完整方案。请尽量说清楚问题发生在什么场景、为什么困扰，以及您希望 ChurchOS 将来可以怎样帮助。</p></div>
     <form id="wish-form" enctype="multipart/form-data">
-      <p class="form-required-note"><span aria-hidden="true">*</span> 为必填项目</p>
-      <label><span class="field-label">问题分类 <span class="required-mark" aria-hidden="true">*</span></span><select name="category" aria-describedby="wish-category-hint" required><option value="">请选择最接近的分类</option><option value="教牧管理">教牧管理</option><option value="执事治理">执事治理</option><option value="会友服务">会友服务</option><option value="宣教关怀">宣教关怀</option><option value="儿青事工">儿青事工</option><option value="财务管理">财务管理</option><option value="空间设备">空间设备</option><option value="初信造就">初信造就</option><option value="更多事工">更多自定义场景</option></select><small class="field-hint" id="wish-category-hint">如果不确定选哪一类，可以先选择“更多自定义场景”，后续我们会整理归类。</small></label>
-      <label><span class="field-label">简短标题 <span class="required-mark" aria-hidden="true">*</span><span class="field-note">5-30 字</span></span><input id="wish-title-input" name="title" maxlength="30" placeholder="例如：希望主日服侍排班可以自动提醒" aria-describedby="wish-title-hint" required><small class="field-hint" id="wish-title-hint">请用一句话说明您遇到的问题，尽量包含具体场景或关键词，方便其他用户理解和搜索。</small></label>
-      <div class="similar-panel" id="similar-panel" hidden><strong>可能已有相似需求</strong><p>如果下面已有类似问题，建议先查看并补充场景，避免重复提交，也能让同一个需求获得更多同感。</p><div id="similar-list"></div></div>
-      <label><span class="field-label">问题描述 <span class="required-mark" aria-hidden="true">*</span><span class="field-note">至少 10 字</span></span><textarea name="content" rows="5" placeholder="可以写：这个问题发生在什么时候？目前怎么处理？哪里最不方便？您希望将来可以怎样改善？" aria-describedby="wish-content-hint" required></textarea><small class="field-hint" id="wish-content-hint">不需要写技术方案。只要把真实经历、困扰和期待说明白，就已经很有价值。</small></label>
-      <label><span class="field-label">补充图片 <span class="optional-mark">选填</span><span class="field-note">最多 3 张，每张 5MB</span></span><input name="images" type="file" accept="image/*" multiple><small class="field-hint">如果有表格、流程截图、纸质记录或现场照片，可以上传帮助我们理解场景。请避免上传敏感个人资料。</small></label>
+      <p class="form-required-note"><span aria-hidden="true">*</span> <span data-i18n="wishForm.requiredNote">为必填项目</span></p>
+      <label><span class="field-label"><span data-i18n="wishForm.categoryLabel">问题分类</span> <span class="required-mark" aria-hidden="true">*</span></span><select name="category" aria-describedby="wish-category-hint" required><option value="" data-i18n="wishForm.categoryPlaceholder">请选择最接近的分类</option><option value="教牧管理" data-i18n="category.pastoral">教牧管理</option><option value="执事治理" data-i18n="category.governance">执事治理</option><option value="会友服务" data-i18n="category.members">会友服务</option><option value="宣教关怀" data-i18n="category.mission">宣教关怀</option><option value="儿青事工" data-i18n="category.youth">儿青事工</option><option value="财务管理" data-i18n="category.finance">财务管理</option><option value="空间设备" data-i18n="category.space">空间设备</option><option value="初信造就" data-i18n="category.discipleship">初信造就</option><option value="更多事工" data-i18n="category.more">更多自定义场景</option></select><small class="field-hint" id="wish-category-hint" data-i18n="wishForm.categoryHint">如果不确定选哪一类，可以先选择“更多自定义场景”，后续我们会整理归类。</small></label>
+      <label><span class="field-label"><span data-i18n="wishForm.titleLabel">简短标题</span> <span class="required-mark" aria-hidden="true">*</span><span class="field-note" data-i18n="wishForm.titleNote">5-30 字</span></span><input id="wish-title-input" name="title" maxlength="30" placeholder="例如：希望主日服侍排班可以自动提醒" data-i18n-placeholder="wishForm.titlePlaceholder" aria-describedby="wish-title-hint" required><small class="field-hint" id="wish-title-hint" data-i18n="wishForm.titleHint">请用一句话说明您遇到的问题，尽量包含具体场景或关键词，方便其他用户理解和搜索。</small></label>
+      <div class="similar-panel" id="similar-panel" hidden><strong data-i18n="wishForm.similarTitle">可能已有相似需求</strong><p data-i18n="wishForm.similarBody">如果下面已有类似问题，建议先查看并补充场景，避免重复提交，也能让同一个需求获得更多同感。</p><div id="similar-list"></div></div>
+      <label><span class="field-label"><span data-i18n="wishForm.contentLabel">问题描述</span> <span class="required-mark" aria-hidden="true">*</span><span class="field-note" data-i18n="wishForm.contentNote">至少 10 字</span></span><textarea name="content" rows="5" placeholder="可以写：这个问题发生在什么时候？目前怎么处理？哪里最不方便？您希望将来可以怎样改善？" data-i18n-placeholder="wishForm.contentPlaceholder" aria-describedby="wish-content-hint" required></textarea><small class="field-hint" id="wish-content-hint" data-i18n="wishForm.contentHint">不需要写技术方案。只要把真实经历、困扰和期待说明白，就已经很有价值。</small></label>
+      <label><span class="field-label"><span data-i18n="wishForm.imagesLabel">补充图片</span> <span class="optional-mark" data-i18n="optional">选填</span><span class="field-note" data-i18n="wishForm.imagesNote">最多 3 张，每张 5MB</span></span><input name="images" type="file" accept="image/*" multiple><small class="field-hint" data-i18n="wishForm.imagesHint">如果有表格、流程截图、纸质记录或现场照片，可以上传帮助我们理解场景。请避免上传敏感个人资料。</small></label>
       <div class="recording-field" aria-labelledby="audio-record-label">
-        <span class="field-label" id="audio-record-label">语音补充 <span class="optional-mark">选填</span></span>
-        <small class="field-hint">不方便打字时，可以直接录音说明问题，录音会发送到 ChurchOS 后台用于转写和需求分析。提交前请检查转写内容是否准确。</small>
+        <span class="field-label" id="audio-record-label"><span data-i18n="wishForm.audioLabel">语音补充</span> <span class="optional-mark" data-i18n="optional">选填</span></span>
+        <small class="field-hint" data-i18n="wishForm.audioHint">不方便打字时，可以直接录音说明问题，录音会发送到 ChurchOS 后台用于转写和需求分析。提交前请检查转写内容是否准确。</small>
         <div class="recording-actions">
-          <button class="secondary-button" id="audio-record-start" type="button"><i data-lucide="mic" aria-hidden="true"></i>开始录音</button>
-          <button class="secondary-button" id="audio-record-stop" type="button" hidden><i data-lucide="square" aria-hidden="true"></i>停止并转写</button>
+          <button class="secondary-button" id="audio-record-start" type="button"><i data-lucide="mic" aria-hidden="true"></i><span data-i18n="wishForm.audioStart">开始录音</span></button>
+          <button class="secondary-button" id="audio-record-stop" type="button" hidden><i data-lucide="square" aria-hidden="true"></i><span data-i18n="wishForm.audioStop">停止并转写</span></button>
         </div>
       </div>
       <div class="audio-result" id="audio-result" hidden></div>
-      <button class="primary-button full-width" type="submit"><i data-lucide="send" aria-hidden="true"></i>提交我的需求</button>
+      <button class="primary-button full-width" type="submit"><i data-lucide="send" aria-hidden="true"></i><span data-i18n="action.submitNeed">提交我的需求</span></button>
     </form>
   </dialog>
 
