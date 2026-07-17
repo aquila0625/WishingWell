@@ -76,6 +76,21 @@ test('home final share action uses the shared dialog binding', () => {
   assert.match(sharing, /querySelectorAll\('\[data-open-share\]'\)/);
 });
 
+test('share dialog and poster use the refined invitation copy', () => {
+  const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const sharing = fs.readFileSync(new URL('../public/js/sharing.mjs', import.meta.url), 'utf8');
+
+  assert.match(html, /<span class="eyebrow">邀请更多人参与<\/span>/);
+  assert.match(html, /<h2 id="share-title">分享 ChurchOS（教会通）调研<\/h2>/);
+  assert.match(html, /复制链接/);
+  assert.match(html, /下载邀请海报/);
+  assert.match(sharing, /一起决定 ChurchOS 第一版先做什么/);
+  assert.match(sharing, /不需要技术背景/);
+  assert.match(sharing, /扫码参与调研/);
+  assert.doesNotMatch(sharing, /全球教会管理 App 需求共创计划/);
+  assert.doesNotMatch(sharing, /教牧排班与日历/);
+});
+
 test('wish wall invites broad participation around real needs', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
 
