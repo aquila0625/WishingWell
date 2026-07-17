@@ -1,10 +1,20 @@
 export function buildCommentTree(comments) {
-  if (comments.some((comment) => Array.isArray(comment.replies))) return comments;
-  const roots = comments.filter((comment) => !comment.parent_comment_id);
-  return roots.map((comment) => ({
-    ...comment,
-    replies: comments.filter((reply) => reply.parent_comment_id === comment.id)
-  }));
+  const rows = [];
+  const flatten = (comment) => {
+    const { replies = [], ...rest } = comment;
+    rows.push(rest);
+    replies.forEach(flatten);
+  };
+  comments.forEach(flatten);
+
+  const nodes = new Map(rows.map((comment) => [comment.id, { ...comment, replies: [] }]));
+  const roots = [];
+  for (const comment of nodes.values()) {
+    const parent = comment.parent_comment_id ? nodes.get(comment.parent_comment_id) : null;
+    if (parent) parent.replies.push(comment);
+    else roots.push(comment);
+  }
+  return roots;
 }
 
 export function translationCacheKey({ wishId, locale, text }) {

@@ -55,6 +55,10 @@ function element(tag, className, text) {
   return node;
 }
 
+function formatTranslatedText(text) {
+  return `${t('translation.badge')}：${text}`;
+}
+
 export function initWishWall({ api, store, auth }) {
   const grid = document.getElementById('wish-grid');
   const empty = document.getElementById('wish-empty-state');
@@ -562,20 +566,20 @@ export function initWishWall({ api, store, auth }) {
     );
     const body = element('p', 'comment-body', comment.content);
     const actions = element('div', 'comment-actions');
-    const translate = element('button', 'text-button', '翻译');
+    const translate = element('button', 'text-button', t('translation.translate'));
     translate.type = 'button';
     translate.addEventListener('click', async () => {
       if (translate.dataset.translation) {
         body.textContent = translate.dataset.original;
         delete translate.dataset.translation;
-        translate.textContent = '翻译';
+        translate.textContent = t('translation.translate');
         return;
       }
       translate.dataset.original = comment.content;
       const translated = await comments.translate(wish.id, comment.content, getLocale());
-      body.textContent = translated;
+      body.textContent = formatTranslatedText(translated);
       translate.dataset.translation = translated;
-      translate.textContent = '显示原文';
+      translate.textContent = t('translation.showOriginal');
     });
     const reply = element('button', 'text-button', '回复');
     reply.type = 'button';
@@ -620,19 +624,19 @@ export function initWishWall({ api, store, auth }) {
 
     const original = element('section', 'detail-section');
     original.append(element('h3', '', '原始需求'), element('p', 'detail-description', wish.content));
-    const translateCard = element('button', 'text-button', '翻译需求内容');
+    const translateCard = element('button', 'text-button', t('translation.needButton'));
     translateCard.type = 'button';
     translateCard.addEventListener('click', async () => {
       const description = original.querySelector('.detail-description');
       if (translateCard.dataset.translation) {
         description.textContent = wish.content;
-        translateCard.textContent = '翻译需求内容';
+        translateCard.textContent = t('translation.needButton');
         delete translateCard.dataset.translation;
       } else {
         const translated = await comments.translate(wish.id, wish.content, getLocale());
-        description.textContent = translated;
+        description.textContent = formatTranslatedText(translated);
         translateCard.dataset.translation = translated;
-        translateCard.textContent = '显示原文';
+        translateCard.textContent = t('translation.showOriginal');
       }
     });
     original.append(translateCard);

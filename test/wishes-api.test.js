@@ -90,6 +90,37 @@ test('wish listing includes public author data and comment counts', async (t) =>
   assert.equal(typeof response.body[0].comment_count, 'number');
 });
 
+test('comment listing keeps nested replies available for translation actions', async (t) => {
+  const context = createApiContext(t);
+  await context.app.locals.ready;
+  const firstReply = await context.app.locals.db.insert('comments', {
+    wish_id: 1,
+    user_id: 2,
+    nickname: 'Reply One',
+    content: '第一层回复',
+    parent_comment_id: 1,
+    reply_to_nickname: 'Pastor Tim'
+  });
+  const secondReply = await context.app.locals.db.insert('comments', {
+    wish_id: 1,
+    user_id: 3,
+    nickname: 'Reply Two',
+    content: '第二层回复',
+    parent_comment_id: firstReply.id,
+    reply_to_nickname: 'Reply One'
+  });
+
+  const comments = await request(context.app)
+    .get('/api/wishes/1/comments')
+    .expect(200);
+
+  const nested = comments.body
+    .find((comment) => comment.id === 1)
+    .replies.find((reply) => reply.id === firstReply.id)
+    .replies.find((reply) => reply.id === secondReply.id);
+  assert.equal(nested.content, '第二层回复');
+});
+
 test('my wishes include hidden posts with administrator contact details', async (t) => {
   const context = createApiContext(t);
 

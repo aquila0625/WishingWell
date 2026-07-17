@@ -28,11 +28,13 @@ test('wish validation enforces category, title, description, and file limits', (
 test('buildCommentTree arranges replies below their parent comment', () => {
   const tree = buildCommentTree([
     { id: 1, content: '主评论', parent_comment_id: null },
-    { id: 2, content: '回复', parent_comment_id: 1 }
+    { id: 2, content: '回复', parent_comment_id: 1 },
+    { id: 3, content: '二级回复', parent_comment_id: 2 }
   ]);
 
   assert.equal(tree.length, 1);
   assert.equal(tree[0].replies[0].id, 2);
+  assert.equal(tree[0].replies[0].replies[0].id, 3);
 });
 
 test('translation cache keys distinguish wish, locale, and text', () => {

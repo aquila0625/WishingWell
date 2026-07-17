@@ -209,12 +209,19 @@ test('hidden own wishes show administrator contact guidance', () => {
 
 test('wish and comment translation follow the selected site language', () => {
   const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+  const i18n = fs.readFileSync(new URL('../public/js/i18n.mjs', import.meta.url), 'utf8');
 
   assert.match(wishes, /import \{ getLocale, translate \} from '\.\/i18n\.mjs'/);
   assert.match(wishes, /comments\.translate\(wish\.id, comment\.content, getLocale\(\)\)/);
   assert.match(wishes, /comments\.translate\(wish\.id, wish\.content, getLocale\(\)\)/);
+  assert.match(wishes, /t\('translation\.translate'\)/);
+  assert.match(wishes, /t\('translation\.showOriginal'\)/);
+  assert.match(wishes, /formatTranslatedText/);
   assert.doesNotMatch(wishes, /comments\.translate\(wish\.id, comment\.content, 'en'\)/);
   assert.doesNotMatch(wishes, /comments\.translate\(wish\.id, wish\.content, 'en'\)/);
+  assert.match(i18n, /'translation\.badge': 'AI 翻译'/);
+  assert.match(i18n, /'translation\.translate': 'Translate'/);
+  assert.match(i18n, /'translation\.translate': '翻譯'/);
 });
 
 test('wish wall presents read-only mode after campaign deadline', () => {

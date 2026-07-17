@@ -42,6 +42,17 @@ function createWishesRouter({
     };
   }
 
+  function buildCommentTree(comments) {
+    const nodes = new Map(comments.map((comment) => [comment.id, { ...comment, replies: [] }]));
+    const roots = [];
+    for (const comment of nodes.values()) {
+      const parent = comment.parent_comment_id ? nodes.get(comment.parent_comment_id) : null;
+      if (parent) parent.replies.push(comment);
+      else roots.push(comment);
+    }
+    return roots;
+  }
+
   async function campaignClosed() {
     const settings = (await database.read('settings'))[0];
     return Boolean(settings?.enabled && settings.deadline && Date.now() >= Date.parse(settings.deadline));
@@ -334,11 +345,7 @@ function createWishesRouter({
 
   router.get('/wishes/:id/comments', async (req, res) => {
     const comments = (await database.read('comments')).filter((comment) => comment.wish_id === Number(req.params.id));
-    const roots = comments.filter((comment) => !comment.parent_comment_id);
-    res.json(roots.map((comment) => ({
-      ...comment,
-      replies: comments.filter((reply) => reply.parent_comment_id === comment.id)
-    })));
+    res.json(buildCommentTree(comments));
   });
 
   router.post('/wishes/:id/translate', async (req, res, next) => {
