@@ -392,6 +392,28 @@ function canvasToPosterFile(canvas) {
   });
 }
 
+function canSharePosterFile(file) {
+  return Boolean(navigator.share && navigator.canShare?.({ files: [file] }));
+}
+
+function prefersNativePosterShare() {
+  return window.matchMedia?.('(hover: none), (pointer: coarse)').matches
+    || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
+function openPosterImagePreview(file) {
+  const imageUrl = URL.createObjectURL(file);
+  const preview = window.open(imageUrl, '_blank', 'noopener,noreferrer');
+  if (!preview) {
+    downloadBlob(file, file.name);
+    URL.revokeObjectURL(imageUrl);
+    return false;
+  }
+
+  setTimeout(() => URL.revokeObjectURL(imageUrl), 60_000);
+  return true;
+}
+
 export function initSharing({ api }) {
   const dialog = document.getElementById('share-dialog');
   const messageInput = document.getElementById('share-message');
@@ -449,14 +471,29 @@ export function initSharing({ api }) {
     }
   });
 
-  downloadButton.addEventListener('click', () => {
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        showToast('海报生成失败，请重试', { tone: 'error' });
-        return;
+  downloadButton.addEventListener('click', async () => {
+    try {
+      const posterFile = await canvasToPosterFile(canvas);
+
+      if (prefersNativePosterShare()) {
+        if (canSharePosterFile(posterFile)) {
+          await navigator.share({
+            title: t('share.systemTitle', getLocale()),
+            files: [posterFile]
+          });
+          return;
+        }
+
+        if (openPosterImagePreview(posterFile)) {
+          showToast('已打开海报图片，可长按保存或分享到社交 APP', { tone: 'info' });
+          return;
+        }
       }
-      downloadBlob(blob, 'ChurchOS-CoCreation-Poster.png');
-    }, 'image/png');
+
+      downloadBlob(posterFile, posterFile.name);
+    } catch (error) {
+      if (error.name !== 'AbortError') showToast(error.message, { tone: 'error' });
+    }
   });
 
   document.querySelectorAll('[data-open-share]').forEach((button) => button.addEventListener('click', open));
