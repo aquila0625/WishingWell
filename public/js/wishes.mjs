@@ -102,7 +102,6 @@ export function initWishWall({ api, store, auth }) {
     const closed = campaignIsClosed();
     if (readonlyNotice) readonlyNotice.hidden = !closed;
     document.querySelectorAll('[data-open-wish], #wall-submit-button, #drawer-submit-button').forEach((button) => {
-      button.disabled = closed;
       button.classList.toggle('is-disabled', closed);
       if (closed) button.setAttribute('aria-disabled', 'true');
       else button.removeAttribute('aria-disabled');
@@ -161,7 +160,9 @@ export function initWishWall({ api, store, auth }) {
     vote.setAttribute('aria-label', `${wish.votes || 0} 位同工表示同感`);
     const voted = store.get().user && (wish.voted_users || []).includes(store.get().user.id);
     vote.classList.toggle('active', Boolean(voted));
-    vote.disabled = campaignIsClosed();
+    vote.classList.toggle('is-disabled', campaignIsClosed());
+    if (campaignIsClosed()) vote.setAttribute('aria-disabled', 'true');
+    else vote.removeAttribute('aria-disabled');
     vote.innerHTML = `<i data-lucide="heart" aria-hidden="true"></i><strong>${wish.votes || 0}</strong><small>${voted ? '已同感' : '同感'}</small>`;
     vote.addEventListener('click', () => auth.requireAuth(async () => {
       if (campaignIsClosed()) {

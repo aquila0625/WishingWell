@@ -190,7 +190,9 @@ test('wish wall presents read-only mode after campaign deadline', () => {
   assert.match(wishes, /function campaignIsClosed/);
   assert.match(wishes, /readonly-campaign-notice/);
   assert.match(wishes, /本阶段需求征集已截止，您仍可查看已有需求/);
-  assert.match(wishes, /vote\.disabled = campaignIsClosed\(\)/);
+  assert.match(wishes, /aria-disabled/);
+  assert.doesNotMatch(wishes, /button\.disabled = closed/);
+  assert.doesNotMatch(wishes, /vote\.disabled = campaignIsClosed\(\)/);
 });
 
 test('staging environment badge is rendered only from environment metadata', () => {

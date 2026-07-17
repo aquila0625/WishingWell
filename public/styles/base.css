@@ -44,6 +44,11 @@ select {
   cursor: pointer;
 }
 
+button.is-disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 button {
   color: inherit;
 }
