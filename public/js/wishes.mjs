@@ -88,6 +88,8 @@ export function initWishWall({ api, store, auth }) {
   let audioChunks = [];
   let recordingStream = null;
   let discardRecording = false;
+  let currentMyWishes = [];
+  let adminContact = {};
 
   function campaignIsClosed() {
     const campaign = store.get().campaign || {};
@@ -204,6 +206,34 @@ export function initWishWall({ api, store, auth }) {
     return wish.user_id === store.get().user?.id && wish.status === 'voting';
   }
 
+  function renderAdminContactLinks() {
+    const wrapper = element('div', 'admin-contact-links');
+    if (adminContact.whatsapp) {
+      const whatsapp = element('a', '', 'WhatsApp');
+      whatsapp.href = adminContact.whatsapp;
+      whatsapp.target = '_blank';
+      whatsapp.rel = 'noreferrer';
+      wrapper.append(element('span', '', 'WhatsApp：'), whatsapp);
+    }
+    if (adminContact.wechat) wrapper.append(element('span', '', `微信：${adminContact.wechat}`));
+    if (adminContact.email) {
+      const email = element('a', '', adminContact.email);
+      email.href = `mailto:${adminContact.email}`;
+      wrapper.append(element('span', '', '邮箱：'), email);
+    }
+    return wrapper;
+  }
+
+  function renderHiddenWishNotice() {
+    const notice = element('section', 'hidden-wish-notice');
+    notice.append(
+      element('strong', '', '该需求已被管理员屏蔽展示'),
+      element('p', '', '这条需求暂不在公开需求墙中显示，也不能继续编辑、助力或评论。如您认为有误，可联系管理员确认。'),
+      renderAdminContactLinks()
+    );
+    return notice;
+  }
+
   function openWishEditor(wish) {
     const latestWish = store.get().wishes.find((item) => item.id === wish.id) || wish;
     if (!canEditWish(latestWish)) {
@@ -228,6 +258,7 @@ export function initWishWall({ api, store, auth }) {
 
     const copy = element('div', 'my-wish-copy');
     copy.append(meta, element('h3', '', wish.title), element('p', '', wish.content));
+    if (wish.status === 'hidden') copy.append(renderHiddenWishNotice());
 
     const actions = element('div', 'my-wish-actions');
     const view = element('button', 'secondary-button', t('myWishes.view'));
@@ -256,18 +287,22 @@ export function initWishWall({ api, store, auth }) {
   }
 
   function renderMyWishes() {
-    const userId = store.get().user?.id;
-    const wishes = store.get().wishes
-      .filter((wish) => wish.user_id === userId)
-      .sort((left, right) => Number(right.created_at || right.id) - Number(left.created_at || left.id));
+    const wishes = currentMyWishes;
     myWishList.replaceChildren(...wishes.map(renderMyWishItem));
     myWishEmpty.hidden = wishes.length > 0;
     refreshIcons();
   }
 
+  async function loadMyWishes() {
+    const response = await api.request('/api/wishes/mine');
+    currentMyWishes = response.items || [];
+    adminContact = response.admin_contact || {};
+  }
+
   function openMyWishes() {
     auth.requireAuth(async () => {
       if (!loaded) await load();
+      await loadMyWishes();
       renderMyWishes();
       openDialog(myWishesDialog);
     });
@@ -621,6 +656,10 @@ export function initWishWall({ api, store, auth }) {
       detailContent.append(reply);
     }
 
+    if (wish.status === 'hidden') {
+      detailContent.append(renderHiddenWishNotice());
+    }
+
     if (wish.status === 'merged') {
       const merged = element('section', 'merged-section');
       merged.append(element('h3', '', '合并处理说明'), element('p', '', wish.merge_reason || '该需求已合并至主需求。'));
@@ -665,7 +704,9 @@ export function initWishWall({ api, store, auth }) {
     commentList.append(...commentTree.map((comment) => renderComment(comment, wish)));
     if (!commentTree.length) commentList.append(element('p', 'muted-copy', '还没有评论，成为第一位回应的同工。'));
     const commentForm = element('form', 'comment-form');
-    if (campaignIsClosed()) {
+    if (wish.status === 'hidden') {
+      commentForm.innerHTML = '<p class="muted-copy">该需求已被屏蔽展示，评论已关闭。</p>';
+    } else if (campaignIsClosed()) {
       commentForm.innerHTML = '<p class="muted-copy">本阶段需求征集已截止，评论已暂时关闭。</p>';
     } else {
       commentForm.innerHTML = '<span class="reply-context"></span><input name="parent_comment_id" type="hidden"><input name="reply_to_nickname" type="hidden"><label>发表评论<textarea name="content" rows="3" required></textarea></label><button class="primary-button" type="submit">发表评论</button>';

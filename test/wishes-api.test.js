@@ -50,6 +50,42 @@ test('wish listing includes public author data and comment counts', async (t) =>
   assert.equal(typeof response.body[0].comment_count, 'number');
 });
 
+test('my wishes include hidden posts with administrator contact details', async (t) => {
+  const context = createApiContext(t);
+
+  await request(context.app)
+    .patch('/api/admin/wishes/4')
+    .set('Authorization', authHeader(1))
+    .send({ status: 'hidden' })
+    .expect(200);
+
+  const publicList = await request(context.app).get('/api/wishes').expect(200);
+  assert.equal(publicList.body.some((wish) => wish.id === 4), false);
+
+  const myWishes = await request(context.app)
+    .get('/api/wishes/mine')
+    .set('Authorization', authHeader(4))
+    .expect(200);
+
+  assert.equal(myWishes.body.items.some((wish) => wish.id === 4 && wish.status === 'hidden'), true);
+  assert.deepEqual(myWishes.body.admin_contact, {
+    whatsapp: 'https://wa.me/qr/KOJJUK7PYZ6LG1',
+    wechat: 'aquila_wang',
+    email: 'aquilawang0625@gmail.com'
+  });
+
+  await request(context.app)
+    .post('/api/wishes/4/vote')
+    .set('Authorization', authHeader(2))
+    .expect(409);
+
+  await request(context.app)
+    .post('/api/wishes/4/comment')
+    .set('Authorization', authHeader(2))
+    .send({ content: '隐藏后不应继续评论。' })
+    .expect(409);
+});
+
 test('expired campaign makes public participation read-only until reopened', async (t) => {
   const context = createApiContext(t);
   await request(context.app)

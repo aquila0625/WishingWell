@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('node:fs/promises');
 const { authenticate } = require('../lib/http');
 const { publicUser } = require('../lib/serializers');
+const { normalizeAdminContact } = require('../lib/admin-contact');
 
 function createWishesRouter({
   database,
@@ -53,6 +54,17 @@ function createWishesRouter({
   router.get('/wishes', async (req, res) => {
     const wishes = (await database.read('wishes')).filter((wish) => wish.status !== 'hidden');
     res.json(await Promise.all(wishes.map(serializeWish)));
+  });
+
+  router.get('/wishes/mine', requireUser, async (req, res) => {
+    const settings = (await database.read('settings'))[0] || {};
+    const wishes = (await database.read('wishes'))
+      .filter((wish) => wish.user_id === req.user.id)
+      .sort((left, right) => Number(right.created_at || right.id) - Number(left.created_at || left.id));
+    res.json({
+      items: await Promise.all(wishes.map(serializeWish)),
+      admin_contact: normalizeAdminContact(settings.admin_contact)
+    });
   });
 
   router.post('/wishes/check-similar', async (req, res) => {
@@ -198,6 +210,7 @@ function createWishesRouter({
   router.post('/wishes/:id/vote', requireUser, rejectIfClosed, async (req, res) => {
     const wish = await database.findById('wishes', req.params.id);
     if (!wish) return res.status(404).json({ error: '未找到该需求' });
+    if (wish.status === 'hidden') return res.status(409).json({ error: '该需求已被屏蔽展示，不能继续助力' });
     const votedUsers = [...(wish.voted_users || [])];
     const index = votedUsers.indexOf(req.user.id);
     if (index === -1) {
@@ -220,6 +233,7 @@ function createWishesRouter({
   router.post('/wishes/:id/comment', requireUser, rejectIfClosed, async (req, res) => {
     const wish = await database.findById('wishes', req.params.id);
     if (!wish) return res.status(404).json({ error: '未找到该需求' });
+    if (wish.status === 'hidden') return res.status(409).json({ error: '该需求已被屏蔽展示，不能继续评论' });
     const content = String(req.body.content || '').trim();
     if (content.length < 2) return res.status(400).json({ error: '评论至少需要 2 个字' });
     const parentId = req.body.parent_comment_id ? Number(req.body.parent_comment_id) : null;

@@ -194,6 +194,19 @@ test('admin requirements list exposes moderation visibility controls', () => {
   assert.match(admin, /status:\s*hidden \? 'voting' : 'hidden'/);
 });
 
+test('hidden own wishes show administrator contact guidance', () => {
+  const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');
+  const admin = fs.readFileSync(new URL('../public/js/admin.mjs', import.meta.url), 'utf8');
+
+  assert.match(wishes, /\/api\/wishes\/mine/);
+  assert.match(wishes, /该需求已被管理员屏蔽展示/);
+  assert.match(wishes, /WhatsApp/);
+  assert.match(wishes, /微信/);
+  assert.match(wishes, /邮箱/);
+  assert.match(admin, /管理员联系方式/);
+  assert.match(admin, /\/api\/admin\/contact/);
+});
+
 test('wish wall presents read-only mode after campaign deadline', () => {
   const html = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const wishes = fs.readFileSync(new URL('../public/js/wishes.mjs', import.meta.url), 'utf8');

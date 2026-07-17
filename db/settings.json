@@ -1,6 +1,11 @@
 [
   {
     "enabled": true,
-    "deadline": "2026-08-31T23:59:59.000Z"
+    "deadline": "2026-08-31T23:59:59.000Z",
+    "admin_contact": {
+      "whatsapp": "https://wa.me/qr/KOJJUK7PYZ6LG1",
+      "wechat": "aquila_wang",
+      "email": "aquilawang0625@gmail.com"
+    }
   }
 ]

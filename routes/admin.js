@@ -1,6 +1,7 @@
 const express = require('express');
 const { adminAuthenticate } = require('../lib/http');
 const { normalizeHomepage } = require('../lib/homepage');
+const { normalizeAdminContact } = require('../lib/admin-contact');
 
 const WISH_STATUSES = new Set([
   'voting', 'accepted', 'planned', 'developing', 'testing', 'completed', 'rejected', 'merged', 'hidden'
@@ -15,7 +16,13 @@ function createAdminRouter({ database, sessionSecret }) {
 
   async function readSettings() {
     const settings = (await database.read('settings'))[0] || {};
-    return { id: 1, enabled: false, deadline: null, ...settings };
+    return {
+      id: 1,
+      enabled: false,
+      deadline: null,
+      ...settings,
+      admin_contact: normalizeAdminContact(settings.admin_contact)
+    };
   }
 
   async function writeSettings(updates) {
@@ -206,6 +213,17 @@ function createAdminRouter({ database, sessionSecret }) {
       homepage_published_at: new Date().toISOString()
     });
     res.json({ message: '首页内容已发布到正式网站', ...homepageState(nextSettings) });
+  });
+
+  router.get('/contact', async (req, res) => {
+    const settings = await readSettings();
+    res.json({ admin_contact: settings.admin_contact });
+  });
+
+  router.patch('/contact', async (req, res) => {
+    const adminContact = normalizeAdminContact(req.body);
+    const settings = await writeSettings({ admin_contact: adminContact });
+    res.json({ message: '管理员联系方式已保存', admin_contact: settings.admin_contact });
   });
 
   async function launchCleanupCounts() {

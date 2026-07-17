@@ -189,6 +189,34 @@ test('admin can draft and publish homepage content settings', async (t) => {
   assert.equal(publicAfterPublish.body.homepage.show_share_button, false);
 });
 
+test('admin can manage public administrator contact details', async (t) => {
+  const context = createApiContext(t);
+
+  const saved = await request(context.app)
+    .patch('/api/admin/contact')
+    .set('Authorization', authHeader(1))
+    .send({
+      whatsapp: 'https://wa.me/qr/KOJJUK7PYZ6LG1',
+      wechat: 'aquila_wang',
+      email: 'aquilawang0625@gmail.com'
+    })
+    .expect(200);
+
+  assert.equal(saved.body.message, '管理员联系方式已保存');
+  assert.deepEqual(saved.body.admin_contact, {
+    whatsapp: 'https://wa.me/qr/KOJJUK7PYZ6LG1',
+    wechat: 'aquila_wang',
+    email: 'aquilawang0625@gmail.com'
+  });
+
+  const read = await request(context.app)
+    .get('/api/admin/contact')
+    .set('Authorization', authHeader(1))
+    .expect(200);
+
+  assert.equal(read.body.admin_contact.wechat, 'aquila_wang');
+});
+
 test('admin can run initial launch cleanup only once', async (t) => {
   const context = createApiContext(t);
 

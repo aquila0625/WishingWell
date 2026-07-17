@@ -268,6 +268,7 @@ export function initAdmin({ api, store }) {
       const response = await api.request('/api/admin/homepage');
       const cleanup = await api.request('/api/admin/launch-cleanup');
       const campaign = await api.request('/api/campaign');
+      const contact = await api.request('/api/admin/contact');
       const homepage = response.draft || response.homepage;
       const form = node('form', 'settings-form');
       const heroTitle = document.createElement('input');
@@ -339,10 +340,58 @@ export function initAdmin({ api, store }) {
         showToast(result.message, { tone: 'success' });
         loadHomepage();
       });
-      container.replaceChildren(form, renderCampaignSettings(campaign), renderLaunchCleanup(cleanup));
+      container.replaceChildren(form, renderCampaignSettings(campaign), renderAdminContact(contact.admin_contact), renderLaunchCleanup(cleanup));
     } catch (error) {
       container.textContent = error.message;
     }
+  }
+
+  function renderAdminContact(contact = {}) {
+    const panel = node('section', 'admin-list');
+    panel.append(node('h2', '', '管理员联系方式'));
+    panel.append(node('p', 'field-hint', '当用户自己的需求被屏蔽展示时，系统会显示这里的联系方式，方便用户联系管理员确认。'));
+
+    const form = node('form', 'settings-form');
+    const whatsapp = document.createElement('input');
+    whatsapp.type = 'url';
+    whatsapp.placeholder = 'https://wa.me/...';
+    whatsapp.value = contact.whatsapp || '';
+    const wechat = document.createElement('input');
+    wechat.placeholder = '微信号';
+    wechat.value = contact.wechat || '';
+    const email = document.createElement('input');
+    email.type = 'email';
+    email.placeholder = 'name@example.com';
+    email.value = contact.email || '';
+    const save = node('button', 'primary-button', '保存联系方式');
+    save.type = 'submit';
+
+    form.append(
+      field('WhatsApp', whatsapp),
+      field('微信', wechat),
+      field('个人邮箱', email),
+      save
+    );
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const result = await api.request('/api/admin/contact', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            whatsapp: whatsapp.value,
+            wechat: wechat.value,
+            email: email.value
+          })
+        });
+        showToast(result.message, { tone: 'success' });
+        loadHomepage();
+      } catch (error) {
+        showToast(error.message, { tone: 'error' });
+      }
+    });
+
+    panel.append(form);
+    return panel;
   }
 
   function renderCampaignSettings(campaign) {
