@@ -62,6 +62,27 @@ test('Supabase database adapter applies a configured table prefix', async () => 
   assert.match(calls[0].url, /\/rest\/v1\/staging_wishes\?select=id%2Cdata&order=id\.asc$/);
 });
 
+test('Supabase database adapter does not seed fixture data into prefixed tables', async () => {
+  const calls = [];
+  const database = createSupabaseDatabase({
+    url: 'https://example.supabase.co',
+    serviceRoleKey: 'service-role',
+    tablePrefix: 'staging_',
+    fetchImpl: async (url, options = {}) => {
+      calls.push({ url: String(url), options });
+      if (options.method === 'POST') return createJsonResponse([{ id: 1, data: { id: 1 } }]);
+      return createJsonResponse([]);
+    }
+  });
+
+  await database.seed();
+
+  const postUrls = calls.filter((call) => call.options.method === 'POST').map((call) => call.url);
+  assert.ok(postUrls.some((url) => url.includes('/rest/v1/staging_settings')));
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/staging_wishes')));
+  assert.ok(!postUrls.some((url) => url.includes('/rest/v1/staging_users')));
+});
+
 test('Supabase database adapter rejects unknown tables', async () => {
   const database = createSupabaseDatabase({
     url: 'https://churchos.supabase.co',

@@ -124,6 +124,7 @@ function createSupabaseDatabase({ url, serviceRoleKey, fetchImpl = fetch, tableP
   async function seed() {
     for (const table of SEED_TABLES) {
       if ((await read(table)).length > 0) continue;
+      if (prefix && table !== 'settings') continue;
       const source = path.join(SEED_DIR, `${table}.json`);
       if (fs.existsSync(source)) {
         await write(table, JSON.parse(fs.readFileSync(source, 'utf8') || '[]'));
