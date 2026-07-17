@@ -311,8 +311,8 @@ const dictionaries = {
     'share.poster.qrTitle': 'Scan to join the survey',
     'share.poster.qrSubtitle': 'Share a real need and help ChurchOS stay close to church life',
     'share.text.intro': 'I would like to invite you to join the early needs survey for the ChurchOS app.',
-    'share.text.body': 'Before official development begins, we want to collect real problems and needs from church life. Whether you are a church leader, ministry coworker, brother or sister, or a seeker, if you have encountered something inconvenient in church life or service, you are welcome to write it down.',
-    'share.text.recognition': 'One real scenario from you may help the first version of ChurchOS better serve real church needs; adopted suggestions may also be recorded on the ChurchOS co-creation acknowledgment wall.',
+    'share.text.body': 'ChurchOS is being prepared as an app to help churches with digital management and ministry collaboration. Before official development begins, we hope to listen first to real needs from churches. Whether you are a church leader, ministry coworker, believer, or seeker, if you have encountered inconvenience in church life, ministry coordination, care and visitation, reimbursement, Sunday school, facilities and equipment, or administrative collaboration, you are welcome to write it down.',
+    'share.text.recognition': 'One real scenario from you may help the first version of ChurchOS stay closer to actual church needs; if a need is adopted in the future, it may also be recorded on the ChurchOS co-creation acknowledgment wall.',
     'share.text.linkLabel': 'Participation link: '
   },
   'zh-TW': {
@@ -468,9 +468,9 @@ const dictionaries = {
     'share.poster.audience': '邀請教會領袖、服事同工、弟兄姊妹和慕道朋友一起參與',
     'share.poster.qrTitle': '掃碼參與調研',
     'share.poster.qrSubtitle': '提交真實問題，幫助 ChurchOS 更貼近教會現場',
-    'share.text.intro': '我想邀請你一起參與 ChurchOS（教會通）APP 的前期需求調研。',
-    'share.text.body': '正式開發前，我們希望先收集教會現場真實發生的問題與需要。無論你是教牧同工、服事同工、弟兄姊妹，或是慕道朋友，只要你在教會生活或服事中遇到過不方便的地方，都歡迎寫下來。',
-    'share.text.recognition': '你的一個真實場景，可能會幫助 ChurchOS 第一版更貼近教會實際需要；被採納的需求，也有機會記錄在 ChurchOS 共創致謝牆中。',
+    'share.text.intro': '我想邀請您一起參與 ChurchOS（教會通）APP 的前期需求調研。',
+    'share.text.body': 'ChurchOS 正在籌備成為一款幫助教會進行數位管理與服事協作的 APP。正式開發前，我們希望先聽見來自教會的真實需求。無論您是教牧同工、服事同工、弟兄姊妹，或是慕道朋友，只要您在教會生活、服事配搭、關懷探訪、財務報銷、主日學、場地設備或行政協作中遇到過不方便的地方，都歡迎寫下來。',
+    'share.text.recognition': '您的一個真實場景，可能會幫助 ChurchOS 第一版更貼近教會實際需要；若需求未來被採納，也有機會被記錄在 ChurchOS 共創致謝牆中。',
     'share.text.linkLabel': '參與連結：'
   },
   es: {
@@ -627,8 +627,8 @@ const dictionaries = {
     'share.poster.qrTitle': 'Escanee para participar',
     'share.poster.qrSubtitle': 'Comparta una necesidad real y ayude a ChurchOS a acercarse a la iglesia',
     'share.text.intro': 'Me gustaría invitarle a participar en la encuesta inicial de necesidades para la app ChurchOS.',
-    'share.text.body': 'Antes de comenzar el desarrollo oficial, queremos recoger problemas y necesidades reales de la vida de iglesia. Ya sea líder, colaborador, hermano o hermana, o una persona en búsqueda, si ha encontrado algo incómodo en la vida o el servicio de la iglesia, le invitamos a escribirlo.',
-    'share.text.recognition': 'Un escenario real suyo puede ayudar a que la primera versión de ChurchOS responda mejor a las necesidades de la iglesia; las sugerencias adoptadas también podrán registrarse en el muro de agradecimientos de ChurchOS.',
+    'share.text.body': 'ChurchOS se está preparando como una app para ayudar a las iglesias con la gestión digital y la colaboración en el servicio. Antes del desarrollo oficial, queremos escuchar primero las necesidades reales de las iglesias. Ya sea líder, colaborador, creyente o una persona en búsqueda, si ha encontrado algo incómodo en la vida de iglesia, la coordinación del servicio, el cuidado y las visitas, los reembolsos, la escuela dominical, los espacios y equipos, o la colaboración administrativa, le invitamos a escribirlo.',
+    'share.text.recognition': 'Un escenario real suyo puede ayudar a que la primera versión de ChurchOS se acerque más a las necesidades reales de la iglesia; si una necesidad se adopta en el futuro, también podrá registrarse en el muro de agradecimientos de ChurchOS.',
     'share.text.linkLabel': 'Enlace para participar: '
   },
   ko: {
@@ -785,8 +785,8 @@ const dictionaries = {
     'share.poster.qrTitle': '스캔하여 설문 참여',
     'share.poster.qrSubtitle': '실제 필요를 나누고 ChurchOS가 교회 현장에 가까워지도록 도와주세요',
     'share.text.intro': 'ChurchOS 앱의 초기 필요 조사에 함께 참여해 주시도록 초대하고 싶습니다.',
-    'share.text.body': '공식 개발 전에 교회 현장에서 실제로 일어나는 문제와 필요를 먼저 모으고자 합니다. 교회 리더, 섬김 동역자, 형제자매, 신앙을 알아가는 분이라면 교회 생활이나 섬김에서 불편했던 점을 자유롭게 적어 주세요.',
-    'share.text.recognition': '여러분의 실제 상황 하나가 ChurchOS 첫 버전이 교회의 실제 필요에 더 가까워지도록 도울 수 있습니다. 채택된 필요는 ChurchOS 공동 설계 감사벽에 기록될 기회도 있습니다.',
+    'share.text.body': 'ChurchOS는 교회의 디지털 관리와 사역 협업을 돕는 앱으로 준비되고 있습니다. 공식 개발 전에 먼저 교회의 실제 필요를 듣고자 합니다. 교회 리더, 섬김 동역자, 성도 또는 신앙을 알아가는 분이라면 교회 생활, 섬김 협력, 돌봄과 심방, 재정 환급, 주일학교, 공간과 장비, 행정 협업에서 불편했던 점을 자유롭게 적어 주세요.',
+    'share.text.recognition': '여러분의 실제 상황 하나가 ChurchOS 첫 버전이 교회의 실제 필요에 더 가까워지도록 도울 수 있습니다. 앞으로 채택되는 필요는 ChurchOS 공동 설계 감사벽에 기록될 기회도 있습니다.',
     'share.text.linkLabel': '참여 링크: '
   },
   fr: {
@@ -943,8 +943,8 @@ const dictionaries = {
     'share.poster.qrTitle': 'Scannez pour participer',
     'share.poster.qrSubtitle': 'Partagez un besoin réel et aidez ChurchOS à rester proche du terrain',
     'share.text.intro': 'J’aimerais vous inviter à participer à l’enquête initiale sur les besoins de l’app ChurchOS.',
-    'share.text.body': 'Avant le développement officiel, nous voulons recueillir les vrais problèmes et besoins de la vie d’église. Que vous soyez responsable, collaborateur, frère ou sœur, ou personne en cheminement, si vous avez rencontré une difficulté dans la vie ou le service de l’église, vous pouvez l’écrire.',
-    'share.text.recognition': 'Un scénario réel de votre part peut aider la première version de ChurchOS à mieux répondre aux besoins de l’église ; les suggestions adoptées pourront aussi être inscrites sur le mur de remerciements ChurchOS.',
+    'share.text.body': 'ChurchOS est en préparation comme une app destinée à aider les églises dans la gestion numérique et la collaboration de service. Avant le développement officiel, nous souhaitons d’abord écouter les besoins réels des églises. Que vous soyez responsable, collaborateur, croyant ou personne en cheminement, si vous avez rencontré une difficulté dans la vie d’église, la coordination du service, l’accompagnement, les remboursements, l’école du dimanche, les locaux et équipements, ou la collaboration administrative, vous pouvez l’écrire.',
+    'share.text.recognition': 'Un scénario réel de votre part peut aider la première version de ChurchOS à rester plus proche des besoins réels de l’église ; si un besoin est adopté à l’avenir, il pourra aussi être inscrit sur le mur de remerciements ChurchOS.',
     'share.text.linkLabel': 'Lien de participation : '
   }
 };
