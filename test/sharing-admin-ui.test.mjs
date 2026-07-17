@@ -71,6 +71,24 @@ test('poster layout wraps long locale text and grows height without shrinking fo
   assert.equal(layout.qrSubtitle.font, '400 28px sans-serif');
 });
 
+test('Chinese poster audience invitation is centered across two lines', () => {
+  const fakeContext = {
+    font: '',
+    measureText(text) {
+      const size = Number(this.font.match(/(\d+)px/)?.[1] || 24);
+      return { width: String(text).length * size * 0.58 };
+    }
+  };
+  const layout = calculatePosterLayout(
+    fakeContext,
+    buildPosterModel({ url: 'https://churchosapp.org/', locale: 'zh-CN' }),
+    848
+  );
+
+  assert.ok(layout.audience.lines.length >= 2);
+  assert.equal(layout.audience.align, 'center');
+});
+
 test('notification summary counts unread items only', () => {
   assert.deepEqual(
     notificationSummary([{ read: false }, { read: true }, { read: false }]),

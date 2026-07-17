@@ -151,7 +151,7 @@ export function calculatePosterLayout(context, model, width) {
     font: '600 30px sans-serif',
     x: width / 2,
     y: cursor + 42,
-    maxWidth: width - 150,
+    maxWidth: width - 440,
     lineHeight: 36,
     align: 'center'
   });
