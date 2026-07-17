@@ -106,3 +106,14 @@ test('admin homepage tools expose draft publish and one-time cleanup actions', (
   assert.match(admin, /首次上线清空测试数据/);
   assert.match(admin, /确认首次上线清空/);
 });
+
+test('staging environment badge is rendered only from environment metadata', () => {
+  const app = fs.readFileSync(new URL('../public/js/app.mjs', import.meta.url), 'utf8');
+  const css = fs.readFileSync(new URL('../public/styles/components.css', import.meta.url), 'utf8');
+
+  assert.match(app, /\/api\/environment/);
+  assert.match(app, /environment-badge/);
+  assert.match(app, /测试环境/);
+  assert.match(app, /STAGING/);
+  assert.match(css, /\.environment-badge\s*\{/);
+});

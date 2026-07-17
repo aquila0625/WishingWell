@@ -89,6 +89,15 @@ function createApp({
   });
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+  app.get('/api/environment', (req, res) => {
+    const staging = String(tablePrefix || '').trim() === 'staging_';
+    res.json({
+      environment: staging ? 'staging' : 'production',
+      label: staging ? '测试环境' : '正式环境',
+      badge: staging ? 'STAGING' : 'PRODUCTION',
+      staging
+    });
+  });
   app.use('/api', createShareRouter({ database }));
   app.use('/api', createAuthRouter({ database, upload, sessionSecret }));
   app.use('/api', createWishesRouter({ database, upload, sessionSecret }));

@@ -27,6 +27,24 @@ test('unknown API paths return structured JSON errors', async (t) => {
   assert.equal(response.body.error, '接口不存在');
 });
 
+test('GET /api/environment identifies staging without exposing secrets', async (t) => {
+  const temp = createTestDb();
+  t.after(() => temp.cleanup());
+  const { createApp } = require('../app');
+
+  const response = await request(createApp({ dbDir: temp.dir, tablePrefix: 'staging_' }))
+    .get('/api/environment')
+    .expect(200);
+
+  assert.deepEqual(response.body, {
+    environment: 'staging',
+    label: '测试环境',
+    badge: 'STAGING',
+    staging: true
+  });
+  assert.doesNotMatch(JSON.stringify(response.body), /secret|service|key/i);
+});
+
 test('createApp can initialize with the Supabase database provider', async () => {
   const { createApp } = require('../app');
   const calls = [];

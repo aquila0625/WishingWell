@@ -20,6 +20,25 @@ const store = createStore({
 const api = createApiClient({ getToken: () => store.get().token });
 let wishWall;
 
+function renderEnvironmentBadge(environment) {
+  document.getElementById('environment-badge')?.remove();
+  if (!environment?.staging) return;
+  const badge = document.createElement('aside');
+  badge.id = 'environment-badge';
+  badge.className = 'environment-badge';
+  badge.setAttribute('aria-label', '当前为测试环境');
+  badge.innerHTML = `<strong>${environment.label || '测试环境'}</strong><span>${environment.badge || 'STAGING'}</span>`;
+  document.body.append(badge);
+}
+
+async function loadEnvironmentBadge() {
+  try {
+    renderEnvironmentBadge(await api.request('/api/environment'));
+  } catch (error) {
+    console.warn('Environment metadata unavailable', error);
+  }
+}
+
 function showView(view) {
   store.set({ view });
   document.querySelectorAll('[data-view]').forEach((section) => {
@@ -68,6 +87,7 @@ function bindShell() {
 async function bootstrapApp() {
   bindShell();
   refreshIcons();
+  await loadEnvironmentBadge();
   showView('home');
   const auth = initAuth({ api, store });
   await auth.restoreSession();
